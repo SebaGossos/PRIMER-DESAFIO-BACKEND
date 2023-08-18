@@ -22,7 +22,7 @@
     "id": 2
   },
   {
-    "title": "producto 3",
+    "title": "producto 11",
     "description": "Este es un producto prueba",
     "price": 200,
     "thumbnail": "Sin imagen",
@@ -33,14 +33,14 @@
     "id": 3
   },
   {
-    "title": "producto 4",
+    "title": "producto 11",
     "description": "Este es un producto prueba",
     "price": 200,
     "thumbnail": "Sin imagen",
-    "code": "abc12346",
+    "code": "abc123456",
     "stock": 25,
-    "category": "Agua",
-    "status": true,
+    "category": "Coca",
+    "status": false,
     "id": 4
   },
   {
