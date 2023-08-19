@@ -1,17 +1,29 @@
 import { Router } from 'express';
+import { ProductManager } from '../products_manager.js';
+import { Carts_manager } from '../carts_manager.js';
+
+const cartManager = new Carts_manager('./data/carts.json')
 
 const router = Router()
 
-const carts = []
+router.post('/', async(req, res) => {
+    try{
+        const hola = await cartManager.createCart()
+        res.json({ success: hola })
+    }catch(err){
+        res.status(400).send({ error: err })
+    }
+})
 
-// router.get('/', (req, res) => res.json(carts)) //? NOSE SI TIENE QUE EXISTIR
-
-router.post('/', (req, res) => {
-    const cart = req.body
-    const id = carts.length === 0 ? 1 : carts[carts.length-1].id + 1;
-    cart.id = id;
-    carts.push( cart )
+router.get('/:cid', async(req, res) => {
+    const id = +req.params.cid;
+    try{
+        // const hola = await cartManager.addToCart(3)
+        // res.json({ success: hola })
+    }catch(err){
+        res.status(400).send({ error: err })
+    }
 })
 
 
-export default router
+export default router 

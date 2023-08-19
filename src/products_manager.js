@@ -60,8 +60,6 @@ export class ProductManager {
         if ( isRepeteadCode ) throw `Code must be unique: ${ code }`
         const indexProd = products.findIndex( p => p.id === id )
         if ( indexProd  < 0 ) throw `Din't found the ID: ${ id }`
-
-        console.log( status )
         
         //? SOULUTION
         for ( const prop in products[indexProd] ) {
@@ -81,3 +79,4 @@ export class ProductManager {
         return products;
     }
 }
+

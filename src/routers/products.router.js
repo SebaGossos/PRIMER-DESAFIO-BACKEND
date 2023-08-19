@@ -3,12 +3,6 @@ import { ProductManager } from '../products_manager.js'
 
 const productManager = new ProductManager('./data/products.json')
 
-// async function test(){
-//     const products = await productManager.getProducts()
-//     console.log( products )
-// }
-// test()
-
 const router = Router()
 
 router.get('/', async(req, res) => {
