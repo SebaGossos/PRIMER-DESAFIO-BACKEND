@@ -29,7 +29,7 @@ export class ProductManager {
     }
 
     async addProduct( product ){
-        const { id, title, description, price, thumbnail='', code, stock, category, status=true } = product
+        const { id, title, description, price, thumbnail=[], code, stock, category, status=true } = product
         if ( id ) throw "Don't try to send an ID in the body, because it will be auto-incremented";
         if ( !title || !description || !price || !code || !stock || !category ) throw 'Must submit all required fields'
         const products = await this.#prodJSON()
