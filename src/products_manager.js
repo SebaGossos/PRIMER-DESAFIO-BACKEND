@@ -29,12 +29,14 @@ export class ProductManager {
     }
 
     async addProduct( product ){
-        const { id, title, description, price, thumbnail=[], code, stock, category, status=true } = product
+        const { id, title, description, price, thumbnail=["Sin Imagen"], code, stock, category, status=true } = product
         if ( id ) throw "Don't try to send an ID in the body, because it will be auto-incremented";
         if ( !title || !description || !price || !code || !stock || !category ) throw 'Must submit all required fields'
         const products = await this.#prodJSON()
         if (products.some( p => p.code === code )) throw `Code: ${ code } must be unique, now is repetead!`;
 
+        product.thumbnail = thumbnail
+        product.status = status
         product.id = await this.generateId()
         await this.#prodJSON( product )
         return product
