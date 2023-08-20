@@ -3,7 +3,9 @@
     "title": "producto 1",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc123",
     "stock": 25,
     "category": "Agua",
@@ -14,7 +16,9 @@
     "title": "producto 2",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc1234",
     "stock": 25,
     "category": "Agua",
@@ -25,7 +29,9 @@
     "title": "producto 11",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc12345",
     "stock": 25,
     "category": "Agua",
@@ -36,7 +42,9 @@
     "title": "producto 11",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc123456",
     "stock": 25,
     "category": "Coca",
@@ -47,7 +55,9 @@
     "title": "producto 5",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc12347",
     "stock": 25,
     "category": "Agua",
@@ -58,7 +68,9 @@
     "title": "producto 6",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc12348",
     "stock": 25,
     "category": "Agua",
@@ -69,7 +81,9 @@
     "title": "producto 7",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc12349",
     "stock": 25,
     "category": "Agua",
@@ -80,7 +94,9 @@
     "title": "producto 8",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc123410",
     "stock": 25,
     "category": "Agua",
@@ -91,7 +107,9 @@
     "title": "producto 9",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc123411",
     "stock": 25,
     "category": "Agua",
@@ -102,11 +120,26 @@
     "title": "producto 10",
     "description": "Este es un producto prueba",
     "price": 200,
-    "thumbnail": "Sin imagen",
+    "thumbnail": [
+      "Sin imagen"
+    ],
     "code": "abc123412",
     "stock": 25,
     "category": "Agua",
     "status": true,
     "id": 10
+  },
+  {
+    "title": "producto 10",
+    "description": "Este es un producto prueba",
+    "price": 200,
+    "thumbnail": [
+      "Sin imagen"
+    ],
+    "code": "abc1234122",
+    "stock": 25,
+    "category": "Agua",
+    "status": true,
+    "id": 11
   }
 ]
