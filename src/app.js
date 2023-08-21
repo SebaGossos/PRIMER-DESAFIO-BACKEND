@@ -10,7 +10,10 @@ app.use('/app' ,express.static('./public'))
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 
-
+let a = 1;
+const b = a++
+const c = ++a
+console.log( a, b, c )
 
 
 app.listen( 8080, () => console.log('SERVER UP!!')) 
