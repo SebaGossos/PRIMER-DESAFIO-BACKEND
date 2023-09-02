@@ -2,8 +2,7 @@ import express from 'express'
 import handlebars from 'express-handlebars'
 import cartsRouter from './routers/cart.router.js'
 import productsRouter from './routers/products.router.js'
-import homeRouter from './routers/home.router.js'
-import realTimeProductsRouter from './routers/realTimeProducts.router.js'
+import viewRouter from './routers/view.router.js'
 import { Server } from 'socket.io'
 
 const app = express()
@@ -15,13 +14,12 @@ app.set( 'view engine', 'handlebars' )
 
 
 // app.use('/app' ,express.static('./public'))
-app.use( express.static('./src/views/layouts') )
-app.use( '/', homeRouter ) 
+app.use( express.static('./src/public') )
+app.use( '/products/', viewRouter ) 
 
 
-app.use('/api/products', productsRouter)
-app.use('/api/carts', cartsRouter)
-app.use('/realtimeproducts', realTimeProductsRouter)
+app.use( '/api/products', productsRouter )
+app.use( '/api/carts', cartsRouter ) 
                 
                 
 const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 

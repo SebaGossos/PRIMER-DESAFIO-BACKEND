@@ -16,7 +16,7 @@ router.get("/:cid", async (req, res) => {
   try {
     res.json({ success: await cartManager.getCartById(id) });
   } catch (err) {
-    res.status(400).send({ error: err });
+    res.status(400).send({ status: 'error', error: err });
   }
 });
 
@@ -28,7 +28,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
     const productToAdd = await cartManager.addToCart( cid, pid );
     res.json({ success: productToAdd })
   } catch (err) {
-    res.status(400).send({ error: err })
+    res.status(400).send({ status: 'error', error: err })
   }
 });
 
