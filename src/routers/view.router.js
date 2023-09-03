@@ -17,39 +17,37 @@ const storage = multer.diskStorage({
 })
 const uploader = multer({ storage });
 
+
+
 router.get('/', async( req, res ) => {
     const products = await productsManager.getProducts()
-    res.render('home', {
-        products
-    })
+    res.render('home', { products })
 })
 
 router.get('/realtimeproducts', async( req, res ) => {
     const products = await productsManager.getProducts()
-    res.render('realTimeProducts',{
-        products
-    })
+    res.render('realTimeProducts',{ products })
 })
 
-router.post('/', uploader.single('thumbnail'), async( req, res ) => {
-    const prod = JSON.parse(JSON.stringify( req.body ))
-    prod.price = +prod.price
-    prod.stock = +prod.stock
-    prod.status = !!prod.status
-    const url = req.file?.filename
-    if( url ) prod.thumbnail = `${Date.now()}-${ url }`
+// router.post('/', uploader.single('thumbnail'), async( req, res ) => {
+//     const prod = JSON.parse(JSON.stringify( req.body ))
+//     prod.price = +prod.price
+//     prod.stock = +prod.stock
+//     prod.status = !!prod.status
+//     const url = req.file?.filename
+//     if( url ) prod.thumbnail = `${Date.now()}-${ url }`
 
-    console.log( prod )
+//     console.log( prod )
     
-    try{
-        await productsManager.addProduct( prod )
-        const products = await productsManager.getProducts()
-        res.render('realTimeProducts', {
-            products
-        }) 
-    }catch( err ){
-        res.status(400).json({ error: err })
-    }
-})
+//     try{
+//         await productsManager.addProduct( prod )
+//         const products = await productsManager.getProducts()
+//         res.render('realTimeProducts', {
+//             products
+//         }) 
+//     }catch( err ){
+//         res.status(400).json({ error: err })
+//     }
+// })
 
 export default router;

@@ -15,23 +15,20 @@ app.set( 'view engine', 'handlebars' )
 
 // app.use('/app' ,express.static('./public'))
 app.use( express.static('./src/public') )
-app.use( '/products/', viewRouter ) 
 
 
+app.use( '/products/', viewRouter )
 app.use( '/api/products', productsRouter )
 app.use( '/api/carts', cartsRouter ) 
                 
                 
 const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 
-const socketServer = new Server( httpServer )
+const io = new Server( httpServer )
 
-let log = []
 
-socketServer.on('connection', (socketClient) => {
-    console.log(`Nuevo cliente conectado ${ socketClient.id}`) 
-    socketClient.emit( 'history', log )
-    socketClient.on('message', data => { 
-        log.push({ userId: socketClient.id, message: data })
-        socketServer.emit( 'history', log )
+io.on('connection', socket => {
+    console.log(`Nuevo cliente conectado ${ socket.id}`) 
+    socket.on('productList', data => {
+        io.emit( 'updatedProducts', data )
     })
 }) 

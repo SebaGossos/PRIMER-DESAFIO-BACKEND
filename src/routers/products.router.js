@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
   try {
     const result = await productManager.getProducts();
     const limit = req.query.limit;
-    res.status(200).json({ products: result.slice(0, limit) });
+    res.status(200).json({ payload: result.slice(0, limit) });
   } catch ( err ) {
     res
       .status(500)
@@ -26,7 +26,7 @@ router.get("/:pid", async (req, res) => {
   const id = parseInt(req.params.pid);
   try {
     const result = await productManager.getProductsById(id);
-    return res.status(200).json({ playload: result });
+    return res.status(200).json({ payload: result });
   } catch (err) {
     return res.status(400).send({ status: 'error', error: err });
   }
@@ -56,8 +56,8 @@ router.put("/:pid", async (req, res) => {
 router.delete("/:pid", async (req, res) => {
   const id = +req.params.pid;
   try {
-    await productManager.deleteProduct(id);
-    res.json({ playload: `Product ID: ${id} was successfully removed` });
+    const products = await productManager.deleteProduct(id);
+    res.json({ payload: products });
   } catch (err) {
     res.status(400).send({ status: 'error', error: err });
   }

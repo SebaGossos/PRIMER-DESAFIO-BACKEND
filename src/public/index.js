@@ -14,7 +14,7 @@ createBtn.addEventListener('click', (evt) => {
         status: document.getElementById('status').value === 'true',
         thumbnail: document.getElementById('thumbnail').value
     }
-    console.log( body.status )
+    
     fetch('/api/products', {
         method: 'post',
         body: JSON.stringify( body ),
@@ -26,7 +26,8 @@ createBtn.addEventListener('click', (evt) => {
     .then( result => {
         if ( result.status === 'error' ) throw new Error( result.error )
     })
-    .then( () => fetch('api/products') )
+    .then( () => fetch('/api/products') )
+    .then( result => result.json() )
     .then( result => {
         if ( result.status === 'error' ) throw new Error( result.error )
         socket.emit( 'productList', result.payload )
@@ -45,9 +46,39 @@ createBtn.addEventListener('click', (evt) => {
 
 
 const deleteProduct = ( id ) => {
-
+    fetch(`/api/products/${ id }`, {
+        method: 'delete'
+    })
+    .then( result => result.json() )
+    .then( result => {
+        if ( result.status === 'error' ) throw new Error( result.error )
+        socket.emit('productList', result.payload)
+        alert(`Ok. Todo salió bien! :) \nEl producto se ha eliminado con éxito!`)
+    })
 }
 
+const tBody = document.getElementById('tBody');
+socket.on( 'updatedProducts', data => {
+    
+    tBody.innerText=''
+    for( product of data ){
+        let tr = document.createElement('tr')
+        tr.innerHTML = `
+            <td><button onclick="deleteProduct(${product.id})" class="btn btn-outline-danger">Remove</button></td>
+            <td>${product.title}</td>
+            <td>${product.description}</td>
+            <td>${product.price}</td>
+            <td>${product.code}</td>
+            <td>${product.stock}</td>
+            <td>${product.category}</td>
+            <td>${product.thumbnail}</td>
+            <td>${product.status}</td>
+            <td>${product.id}</td>
+        `
+        tBody.appendChild(tr)
+    }
+
+})
 
 // chatBox.addEventListener('keyup', (evt) => {
 //     console.log(3)
