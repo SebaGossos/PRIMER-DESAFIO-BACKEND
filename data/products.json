@@ -115,18 +115,5 @@
     ],
     "status": true,
     "id": 9
-  },
-  {
-    "title": "producto 10",
-    "description": "Este es un producto prueba",
-    "price": 200,
-    "code": "abc12345678910",
-    "stock": 25,
-    "category": "Agua",
-    "thumbnail": [
-      "Sin Imagen"
-    ],
-    "status": true,
-    "id": 10
   }
 ]

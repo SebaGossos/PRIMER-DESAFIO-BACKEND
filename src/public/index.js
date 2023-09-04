@@ -1,5 +1,4 @@
 const socket = io()
-// let chatBox = document.getElementById('chatBox')
 let createForm = document.getElementById('createForm')
 let createBtn = document.getElementById('createBtn')
 
@@ -14,13 +13,12 @@ createBtn.addEventListener('click', (evt) => {
         status: document.getElementById('status').value === 'true',
         thumbnail: document.getElementById('thumbnail').value
     }
-    
     fetch('/api/products', {
         method: 'post',
         body: JSON.stringify( body ),
         headers: {
             'Content-Type': 'application/json'
-        },
+        }
     })
     .then( result => result.json() )
     .then( result => {
@@ -79,18 +77,3 @@ socket.on( 'updatedProducts', data => {
     }
 
 })
-
-// chatBox.addEventListener('keyup', (evt) => {
-//     console.log(3)
-//     socketClient.emit( 'messages', evt.key )
-// })
-
-// socketClient.on('history', data => {
-//     let history = document.getElementById('history');
-//     let messages = ''
-//     data.forEach( ( { userId, message } ) => {
-//         messages += `${ userId }: ${ message } <br>`
-//     });
-//     history.innerHTML = messages;
-//     chatBox.value = ''
-// })

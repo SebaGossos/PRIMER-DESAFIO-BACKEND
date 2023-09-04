@@ -1,6 +1,5 @@
-import { transcode } from 'buffer';
 import fs from 'fs';
-import { type } from 'os';
+
 
 export class ProductManager {
     #_path;
@@ -31,14 +30,14 @@ export class ProductManager {
     }
 
     async addProduct( product ){
-        const { id, title, description, price, thumbnail=["Sin Imagen"], code, stock, category, status=true } = product
+        const { id, title, description, price, thumbnail, code, stock, category, status=true } = product
         if ( id ) throw "Don't try to send an ID in the body, because it will be auto-incremented";
         if ( !title || !description || !price || !code || !stock || !category ) throw 'Must submit all required fields'
         if( typeof price !== 'number' || typeof stock !== 'number' || typeof status !== 'boolean' ) throw 'Must send a the correct type for each field'
         const products = await this.#prodJSON()
         if (products.some( p => p.code === code )) throw `Code: ${ code } must be unique, now is repetead!`;
 
-        product.thumbnail = thumbnail
+        product.thumbnail = thumbnail.length === 0 ? ["Sin Imagen"] : thumbnail;
         product.status = status
         product.id = await this.generateId()
         await this.#prodJSON( product )

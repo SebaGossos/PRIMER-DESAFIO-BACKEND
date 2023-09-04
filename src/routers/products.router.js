@@ -6,6 +6,8 @@ const productManager = new ProductManager( routProductJSON );
 
 const router = Router();
 
+
+
 router.get("/", async (req, res) => {
   try {
     const result = await productManager.getProducts();
