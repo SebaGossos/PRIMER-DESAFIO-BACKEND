@@ -1,7 +1,7 @@
-import fs from 'fs'
+import mongoose from "mongoose";
 
 
-export class Carts_manager{
+export class CartManagerDB{
     #pathCartJSON;
     #pathProductsJSON
 

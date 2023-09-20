@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 
-export class ProductManager {
+export class ProductManagerFS {
     #_path;
     constructor( path ){
         this.#_path = path;

@@ -115,5 +115,27 @@
     ],
     "status": true,
     "id": 9
+  },
+  {
+    "title": "324432",
+    "description": "234342",
+    "price": 234234,
+    "code": "234234",
+    "stock": 243234,
+    "category": "Agua",
+    "status": true,
+    "thumbnail": "1693919141254-1693919141249-1.png",
+    "id": 10
+  },
+  {
+    "title": "234",
+    "description": "234234",
+    "price": 234234,
+    "code": "234423423",
+    "stock": 234234423,
+    "category": "Gaseosa",
+    "status": false,
+    "thumbnail": "1695033342981-1695033342950-Captura de pantalla (13).png",
+    "id": 11
   }
 ]

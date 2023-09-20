@@ -3,7 +3,7 @@
         <h1>ADD PRODUCT</h1>
         <hr />
         
-        <form id="createForm">
+        <form id="createForm" enctype="multipart/form-data">
         
             <label for="title">Título:</label>
             <input type="text" id="title" name="title" required><br>
@@ -35,6 +35,9 @@
 
             <label for="thumbnail">Imagen:</label>
             <input class="mb-3" type="file" id="thumbnail" name="thumbnail"><br>
+
+            <input type="submit">
+
         </form>
         
             <button id="createBtn" class="btn btn-success" >Agregar producto</button>
@@ -68,7 +71,7 @@
                     <td>{{this.category}}</td>
                     <td>{{this.thumbnail}}</td>
                     <td>{{this.status}}</td>
-                    <td>{{this.id}}</td>
+                    <td>{{this._id}}</td>
                 </tr>
             {{/each}}
         </tbody>

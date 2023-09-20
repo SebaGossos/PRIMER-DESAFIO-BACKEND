@@ -3,22 +3,13 @@ let createForm = document.getElementById('createForm')
 let createBtn = document.getElementById('createBtn')
 
 createBtn.addEventListener('click', (evt) => {
-    const body = {
-        title: document.getElementById('title').value,
-        description: document.getElementById('description').value,
-        price: +document.getElementById('price').value,
-        code: document.getElementById('code').value,
-        stock: +document.getElementById('stock').value,
-        category: document.getElementById('category').value,
-        status: document.getElementById('status').value === 'true',
-        thumbnail: document.getElementById('thumbnail').value
-    }
+    const formData = new FormData( createForm )
     fetch('/api/products', {
         method: 'post',
-        body: JSON.stringify( body ),
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        body: formData,
+        // headers: {
+        //     'Content-Type': 'application/json'
+        // }
     })
     .then( result => result.json() )
     .then( result => {
@@ -35,13 +26,17 @@ createBtn.addEventListener('click', (evt) => {
         document.getElementById('price').value = ''
         document.getElementById('code').value = ''
         document.getElementById('stock').value = ''
-        document.getElementById('category').value = ''
-        document.getElementById('status').value = ''
         document.getElementById('thumbnail').value = ''
     })
     .catch(err => alert(`Ocurrió un error: \n${err}`))
 })
 
+createForm.addEventListener('submit', evt => {
+    evt.preventDefault()
+    const formData = new FormData( createForm )
+    const data = new URLSearchParams( formData )
+    console.log(evt.target.title.value)
+})
 
 const deleteProduct = ( id ) => {
     fetch(`/api/products/${ id }`, {
