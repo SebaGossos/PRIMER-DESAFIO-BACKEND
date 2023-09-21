@@ -39,6 +39,7 @@ createForm.addEventListener('submit', evt => {
 })
 
 const deleteProduct = ( id ) => {
+    console.log( id )
     fetch(`/api/products/${ id }`, {
         method: 'delete'
     })
@@ -55,9 +56,9 @@ socket.on( 'updatedProducts', data => {
     
     tBody.innerText=''
     for( product of data ){
-        let tr = document.createElement('tr')
+        let tr = document.createElement('tr') 
         tr.innerHTML = `
-            <td><button onclick="deleteProduct(${product.id})" class="btn btn-outline-danger">Remove</button></td>
+            <td><button onclick="deleteProduct(${product._id})" class="btn btn-outline-danger">Remove</button></td>
             <td>${product.title}</td>
             <td>${product.description}</td>
             <td>${product.price}</td>
@@ -66,9 +67,9 @@ socket.on( 'updatedProducts', data => {
             <td>${product.category}</td>
             <td>${product.thumbnail}</td>
             <td>${product.status}</td>
-            <td>${product.id}</td>
+            <td>${product._id}</td>
         `
-        tBody.appendChild(tr)
+        tBody.appendChild(tr) 
     }
 
 })

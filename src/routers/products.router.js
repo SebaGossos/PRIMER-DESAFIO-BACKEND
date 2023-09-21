@@ -84,10 +84,16 @@ router.put("/:pid", async (req, res) => {
 });
 
 router.delete("/:pid", async (req, res) => {
-  const id = +req.params.pid;
+  const id = req.params.pid;
+  console.log( id )
   try {
-    const products = await productManagerFS.deleteProduct(id);
+    await productsManagerDB.deleteProduct(id);
+
+    
+    const products = await productsManagerDB.getProducts();
+
     res.json({ payload: products });
+
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
   }
