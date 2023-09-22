@@ -43,7 +43,6 @@ export class ProductManagerDB {
     }
 
     async deleteProduct( id ) {
-        console.log( 33, id)
-        await productsModel.findByIdAndDelete( id ) //TODO: DELETE PRODUCT
+        await productsModel.findByIdAndDelete( id )
     }
 }

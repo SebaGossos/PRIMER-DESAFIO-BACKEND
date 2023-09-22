@@ -29,17 +29,17 @@ try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
         dbName: 'ecommerce'
     })
+    const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 
+    const io = new Server( httpServer )
+    io.on('connection', socket => {
+        console.log(`Nuevo cliente conectado ${ socket.id}`) 
+        socket.on('productList', data => {
+            io.emit( 'updatedProducts', data )
+        })
+    }) 
 }catch(err) {
     console.log( err.message )
 }
 
-const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 
-const io = new Server( httpServer )
-io.on('connection', socket => {
-    console.log(`Nuevo cliente conectado ${ socket.id}`) 
-    socket.on('productList', data => {
-        io.emit( 'updatedProducts', data )
-    })
-}) 
 
 
