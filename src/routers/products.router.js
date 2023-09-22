@@ -59,9 +59,9 @@ router.get("/query/:pcode", async (req, res) => {
   console.log( code )
   
   try {
-    const isProd = await productsManagerDB.isProductsByCode( code )
-
-    return res.status(200).json({ payload: isProd });
+    const prod = await productsManagerDB.isProductsByCode( code );
+    console.log( prod.thumbnail )
+    return res.status(200).json({ payload: prod });
   } catch (err) {
     return res.status(400).send({ status: "error", error: err });
   }

@@ -44,7 +44,7 @@
         </div>
 
         <div class="mb-4">
-            <h1>UPDATE PRODUCT</h1>
+            <h1>UPDATE PRODUCT BY CODE</h1>
             <hr />
             
             <form id="createForm" enctype="multipart/form-data">
@@ -61,38 +61,38 @@
                     </div>
                 </div>
 
-                <label for="title">Título:</label>
-                <input type="text" id="title" name="title" required><br>
+                <label for="titleUpdate">Título:</label>
+                <input type="text" id="titleUpdate" name="titleUpdate" required><br>
 
-                <label for="description">Descripción:</label>
-                <input class="form-control w-50" type="text" id="description" name="description" required><br>
+                <label for="descriptionUpdate">Descripción:</label>
+                <input class="form-control w-50" type="text" id="descriptionUpdate" name="descriptionUpdate" required><br>
 
-                <label for="price">Precio:</label>
-                <input type="number" id="price" name="price" min="0" required><br>
+                <label for="priceUpdate">Precio:</label>
+                <input type="number" id="priceUpdate" name="priceUpdate" min="0" required><br>
 
 
-                <label for="stock">Stock:</label>
-                <input type="number" id="stock" name="stock" min="0" required><br>
+                <label for="stockUpdate">Stock:</label>
+                <input type="number" id="stockUpdate" name="stockUpdate" min="0" required><br>
 
-                <label for="category">Categoría:</label>
-                <select id="category" name="category">
+                <label for="categoryUpdate">Categoría:</label>
+                <select id="categoryUpdate" name="categoryUpdate">
                     <option value="Agua">Agua</option>
                     <option value="Jugo">Jugo</option>
                     <option value="Gaseosa">Gaseosa</option>
                 </select><br>
 
-                <label for="status">Estado:</label>
-                <select id="status" name="status">
+                <label for="statusUpdate">Estado:</label>
+                <select id="statusUpdate" name="statusUpdate">
                     <option value="true">Verdadero</option>
                     <option value="false">Falso</option>
                 </select><br>
 
-                <label for="thumbnail">Imagen:</label>
-                <input class="mb-3" type="file" id="thumbnail" name="thumbnail"><br>
+                <label for="thumbnailUpdate">Imagen:</label>
+                <input class="mb-3" type="file" id="thumbnailUpdate" name="thumbnailUpdate"><br>
 
             </form>
             
-                <button id="createBtn" class="btn btn-success" >Agregar producto</button>
+                <button id="createBtn" class="btn btn-success" >Actualizar producto</button>
 
         </div>
     </div>

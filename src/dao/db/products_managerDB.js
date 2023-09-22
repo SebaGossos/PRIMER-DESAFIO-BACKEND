@@ -36,7 +36,11 @@ export class ProductManagerDB {
 
     getProductsById = async( id ) => await productsModel.findById({ _id: id })
 
-    isProductsByCode = async( code ) => !(await productsModel.findOne({ code: code }) === null)
+    isProductsByCode = async( code ) => {
+        const product = await productsModel.findOne({ code: code }).lean().exec();
+        product._id = product._id.toString();
+        return product;
+    }
     
     async updateProduct( id, product){
         productsModel.findByIdAndUpdate()//TODO: UPDATE PRODUCT
