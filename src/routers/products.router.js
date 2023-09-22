@@ -53,6 +53,20 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
+router.get("/query/:pcode", async (req, res) => {
+  const code = req.params.pcode;
+
+  console.log( code )
+  
+  try {
+    const isProd = await productsManagerDB.isProductsByCode( code )
+
+    return res.status(200).json({ payload: isProd });
+  } catch (err) {
+    return res.status(400).send({ status: "error", error: err });
+  }
+});
+
 router.post("/", uploader.single("thumbnail"), async (req, res) => {
   try {
     // console.log(req.body, req.file);

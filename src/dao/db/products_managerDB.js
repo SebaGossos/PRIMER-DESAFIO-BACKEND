@@ -34,15 +34,14 @@ export class ProductManagerDB {
     }
 
 
-    getProductsById = async( id ) => {
-        return await productsModel.findById({ _id: id })
-    }
+    getProductsById = async( id ) => await productsModel.findById({ _id: id })
+
+    isProductsByCode = async( code ) => !(await productsModel.findOne({ code: code }) === null)
     
     async updateProduct( id, product){
         productsModel.findByIdAndUpdate()//TODO: UPDATE PRODUCT
     }
 
-    async deleteProduct( id ) {
-        await productsModel.findByIdAndDelete( id )
-    }
+    deleteProduct = async( id ) => await productsModel.findByIdAndDelete( id )
+
 }
