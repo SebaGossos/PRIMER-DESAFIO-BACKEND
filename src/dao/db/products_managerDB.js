@@ -39,11 +39,11 @@ export class ProductManagerDB {
     isProductsByCode = async( code ) => {
         const product = await productsModel.findOne({ code: code }).lean().exec();
         product._id = product._id.toString();
-        return product;
+        return product
     }
-    
+    //TODO: 
     async updateProduct( id, product){
-        productsModel.findByIdAndUpdate()//TODO: UPDATE PRODUCT
+        // productsModel.findByIdAndUpdate()
     }
 
     deleteProduct = async( id ) => await productsModel.findByIdAndDelete( id )

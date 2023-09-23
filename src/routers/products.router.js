@@ -55,12 +55,9 @@ router.get("/:pid", async (req, res) => {
 
 router.get("/query/:pcode", async (req, res) => {
   const code = req.params.pcode;
-
-  console.log( code )
   
   try {
     const prod = await productsManagerDB.isProductsByCode( code );
-    console.log( prod.thumbnail )
     return res.status(200).json({ payload: prod });
   } catch (err) {
     return res.status(400).send({ status: "error", error: err });
@@ -69,15 +66,13 @@ router.get("/query/:pcode", async (req, res) => {
 
 router.post("/", uploader.single("thumbnail"), async (req, res) => {
   try {
-    // console.log(req.body, req.file);
     const product = JSON.parse(JSON.stringify(req.body));
+    console.log( product )
     const url = req.file?.filename;
     product.thumbnail = url ? `${Date.now()}-${url}` : undefined;
     product.price = +product.price;
     product.stock = +product.stock;
     product.status = product.status === "true";
-
-    console.log(product);
 
     await productsManagerDB.addProduct( product );
     res.status(200).json(product);
@@ -86,12 +81,14 @@ router.post("/", uploader.single("thumbnail"), async (req, res) => {
   }
 });
 
-router.put("/:pid", async (req, res) => {
-  const id = Number(req.params.pid);
-  const product = req.body;
+router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
   try {
-    await productManagerFS.updateProduct(id, product);
-    res.json(product);
+    const id = req.params.pid;
+    const product = req.body;
+    console.log( id, product )
+  //   await productManagerFS.updateProduct(id, product);
+  //   await productsManagerDB.updateProduct( id, product );
+  //   res.json(product);
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
   }
