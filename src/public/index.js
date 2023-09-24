@@ -74,25 +74,24 @@ createBtn.addEventListener('click', (evt) => {
 
 updateBtn.addEventListener('click', () => {
     const formData = new FormData( createFormUpdate );
-    const prod = {
-        title: formData.get('title'),
-        description: formData.get('description'),
-        price: formData.get('price'),
-        code: formData.get('code'),
-        stock: formData.get('stock'),
-        category: formData.get('category'),
-        status: formData.get('status'),
-        thumbnail: formData.get('thumbnail').name
-    }
-    fetch(`/api/products/:${prodIdToUpdate}`, {
+    fetch(`/api/products/${prodIdToUpdate}`, {
         method: 'put',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(prod),
+        body: formData
     })
-    .then( data => console.log( data ))
-    .catch( err => err )
+    .then( result => result.json() )
+    .then( result => console.log( result ))
+    // .then( result => {
+    //     if ( result.status === 'error' ) throw new Error( result.error )
+    // })
+    // .then( () => fetch('/api/products') )
+    // .then( result => result.json() )
+    // .then( result => {
+    //     if ( result.status === 'error' ) throw new Error( result.error )
+    //     socket.emit( 'productList', result.payload )
+    //     alert(`Ok. Todo salió bien! :) \nEl producto se ha agregado con éxito!\n \nVista actuallizada`)
+    //     cleanInputs('add')
+    // })
+    // .catch(err => alert(`Ocurrió un error: \n${err}`))
 });
 
 let timerId;

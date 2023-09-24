@@ -42,8 +42,9 @@ export class ProductManagerDB {
         return product
     }
     //TODO: 
-    async updateProduct( id, product){
-        // productsModel.findByIdAndUpdate()
+    async updateProduct( id, product ){
+        console.log( id, product )
+        return await productsModel.findByIdAndUpdate( id, product )
     }
 
     deleteProduct = async( id ) => await productsModel.findByIdAndDelete( id )

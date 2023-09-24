@@ -69,6 +69,7 @@ router.post("/", uploader.single("thumbnail"), async (req, res) => {
     const product = JSON.parse(JSON.stringify(req.body));
     console.log( product )
     const url = req.file?.filename;
+    console.log( req.file )
     product.thumbnail = url ? `${Date.now()}-${url}` : undefined;
     product.price = +product.price;
     product.stock = +product.stock;
@@ -85,10 +86,18 @@ router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
   try {
     const id = req.params.pid;
     const product = req.body;
+    console.log( id, req.file )
+
+    const url = req.file?.filename;
+    product.thumbnail = url ? `${Date.now()}-${url}` : ['without image'];
+    product.price = +product.price;
+    product.stock = +product.stock;
+    product.status = product.status === "true";
     console.log( id, product )
-  //   await productManagerFS.updateProduct(id, product);
-  //   await productsManagerDB.updateProduct( id, product );
-  //   res.json(product);
+
+    // await productManagerFS.updateProduct(id, product);
+    await productsManagerDB.updateProduct( id, product );
+    res.json(product);
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
   }
