@@ -79,19 +79,18 @@ updateBtn.addEventListener('click', () => {
         body: formData
     })
     .then( result => result.json() )
-    .then( result => console.log( result ))
-    // .then( result => {
-    //     if ( result.status === 'error' ) throw new Error( result.error )
-    // })
-    // .then( () => fetch('/api/products') )
-    // .then( result => result.json() )
-    // .then( result => {
-    //     if ( result.status === 'error' ) throw new Error( result.error )
-    //     socket.emit( 'productList', result.payload )
-    //     alert(`Ok. Todo salió bien! :) \nEl producto se ha agregado con éxito!\n \nVista actuallizada`)
-    //     cleanInputs('add')
-    // })
-    // .catch(err => alert(`Ocurrió un error: \n${err}`))
+    .then( result => {
+        if ( result.status === 'error' ) throw new Error( result.error )
+    })
+    .then( () => fetch('/api/products') )
+    .then( result => result.json() )
+    .then( result => {
+        if ( result.status === 'error' ) throw new Error( result.error )
+        socket.emit( 'productList', result.payload )
+        alert(`Ok. Todo salió bien! :) \nEl producto se ha agregado con éxito!\n \nVista actuallizada`)
+        cleanInputs('add')
+    })
+    .catch(err => alert(`Ocurrió un error: \n${err}`))
 });
 
 let timerId;
