@@ -1,16 +1,12 @@
 import { Router } from "express";
 import multer from "multer";
-import mongoose from "mongoose";
-
-const objectId = mongoose.Types.ObjectId;
-
-import { ProductManagerFS } from "../dao/fs/products_managerFS.js";
-import { routProductJSON } from "../routesJSON/routes.js";
-
 
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
 
-const productManagerFS = new ProductManagerFS(routProductJSON);
+// import mongoose from "mongoose";
+// import { ProductManagerFS } from "../dao/fs/products_managerFS.js";
+// import { routProductJSON } from "../routesJSON/routes.js";
+// const productManagerFS = new ProductManagerFS(routProductJSON);
 
 const productsManagerDB = new ProductManagerDB();
 
@@ -25,6 +21,7 @@ const storage = multer.diskStorage({
   },
 });
 const uploader = multer({ storage });
+
 
 router.get("/", async (req, res) => {
   try {

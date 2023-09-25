@@ -1,33 +1,47 @@
 import { Router } from "express";
-import { Carts_managerFS } from "../dao/fs/carts_managerFS.js";
-import { routCartJSON, routProductJSON } from "../routesJSON/routes.js";
-import cartsModels from "../dao/models/carts.models.js";
+import { CartManagerDB } from "../dao/db/carts_managerDB.js";
 
-const cartManager = new Carts_managerFS(routCartJSON, routProductJSON);
+// import { Carts_managerFS } from "../dao/fs/carts_managerFS.js";
+// import { routCartJSON, routProductJSON } from "../routesJSON/routes.js";
+// const cartManager = new Carts_managerFS(routCartJSON, routProductJSON);
+
+const cartManagerDB = new CartManagerDB();
 
 const router = Router();
 
+router.get('/', async(req, res) => {
+  try{
+    res.json({ success: await cartManagerDB.getCarts() })
+  }catch( err ) {
+    res.status(400).send({ status: 'error', error: err })
+  }
+})
+
 router.get("/:cid", async (req, res) => {
-  const id = +req.params.cid;
+  const id = req.params.cid;
   try {
-    res.json({ success: await cartManager.getCartById(id) });
+    // res.json({ success: await cartManager.getCartById(id) });
+    res.json({ success: await cartManagerDB.getCartById( id ) })
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
   }
 });
 
 router.post("/", async (req, res) => {
-  // const data = await cartManager.createCart();
-  const data = await cartsModels.find().lean().exec();
-  res.json({ success: data });
+  const data = await cartManagerDB.createCart();
+  try{
+    res.json({ success: data });
+  }catch( err ){
+    res.status(400).send({ status: "error", error: err });
+  }
 });
 
 router.post("/:cid/product/:pid", async (req, res) => {
-  const cid = +req.params.cid;
-  const pid = +req.params.pid;
+  const cid = req.params.cid;
+  const pid = req.params.pid;
 
   try {
-    const productToAdd = await cartManager.addToCart(cid, pid);
+    const productToAdd = await cartManagerDB.addToCart(cid, pid);
     res.json({ success: productToAdd });
   } catch (err) {
     res.status(400).send({ status: "error", error: err });

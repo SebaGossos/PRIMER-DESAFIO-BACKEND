@@ -11,7 +11,6 @@ export class ProductManagerDB {
         return productsWithIdAsString; 
     }
 
-
     async addProduct({
         title,
         description,
@@ -33,20 +32,16 @@ export class ProductManagerDB {
         await productGenerated.save()
     }
 
-
-    getProductsById = async( id ) => await productsModel.findById({ _id: id })
-
     isProductsByCode = async( code ) => {
         const product = await productsModel.findOne({ code: code }).lean().exec();
         product._id = product._id.toString();
         return product
     }
-    //TODO: 
-    async updateProduct( id, product ){
-        console.log( id, product )
-        return await productsModel.findByIdAndUpdate( id, product )
-    }
 
-    deleteProduct = async( id ) => await productsModel.findByIdAndDelete( id )
+    getProductsById = async( id ) => await productsModel.findById({ _id: id });
+
+    updateProduct = async( id, product ) =>  await productsModel.findByIdAndUpdate( id, product );
+
+    deleteProduct = async( id ) => await productsModel.findByIdAndDelete( id );
 
 }
