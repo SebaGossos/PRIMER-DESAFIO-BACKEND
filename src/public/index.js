@@ -122,13 +122,6 @@ inputCode.addEventListener('input', (evt) => {
 });
 
 
-// createForm.addEventListener('submit', evt => {
-//     evt.preventDefault()
-//     const formData = new FormData( createForm )
-//     const data = new URLSearchParams( formData )
-//     console.log(evt.target.title.value)
-// })
-
 const deleteProduct = ( id ) => {
 
     fetch(`/api/products/${ id }`, {

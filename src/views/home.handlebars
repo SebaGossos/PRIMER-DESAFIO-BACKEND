@@ -1,46 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div class="container">
-        <h1 class="text-center">PRODUCTS</h1>
-        <hr class=" mb-4">
+<div class="container">
+    <h1 class="text-center">PRODUCTS</h1>
+    <hr class=" mb-4">
 
-        <table class="table table-striped-columns">
-            <thead>
+    <table class="table table-striped-columns">
+        <thead>
+            <tr>
+                <th>title</th>
+                <th>description</th>
+                <th>price</th>
+                <th>code</th>
+                <th>stock</th>
+                <th>category</th>
+                <th>thumbnail</th>
+                <th>status</th>
+                <th>id</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}
                 <tr>
-                    <th>title</th>
-                    <th>description</th>
-                    <th>price</th>
-                    <th>code</th>
-                    <th>stock</th>
-                    <th>category</th>
-                    <th>thumbnail</th>
-                    <th>status</th>
-                    <th>id</th>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.thumbnail}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this._id}}</td>
                 </tr>
-            </thead>
-            <tbody>
-                {{#each products}}
-                    <tr>
-                        <td>{{this.title}}</td>
-                        <td>{{this.description}}</td>
-                        <td>{{this.price}}</td>
-                        <td>{{this.code}}</td>
-                        <td>{{this.stock}}</td>
-                        <td>{{this.category}}</td>
-                        <td>{{this.thumbnail}}</td>
-                        <td>{{this.status}}</td>
-                        <td>{{this._id}}</td>
-                    </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
-    
-</body>
-</html>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

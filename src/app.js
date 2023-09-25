@@ -1,9 +1,7 @@
 import express, { urlencoded } from 'express'
 import mongoose from 'mongoose'
 import handlebars from 'express-handlebars'
-import cartsRouter from './routers/cart.router.js'
-import productsRouter from './routers/products.router.js'
-import viewRouter from './routers/view.router.js'
+import { cartsRouter, productsRouter, viewRouter, chatRouter } from './routers/index.js'
 import { Server } from 'socket.io'
 
 const app = express()
@@ -20,10 +18,11 @@ app.set( 'view engine', 'handlebars' )
 app.use( express.static('./src/public') )
 
 
-app.use( '/products', viewRouter )
 app.use( '/api/products', productsRouter )
 app.use( '/api/carts', cartsRouter ) 
-                
+app.use( '/products', viewRouter )
+app.use( '/chat', chatRouter )
+
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
