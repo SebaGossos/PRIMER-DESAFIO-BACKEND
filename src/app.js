@@ -23,6 +23,7 @@ app.use( '/api/carts', cartsRouter )
 app.use( '/products', viewRouter )
 app.use( '/chat', chatRouter )
 
+const log = []
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
@@ -35,7 +36,12 @@ try{
         socket.on('productList', data => {
             io.emit( 'updatedProducts', data )
         })
-    }) 
+        socket.on('message', data => {
+            console.log( data )
+            log.push( data )
+            socket.emit('log', log)
+        })
+    })
 }catch(err) {
     console.log( err.message )
 }

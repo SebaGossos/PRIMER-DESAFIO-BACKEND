@@ -28,19 +28,19 @@ export class CartManagerDB{
         
     }
 
-    async updateCart( cid, change ){
-        const data = await cartModel.findOne({ _id: cid }).populate('products.pId');
-        const cart = JSON.parse(JSON.stringify( data, null, 2))
-        cart.products.map( p => {
-            if( p.pId === pid ){
-                return p.quantity++
-            }
-            return p
-        })
-        console.log( cart )
+    // async updateCart( cid, change ){
+    //     const data = await cartModel.findOne({ _id: cid }).populate('products.pId');
+    //     const cart = JSON.parse(JSON.stringify( data, null, 2))
+    //     cart.products.map( p => {
+    //         if( p.pId === pid ){
+    //             return p.quantity++
+    //         }
+    //         return p
+    //     })
+    //     console.log( cart )
 
-        return cart
-    }
+    //     return cart
+    // }
     
 
     deleteCart = async ( id ) => await cartModel.findByIdAndDelete( id );
