@@ -10,28 +10,45 @@ Swal.fire({
 }).then( result => {
     let user = result.value
     document.getElementById('username').innerHTML = user;
+
+    fetch('/api/chat')
+        .then(result => result.json())
+        .then( result => {
+            socket.emit('logDB', result.payload)
+        })
     
     let chatBox = document.getElementById('chatbox')
     chatBox.addEventListener('keyup', e => {
         if( e.key === 'Enter' ) {
             if (chatBox.value.trim().length > 0 ) {
-                socket.emit('message', {
-                    user,
-                    message: chatBox.value
+                fetch('/api/chat',{
+                    method: 'post',
+                    body: JSON.stringify({
+                        user,
+                        message: chatBox.value
+                    }),
+                    headers: {'Content-Type': 'application/json'}
                 })
+                .then(result => result.json())
+                .then( result => {
+                    console.log( result.payload )
+                    socket.emit('message', result.payload)
+                    chatBox.value = ''
+                })
+
             }
         }
     })
 })
 const logElement = document.getElementById('log')
 socket.on('log', log => {
+    console.log( log )
     logElement.innerText = ''
+    let message = '';
     for( let i = 0; i < log.length; i++ ){
-        const div = document.createElement('div');
-        div.innerHTML = `${log[i].user}: ${log[i].message}</br>`
-        
-        logElement.appendChild(div)
+        message += `<p><i>${log[i].user}</i>: ${log[i].message}</p>`
     }
+    logElement.innerHTML = message;
 })
 
 

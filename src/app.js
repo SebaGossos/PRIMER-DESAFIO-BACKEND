@@ -13,38 +13,38 @@ app.engine( 'handlebars', handlebars.engine() )
 app.set( 'views', './src/views' )
 app.set( 'view engine', 'handlebars' )
 
-
 // app.use('/app' ,express.static('./public'))
 app.use( express.static('./src/public') )
 
-
 app.use( '/api/products', productsRouter )
 app.use( '/api/carts', cartsRouter ) 
-app.use( '/products', viewRouter )
-app.use( '/chat', chatRouter )
-
-const log = []
+app.use( '/api/chat', chatRouter ) 
+app.use( '/', viewRouter )
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
         dbName: 'ecommerce'
     })
-    const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 
-    const io = new Server( httpServer )
-    io.on('connection', socket => {
-        console.log(`Nuevo cliente conectado ${ socket.id}`) 
-        socket.on('productList', data => {
-            io.emit( 'updatedProducts', data )
-        })
-        socket.on('message', data => {
-            console.log( data )
-            log.push( data )
-            socket.emit('log', log)
-        })
-    })
+    
 }catch(err) {
     console.log( err.message )
 }
 
-
+let log = []
+const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 
+const io = new Server( httpServer );
+io.on('connection', socket => {
+    console.log(`Nuevo cliente conectado ${ socket.id}`) 
+    socket.on('productList', data => {
+        io.emit( 'updatedProducts', data )
+    })
+    socket.on('logDB', data => {
+        log = data;
+        io.emit('log', log.reverse())
+    })
+    socket.on('message', data => {
+        log.push( data );
+        io.emit('log', log.reverse())
+    })
+})
 

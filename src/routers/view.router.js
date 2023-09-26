@@ -11,15 +11,25 @@ const productsManagerDB = new ProductManagerDB();
 
 const router = Router();
 
-router.get("/", async (req, res) => {
-  // const products = await productsModel.find().lean().exec();
+//! PRODUCTS
+router.get("/products", async (req, res) => {
   const products = await productsManagerDB.getProducts()
   res.render("home", { products });
 });
 
-router.get("/realtimeproducts", async (req, res) => {
+router.get("/products/realtimeproducts", async (req, res) => {
   const products = await productsManagerDB.getProducts();
   res.render("realTimeProducts", { products });
 });
+
+
+
+//! MESSAGES
+
+router.get('/chat', async(req, res) => {
+  res.render('chat')
+})
+
+
 
 export default router;
