@@ -40,7 +40,10 @@ export class ProductManagerDB {
 
     paginate = async( { stock, category }, { limit=10, page=1, sort } ) => {
         //! HANDLE ERRORS
-        if( isNaN( Number( stock ) ) ) throw `Must send a valid stock not: ${ stock }`
+        const optCategory=['Agua', 'Jugo', 'Gaseosa']
+        
+        if( stock !== undefined && isNaN( Number( stock ) ) ) throw `Must send a valid stock not: ${ stock }`
+        if ( category !== undefined && !optCategory.includes( category ) ) throw `Must send a valid Category between 'Agua', 'Jugo', 'Gaseosa'. Not: ${ category }`
 
         if( isNaN( Number( limit ) ) ) throw `Must send a valid limit not: ${ limit }`
         if( isNaN( Number( page ) ) ) throw `Must send a valid page not: ${ page }`

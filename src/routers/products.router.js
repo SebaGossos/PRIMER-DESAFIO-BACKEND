@@ -30,8 +30,6 @@ router.get("/", async (req, res) => {
     const sort = req.query.sort;
     const stock = req.query.stock;
     const category = req.query.category;
-
-    console.log(Number('243234d') )
     
     // const result = await productsManagerDB.getProducts();
     const result = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
