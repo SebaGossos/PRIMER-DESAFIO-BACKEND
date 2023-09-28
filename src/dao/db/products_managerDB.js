@@ -38,6 +38,26 @@ export class ProductManagerDB {
         return product
     }
 
+    paginate = async( { stock, category }, { limit=10, page=1, sort } ) => {
+        //! HANDLE ERRORS
+        if( isNaN( Number( stock ) ) ) throw `Must send a valid stock not: ${ stock }`
+
+        if( isNaN( Number( limit ) ) ) throw `Must send a valid limit not: ${ limit }`
+        if( isNaN( Number( page ) ) ) throw `Must send a valid page not: ${ page }`
+        if( sort !== undefined && sort !== 'asc' && sort !== 'desc' ) throw `Must send a valid sort between 'asc' or 'desc' not: ${ sort }`
+        
+        //? SOLUTION
+        const paginateOption = { lean: true, limit, page }
+        if ( sort ) paginateOption.sort = { price: (sort==='asc') ? 1 : -1 };
+
+        const filterOption = {}
+        if ( stock ) filterOption.stock = stock;
+        if ( category ) filterOption.category = category;
+        
+        const res = await productsModel.paginate( filterOption, paginateOption )
+        return res;
+    }
+
     getProductsById = async( id ) => await productsModel.findById({ _id: id });
 
     updateProduct = async( id, product ) =>  await productsModel.findByIdAndUpdate( id, product );

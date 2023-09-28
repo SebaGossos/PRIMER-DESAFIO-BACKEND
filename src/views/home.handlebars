@@ -7,6 +7,7 @@
     <table class="table table-striped-columns">
         <thead>
             <tr>
+                <th>add to cart</th>
                 <th>title</th>
                 <th>description</th>
                 <th>price</th>
@@ -21,6 +22,9 @@
         <tbody>
             {{#each products}}
                 <tr>
+                    <td class="text-nowrap px-1">
+                        <button onclick="addToCart('{{this._id}}')" class="btn btn-success">Add To Cart</button>
+                    </td>
                     <td>{{this.title}}</td>
                     <td>{{this.description}}</td>
                     <td>{{this.price}}</td>
@@ -35,3 +39,4 @@
         </tbody>
     </table>
 </div>
+<script src="/products.js"></script>

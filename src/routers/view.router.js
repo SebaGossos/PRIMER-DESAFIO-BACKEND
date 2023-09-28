@@ -24,8 +24,7 @@ router.get("/products/realtimeproducts", async (req, res) => {
 
 
 
-//! MESSAGES
-
+//! CHAT
 router.get('/chat', async(req, res) => {
   res.render('chat')
 })

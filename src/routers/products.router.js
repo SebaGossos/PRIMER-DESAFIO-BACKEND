@@ -25,9 +25,17 @@ const uploader = multer({ storage });
 
 router.get("/", async (req, res) => {
   try {
-    const result = await productsManagerDB.getProducts();
     const limit = req.query.limit;
-    res.status(200).json({ payload: result.slice(0, limit) });
+    const page = req.query.page;
+    const sort = req.query.sort;
+    const stock = req.query.stock;
+    const category = req.query.category;
+
+    console.log(Number('243234d') )
+    
+    // const result = await productsManagerDB.getProducts();
+    const result = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
+    res.status(200).json({ payload: result.docs });
     
   } catch (err) {
     res.status(500).json({

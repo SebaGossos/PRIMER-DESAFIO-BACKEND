@@ -20,7 +20,6 @@ router.get('/', async(req, res) => {
 router.get("/:cid", async (req, res) => {
   const id = req.params.cid;
   try {
-    // res.json({ success: await cartManager.getCartById(id) });
     res.json({ success: await cartManagerDB.getCartById( id ) })
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
