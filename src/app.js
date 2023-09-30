@@ -4,6 +4,7 @@ import handlebars from 'express-handlebars'
 import { cartsRouter, productsRouter, viewRouter, chatRouter } from './routers/index.js'
 import { Server } from 'socket.io'
 
+
 const app = express()
 
 app.use( express.json() )
@@ -31,7 +32,11 @@ try{
 }
 
 let log = []
-const httpServer = app.listen( 8080, () => console.log('SERVER UP!!')) 
+
+export const PORT = 8080;
+const httpServer = app.listen( PORT, () => console.log('SERVER UP!!')) 
+
+
 const io = new Server( httpServer );
 io.on('connection', socket => {
     console.log(`Nuevo cliente conectado ${ socket.id}`) 

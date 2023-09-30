@@ -1,5 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
+import { PORT } from "../app.js";
 
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
 
@@ -22,8 +23,7 @@ const storage = multer.diskStorage({
 });
 const uploader = multer({ storage });
 
-
-router.get("/", async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
     const limit = req.query.limit;
     const page = req.query.page;
@@ -31,10 +31,38 @@ router.get("/", async (req, res) => {
     const stock = req.query.stock;
     const category = req.query.category;
     
-    // const result = await productsManagerDB.getProducts();
     const result = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
-    res.status(200).json({ payload: result.docs });
+
+    console.log( req.query.page )
     
+    return {
+      status: 'success',
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: ``,
+      nextLink: ``
+    };
+    
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      error: err,
+      description: "No se encuentran los products por el momento",
+    });
+  }
+}
+
+router.get("/", async (req, res) => {
+  try {
+    // const result = await productsManagerDB.getProducts();
+    const result = await getProducts(req, res);  
+    res.status(200).json(result);
+
   } catch (err) {
     res.status(500).json({
       status: "error",

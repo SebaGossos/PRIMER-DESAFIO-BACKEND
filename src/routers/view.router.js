@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getProducts } from "./products.router.js";
 
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
 
@@ -13,8 +14,9 @@ const router = Router();
 
 //! PRODUCTS
 router.get("/products", async (req, res) => {
-  const products = await productsManagerDB.getProducts()
-  res.render("home", { products });
+  const result = await getProducts(req, res)
+  // const products = await productsManagerDB.getProducts()
+  res.render("home", { products: result.payload });
 });
 
 router.get("/products/realtimeproducts", async (req, res) => {
