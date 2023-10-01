@@ -33,8 +33,23 @@ export const getProducts = async (req, res) => {
     
     const result = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
 
-    console.log( req.query.page )
-    
+    console.log( req.hostname, req.originalUrl, result.prevPage, result.nextPage )
+    let prevLink;
+    if ( !page ){
+      prevLink = `http://${req.hostname}:${PORT}${req.originalUrl}&page=${result.prevPage}`;
+    } else {
+      const modifyLink = req.originalUrl.replace(`page=${req.query.page}`,`page=${result.prevPage}`);
+      prevLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
+    }
+
+    let nextLink
+    if ( !page ){
+      nextLink = `http://${req.hostname}:${PORT}${req.originalUrl}&page=${result.nextPage}`;
+    } else {
+      const modifyLink = req.originalUrl.replace(`page=${req.query.page}`,`page=${result.nextPage}`);
+      nextLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
+    }
+
     return {
       status: 'success',
       payload: result.docs,
@@ -44,8 +59,8 @@ export const getProducts = async (req, res) => {
       page: result.page,
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
-      prevLink: ``,
-      nextLink: ``
+      prevLink,
+      nextLink
     };
     
   } catch (err) {
@@ -98,9 +113,7 @@ router.get("/query/:pcode", async (req, res) => {
 router.post("/", uploader.single("thumbnail"), async (req, res) => {
   try {
     const product = JSON.parse(JSON.stringify(req.body));
-    console.log( product )
     const url = req.file?.filename;
-    console.log( req.file )
     product.thumbnail = url ? `${Date.now()}-${url}` : undefined;
     product.price = +product.price;
     product.stock = +product.stock;
@@ -117,14 +130,12 @@ router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
   try {
     const id = req.params.pid;
     const product = req.body;
-    console.log( id, req.file )
 
     const url = req.file?.filename;
     product.thumbnail = url ? `${Date.now()}-${url}` : ['without image'];
     product.price = +product.price;
     product.stock = +product.stock;
     product.status = product.status === "true";
-    console.log( id, product )
 
     // await productManagerFS.updateProduct(id, product);
     await productsManagerDB.updateProduct( id, product );
@@ -136,13 +147,10 @@ router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
 
 router.delete("/:pid", async (req, res) => {
   const id = req.params.pid;
-  console.log( id )
+
   try {
     await productsManagerDB.deleteProduct(id);
-
-    
     const products = await productsManagerDB.getProducts();
-
     res.json({ payload: products });
 
   } catch (err) {

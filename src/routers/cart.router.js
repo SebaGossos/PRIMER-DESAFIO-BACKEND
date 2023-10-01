@@ -9,6 +9,8 @@ const cartManagerDB = new CartManagerDB();
 
 const router = Router();
 
+
+
 router.get('/', async(req, res) => {
   try{
     res.json({ success: await cartManagerDB.getCarts() })

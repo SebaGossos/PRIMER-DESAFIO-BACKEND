@@ -5,11 +5,11 @@ const productManagerDb = new ProductManagerDB()
 
 export class CartManagerDB{
 
+    createCart = async () => await cartModel.create({ products:[] });
+    
     getCarts = async() => await cartModel.find().lean().exec();
     
-    getCartById = async ( id ) => await cartModel.findById( id );
-
-    createCart = async () => await cartModel.create({ products:[] });
+    getCartById = async ( id ) => await cartModel.findById( id ).populate('products.pId').lean();
     
     async addToCart( cid, pid ){
         // const data = await cartModel.findOne({ _id: cid }).populate('products.pId');

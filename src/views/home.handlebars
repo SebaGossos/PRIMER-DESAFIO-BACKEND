@@ -3,7 +3,15 @@
 <div class="container">
     <h1 class="text-center">PRODUCTS</h1>
     <hr class="mb-4">
-    <div class="pb-3 text-center" id="pagination"> poner las paginas que hay </div>
+
+    <div class="pb-3 text-center" id="pagination">
+        {{#if prevPage}}
+        <a class="btn btn-primary" href="{{prevLink}}"><</a>
+        {{/if}}
+        {{#if nextPage}}
+        <a class="btn btn-primary" href="{{nextLink}}">></a>
+        {{/if}}
+    </div>
     <hr class="mb-4">
 
     <table class="table table-striped-columns">
