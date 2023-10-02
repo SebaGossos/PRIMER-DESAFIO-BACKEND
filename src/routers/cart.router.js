@@ -22,7 +22,7 @@ router.get('/', async(req, res) => {
 router.get("/:cid", async (req, res) => {
   const id = req.params.cid;
   try {
-    res.json({ success: await cartManagerDB.getCartById( id ) })
+    res.json({ status: 'success', payload: await cartManagerDB.getCartById( id ) })
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
   }
@@ -31,7 +31,7 @@ router.get("/:cid", async (req, res) => {
 router.post("/", async (req, res) => {
   const data = await cartManagerDB.createCart();
   try{
-    res.json({ success: data });
+    res.json({ status: 'success', payload: data });
   }catch( err ){
     res.status(400).send({ status: "error", error: err });
   }
@@ -42,11 +42,52 @@ router.post("/:cid/product/:pid", async (req, res) => {
   const pid = req.params.pid;
 
   try {
-    const productToAdd = await cartManagerDB.addToCart(cid, pid);
-    res.json({ success: productToAdd });
+    const { addToCartByMongo ,cartAdded } = await cartManagerDB.addToCart(cid, pid);
+    res.json({ status: 'success', message: addToCartByMongo, payload: cartAdded });
   } catch (err) {
     res.status(400).send({ status: "error", error: err });
   }
 });
+
+//TODO: COMPLETE THIS ONE
+router.put('/:cid/product/:pid', async (req, res) => {
+  const cid = req.params.cid;
+  const pid = req.params.pid;
+
+  try {
+
+  } catch (err) {
+    res.status(400).json({ status: 'error', error: err })
+  }
+})
+//TODO: COMPLETE THIS ONE
+router.put('/:cid/', async (req, res) => {
+  const cid = req.params.cid;
+
+  try {
+
+  } catch (err) {
+    res.status(400).json({ status: 'error', error: err })
+  }
+})
+
+
+router.delete('/:cid/product/:pid', async (req, res) => {
+  const cid = req.params.cid;
+  const pid = req.params.pid;
+
+  try {
+    const a = await cartManagerDB.deleteProductByCart(cid, pid)
+    res.json({ status: 'success', payload: 'f' })
+  } catch (err) {
+
+    if ( err.httpError ) {
+      res.status(err.httpError).json({ status: 'error', error: err.desc })
+    } else{
+      res.status(500).json({ status: 'error', error: err.message })
+    }
+
+  }
+})
 
 export default router;

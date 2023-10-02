@@ -5,10 +5,13 @@
     <hr class="mb-4">
 
     <div class="pb-3 text-center" id="pagination">
-        {{#if prevPage}}
+        {{#if hasPrevPage}}
         <a class="btn btn-primary" href="{{prevLink}}"><</a>
         {{/if}}
-        {{#if nextPage}}
+        <div class="d-inline p-3">
+            {{page}}
+        </div>
+        {{#if hasNextPage}}
         <a class="btn btn-primary" href="{{nextLink}}">></a>
         {{/if}}
     </div>

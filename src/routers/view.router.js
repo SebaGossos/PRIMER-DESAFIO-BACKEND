@@ -16,7 +16,14 @@ const router = Router();
 router.get("/products", async (req, res) => {
   const result = await getProducts(req, res)
   // const products = await productsManagerDB.getProducts()
-  res.render("home", { products: result.payload, prevLink: result.prevLink, nextLink: result.nextLink, prevPage: result.prevPage, nextPage: result.nextPage});
+  res.render("home", { 
+    products: result.payload,
+    prevLink: result.prevLink,
+    nextLink: result.nextLink,
+    hasPrevPage: result.hasPrevPage,
+    hasNextPage: result.hasNextPage,
+    page: result.page
+  });
 });
 
 router.get("/products/realtimeproducts", async (req, res) => {

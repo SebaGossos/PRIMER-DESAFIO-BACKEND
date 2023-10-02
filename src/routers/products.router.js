@@ -76,6 +76,7 @@ router.get("/", async (req, res) => {
   try {
     // const result = await productsManagerDB.getProducts();
     const result = await getProducts(req, res);  
+    console.log( result )
     res.status(200).json(result);
 
   } catch (err) {
