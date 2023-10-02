@@ -77,8 +77,8 @@ router.delete('/:cid/product/:pid', async (req, res) => {
   const pid = req.params.pid;
 
   try {
-    const a = await cartManagerDB.deleteProductByCart(cid, pid)
-    res.json({ status: 'success', payload: 'f' })
+    const { updatedByMongo ,cartToUpdate } = await cartManagerDB.deleteProductByCart(cid, pid)
+    res.json({ status: 'success', message: updatedByMongo, payload: cartToUpdate })
   } catch (err) {
 
     if ( err.httpError ) {

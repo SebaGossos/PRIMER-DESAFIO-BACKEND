@@ -58,13 +58,14 @@ export class CartManagerDB{
         if( !isProdInCart ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found inside the cart` };
 
         //? SOLUTION
-        const deleteProdByCart = data.products.filter( p => {
+        const updateCart = data.products.filter( p => {
             return p.pId !== pid;
         })
-        // console.log( deleteProdByCart )
-        // cartModel.findOneAndUpdate({ _id:cid }, )
+        cartToUpdate.products = updateCart
 
-        return 0;
+        const updatedByMongo = await cartModel.findOneAndUpdate({ _id:cid }, cartToUpdate )
+
+        return { updatedByMongo, cartToUpdate };
     };
     
     deleteProductsByCart = async ( id ) => {
