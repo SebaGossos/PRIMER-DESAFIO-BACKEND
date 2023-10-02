@@ -8,7 +8,7 @@ import { Server } from 'socket.io'
 const app = express()
 
 app.use( express.json() )
-app.use( urlencoded({ extended: true }))
+app.use( urlencoded({ extended: true }) )
 
 app.engine( 'handlebars', handlebars.engine() )
 app.set( 'views', './src/views' )

@@ -11,7 +11,7 @@ export class CartManagerDB{
     
     getCartById = async ( id ) => await cartModel.findById( id ).populate('products.pId');
     
-    async addToCart( cid, pid ){
+    addToCart = async ( cid, pid ) => {
 
         const data = await cartModel.findById( cid ).lean().exec();
         if( !data ) throw `Dind´t found the cart with id: ${cid}`;
@@ -32,14 +32,14 @@ export class CartManagerDB{
         
     }
 
-    updateQuantity = async( cid, pid, change ) => {
+    updateQuantity = async ( cid, pid, change ) => {
 
         //! HANDLE ERRORS
         const data = await cartModel.findById( cid ).lean();
         const cart = JSON.parse( JSON.stringify( data, null, 2 ) );
+        const isProdInCart = cart.products.some( p => p.pId === pid );
         if ( !data ) throw { httpError: 404 , desc:`The cartId : ${ cid } was not found` }
         if ( !change.quantity ) throw { httpError: 400 , desc:`Must send an object with quantity as property, not: ${ change.quantity }` }
-        const isProdInCart = cart.products.some( p => p.pId === pid );
         if ( !isProdInCart ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found in the cart` }
 
         //? SOLUTION
@@ -47,14 +47,12 @@ export class CartManagerDB{
             if ( p.pId === pid ) return p.quantity = change.quantity;
             return p
         });
-        console.log( cart )
         const updatedByMongo = await cartModel.findByIdAndUpdate( cid, cart );
         
         return { updatedByMongo, cartUpdated: cart }
-
     }
 
-    async updateCart( cid, change ){
+    updateCart = async ( cid, change ) => {
         //! HANDLE ERRORS
         const data = await cartModel.findById( cid ).populate('products.pId');
         if ( !data ) throw { httpError: 404 , desc:`The cartId : ${ cid } was not found` }
@@ -96,10 +94,10 @@ export class CartManagerDB{
         return { updatedByMongo, cartToUpdate };
     };
     
-    deleteProductsByCart = async ( id ) => {
-        await cartModel.findByIdAndDelete( id )
-
-        return 0;
+    deleteProductsByCart = async ( cid ) => {
+        const cartDeleted = await cartModel.findByIdAndDelete( cid );
+        if ( !cartDeleted ) throw { httpError: 404, desc: `${ cid } not found this cart` }
+        return cartDeleted;
     };
     
 }

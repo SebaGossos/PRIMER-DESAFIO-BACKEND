@@ -10,7 +10,6 @@ const cartManagerDB = new CartManagerDB();
 const router = Router();
 
 
-
 router.get('/', async(req, res) => {
   try{
     res.json({ success: await cartManagerDB.getCarts() })
@@ -68,7 +67,6 @@ router.put('/:cid/', async (req, res) => {
   }
 })
 
-//TODO: COMPLETE THIS ONE
 router.put('/:cid/product/:pid', async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
@@ -89,6 +87,24 @@ router.put('/:cid/product/:pid', async (req, res) => {
   }
 })
 
+//TODO: COMPLETE THIS ONE
+router.delete('/:cid', async (req, res) => {
+  const cid = req.params.cid;
+  
+  try{
+    const cartDeleted = await cartManagerDB.deleteProductsByCart( cid );
+    res.json({ status: 'success', payload: cartDeleted })
+
+  } catch (err) {
+
+    if ( err.httpError ) {
+      res.status(err.httpError).json({ status: 'error', error: err.desc })
+    } else {
+      res.status(500).json({ status: 'error', error: err.message })
+    }
+
+  }
+})
 
 router.delete('/:cid/product/:pid', async (req, res) => {
   const cid = req.params.cid;
