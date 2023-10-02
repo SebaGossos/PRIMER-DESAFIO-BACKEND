@@ -32,19 +32,31 @@ export class CartManagerDB{
         
     }
 
-    // async updateCart( cid, change ){
-    //     const data = await cartModel.findOne({ _id: cid }).populate('products.pId');
-    //     const cart = JSON.parse(JSON.stringify( data, null, 2))
-    //     cart.products.map( p => {
-    //         if( p.pId === pid ){
-    //             return p.quantity++
-    //         }
-    //         return p
-    //     })
-    //     console.log( cart )
+    async updateCart( cid, change ){
+        //! HANDLE ERRORS
+        const data = await cartModel.findById( cid ).populate('products.pId');
+        if ( !data ) throw { httpError: 404 , desc:`The cartId : ${ cid } was not found` }
+        let products = change.products;
+        if ( !products ) throw { httpError: 404 , desc:`Must send a products as property, not: ${ change.products }` }
+        products = await Promise.all(products.map ( async p => {
+            if ( !p.pId || typeof p.quantity === 'undefined') throw { httpError: 400 , desc:`Must send a product with pId and quantity as property, not: ${ p.pId && p.quantity }` }
+            const product = await productManagerDb.getProductsById( p.pId );
+            if ( !product ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found` }
+            if ( typeof p.quantity !== 'number' || p.quantity < 1 ) throw { httpError: 400 , desc:`Quantity from product must be a number greater than: ${ p.quantity }` }
+            return p
+        }))
 
-    //     return cart
-    // }
+        data.products = products;
+        console.log( data )
+
+        //? SOLUTION
+        
+        const updatedByMongo = await cartModel.findByIdAndUpdate( cid, data );
+        
+        return { updatedByMongo, cartUpdated:data }
+
+
+    }
     
 
     deleteProductByCart = async ( cid, pid ) => {
@@ -52,7 +64,7 @@ export class CartManagerDB{
         const cartToUpdate = await cartModel.findById( cid ).lean().exec();
         if ( !cartToUpdate ) throw { httpError: 404 , desc:`The cartId : ${ cid } was not found ` }
         const product = await productManagerDb.getProductsById( pid );
-        if ( !product ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found ` }
+        if ( !product ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found` }
         const data = JSON.parse( JSON.stringify(cartToUpdate, null, 2) )
         const isProdInCart = data.products.some( p => p.pId === pid );
         if( !isProdInCart ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found inside the cart` };

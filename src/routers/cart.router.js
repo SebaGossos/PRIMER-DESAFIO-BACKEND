@@ -49,6 +49,26 @@ router.post("/:cid/product/:pid", async (req, res) => {
   }
 });
 
+
+//TODO: COMPLETE THIS ONE
+router.put('/:cid/', async (req, res) => {
+  const cid = req.params.cid;
+  const body = req.body;
+
+  try {
+    const { updatedByMongo, cartUpdated } = await cartManagerDB.updateCart( cid, body )
+    res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
+  } catch (err) {
+    
+    if ( err.httpError ) {
+      res.status(err.httpError).json({ status: 'error', error: err.desc })
+    } else {
+      res.status(500).json({ status: 'error', error: err.message })
+    }
+
+  }
+})
+
 //TODO: COMPLETE THIS ONE
 router.put('/:cid/product/:pid', async (req, res) => {
   const cid = req.params.cid;
@@ -57,17 +77,13 @@ router.put('/:cid/product/:pid', async (req, res) => {
   try {
 
   } catch (err) {
-    res.status(400).json({ status: 'error', error: err })
-  }
-})
-//TODO: COMPLETE THIS ONE
-router.put('/:cid/', async (req, res) => {
-  const cid = req.params.cid;
 
-  try {
+    if ( err.httpError ) {
+      res.status(err.httpError).json({ status: 'error', error: err.desc })
+    } else {
+      res.status(500).json({ status: 'error', error: err.message })
+    }
 
-  } catch (err) {
-    res.status(400).json({ status: 'error', error: err })
   }
 })
 
@@ -83,7 +99,7 @@ router.delete('/:cid/product/:pid', async (req, res) => {
 
     if ( err.httpError ) {
       res.status(err.httpError).json({ status: 'error', error: err.desc })
-    } else{
+    } else {
       res.status(500).json({ status: 'error', error: err.message })
     }
 
