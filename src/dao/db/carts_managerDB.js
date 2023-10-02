@@ -26,10 +26,32 @@ export class CartManagerDB{
         } else {
             cart.products.push({ pId: pid, quantity: 1 });
         }
-
+        console.log( 33 )
         const addToCartByMongo = await cartModel.updateOne({_id: cid}, cart)
         return { addToCartByMongo, cartAdded: cart }
         
+    }
+
+    updateQuantity = async( cid, pid, change ) => {
+
+        //! HANDLE ERRORS
+        const data = await cartModel.findById( cid ).lean();
+        const cart = JSON.parse( JSON.stringify( data, null, 2 ) );
+        if ( !data ) throw { httpError: 404 , desc:`The cartId : ${ cid } was not found` }
+        if ( !change.quantity ) throw { httpError: 400 , desc:`Must send an object with quantity as property, not: ${ change.quantity }` }
+        const isProdInCart = cart.products.some( p => p.pId === pid );
+        if ( !isProdInCart ) throw { httpError: 404 , desc:`The productId : ${ pid } was not found in the cart` }
+
+        //? SOLUTION
+        cart.products.forEach( p => {
+            if ( p.pId === pid ) return p.quantity = change.quantity;
+            return p
+        });
+        console.log( cart )
+        const updatedByMongo = await cartModel.findByIdAndUpdate( cid, cart );
+        
+        return { updatedByMongo, cartUpdated: cart }
+
     }
 
     async updateCart( cid, change ){
@@ -45,19 +67,14 @@ export class CartManagerDB{
             if ( typeof p.quantity !== 'number' || p.quantity < 1 ) throw { httpError: 400 , desc:`Quantity from product must be a number greater than: ${ p.quantity }` }
             return p
         }))
-
-        data.products = products;
-        console.log( data )
-
+        
         //? SOLUTION
         
+        data.products = products;
         const updatedByMongo = await cartModel.findByIdAndUpdate( cid, data );
-        
+
         return { updatedByMongo, cartUpdated:data }
-
-
     }
-    
 
     deleteProductByCart = async ( cid, pid ) => {
         //! HANDLE ERRORS
@@ -74,7 +91,6 @@ export class CartManagerDB{
             return p.pId !== pid;
         })
         cartToUpdate.products = updateCart
-
         const updatedByMongo = await cartModel.findOneAndUpdate({ _id:cid }, cartToUpdate )
 
         return { updatedByMongo, cartToUpdate };

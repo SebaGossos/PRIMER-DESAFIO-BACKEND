@@ -50,7 +50,6 @@ router.post("/:cid/product/:pid", async (req, res) => {
 });
 
 
-//TODO: COMPLETE THIS ONE
 router.put('/:cid/', async (req, res) => {
   const cid = req.params.cid;
   const body = req.body;
@@ -73,8 +72,11 @@ router.put('/:cid/', async (req, res) => {
 router.put('/:cid/product/:pid', async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
+  const body = req.body;
 
   try {
+    const { updatedByMongo, cartUpdated } = await cartManagerDB.updateQuantity( cid, pid, body );
+    res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
 
   } catch (err) {
 
