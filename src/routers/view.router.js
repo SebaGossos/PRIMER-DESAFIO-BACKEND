@@ -32,8 +32,22 @@ router.get("/products/realtimeproducts", async (req, res) => {
 });
 
 
+//! CARTS
+router.get('/carts/:cid', async(req, res) => {
+  const cid = req.params.cid;
 
-//! CHAT
+  try{
+
+    res.render('cart', {hola: 3})
+    
+  } catch ( err ) {
+    res.send(500).json({ status: 'error', error: err })
+  }
+})
+
+
+
+//! CHATS
 router.get('/chat', async(req, res) => {
   res.render('chat')
 })

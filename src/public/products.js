@@ -29,5 +29,5 @@ const addToCart = ( pid ) => {
     if( cartId ){
         callApiAddProd( cartId, pid )
     }
-    console.log(cartId)
+
 }
