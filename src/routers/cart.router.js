@@ -48,7 +48,6 @@ router.post("/:cid/product/:pid", async (req, res) => {
   }
 });
 
-
 router.put('/:cid/', async (req, res) => {
   const cid = req.params.cid;
   const body = req.body;
@@ -87,7 +86,6 @@ router.put('/:cid/product/:pid', async (req, res) => {
   }
 })
 
-//TODO: COMPLETE THIS ONE
 router.delete('/:cid', async (req, res) => {
   const cid = req.params.cid;
   

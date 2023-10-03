@@ -26,7 +26,6 @@ export class CartManagerDB{
         } else {
             cart.products.push({ pId: pid, quantity: 1 });
         }
-        console.log( 33 )
         const addToCartByMongo = await cartModel.updateOne({_id: cid}, cart)
         return { addToCartByMongo, cartAdded: cart }
         

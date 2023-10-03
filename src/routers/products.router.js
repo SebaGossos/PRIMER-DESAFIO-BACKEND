@@ -32,21 +32,22 @@ export const getProducts = async (req, res) => {
     const category = req.query.category;
     
     const result = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
+    const originalUrl = req.originalUrl.at(-1) === '/' ? req.originalUrl.pop() : req.originalUrl;
+    const andOrQuestion = originalUrl === '/products' ? '?' : '&';
 
-    console.log( req.hostname, req.originalUrl, result.prevPage, result.nextPage )
     let prevLink;
     if ( !page ){
-      prevLink = `http://${req.hostname}:${PORT}${req.originalUrl}&page=${result.prevPage}`;
+      prevLink = `http://${req.hostname}:${PORT}${originalUrl}${andOrQuestion}page=${result.prevPage}`;
     } else {
-      const modifyLink = req.originalUrl.replace(`page=${req.query.page}`,`page=${result.prevPage}`);
+      const modifyLink = originalUrl.replace(`page=${req.query.page}`,`page=${result.prevPage}`);
       prevLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
     }
 
     let nextLink
     if ( !page ){
-      nextLink = `http://${req.hostname}:${PORT}${req.originalUrl}&page=${result.nextPage}`;
+      nextLink = `http://${req.hostname}:${PORT}${originalUrl}${andOrQuestion}page=${result.nextPage}`;
     } else {
-      const modifyLink = req.originalUrl.replace(`page=${req.query.page}`,`page=${result.nextPage}`);
+      const modifyLink = originalUrl.replace(`page=${req.query.page}`,`page=${result.nextPage}`);
       nextLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
     }
 
