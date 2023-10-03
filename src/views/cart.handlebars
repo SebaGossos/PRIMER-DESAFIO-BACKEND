@@ -1,1 +1,42 @@
-holaaa
+<div class="container">
+    <h1 class="text-center">CART ID: {{cartId}}</h1>
+    <hr class="mb-4">
+
+    <table class="table table-striped-columns">
+        <thead>
+            <tr>
+                <th>add to cart</th>
+                <th>title</th>
+                <th>description</th>
+                <th>price</th>
+                <th>code</th>
+                <th>stock</th>
+                <th>category</th>
+                <th>thumbnail</th>
+                <th>status</th>
+                <th>id</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}
+                <tr>
+                    <td class="text-nowrap px-1">
+                        <button onclick="" class="btn btn-success">Delete To Cart</button>
+                    </td>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.thumbnail}}</td>
+                    <td>{{this.status}}</td>
+                    <td>{{this._id}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    
+
+{{cart}}
+</div>

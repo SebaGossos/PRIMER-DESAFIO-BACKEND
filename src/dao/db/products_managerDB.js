@@ -2,7 +2,6 @@ import productsModel from '../models/products.models.js';
 
 export class ProductManagerDB {
 
-    //TODO: CHANGE NAME BECAUSE IS REPETEAD WITH THE PRODUCT ROUTER
     getProducts = async() => {
         const products = await productsModel.find().lean().exec();
         const productsWithIdAsString = products.map( p => {

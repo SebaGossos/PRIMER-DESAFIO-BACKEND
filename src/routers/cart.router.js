@@ -10,6 +10,12 @@ const cartManagerDB = new CartManagerDB();
 const router = Router();
 
 
+export const getCarts = async (req, res) => {
+  const cid = req.params.cid;
+  const cart = await cartManagerDB.getCartById( cid )
+  return cart 
+}
+
 router.get('/', async(req, res) => {
   try{
     res.json({ success: await cartManagerDB.getCarts() })

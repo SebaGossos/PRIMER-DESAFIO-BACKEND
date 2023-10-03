@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getProducts } from "./products.router.js";
 
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
+import { getCarts } from "./cart.router.js";
 
 // import { routProductJSON } from "../routesJSON/routes.js";
 // import { ProductManagerFS } from "../dao/fs/products_managerFS.js";
@@ -34,15 +35,16 @@ router.get("/products/realtimeproducts", async (req, res) => {
 
 //! CARTS
 router.get('/carts/:cid', async(req, res) => {
-  const cid = req.params.cid;
-
   try{
-
-    res.render('cart', {hola: 3})
-    
-  } catch ( err ) {
+    const dataCart = await getCarts(req, res);
+    const cart = JSON.parse(JSON.stringify(dataCart));
+    const products = cart.products.map( p => p.pId)
+    console.log( products )
+    res.render('cart', { cartId: cart._id, products })
+  } catch(err) {
     res.send(500).json({ status: 'error', error: err })
   }
+
 })
 
 
