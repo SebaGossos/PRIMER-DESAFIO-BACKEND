@@ -6,7 +6,7 @@ const callApiAddProd = async( cid , pid ) => {
         await fetch( `/api/carts/${cid}/product/${pid}`, {
             method: 'post'
         })
-        alert('producto agregado al cart!')
+        alert(`producto agregado al cartId: ${cartId}`)
     } catch ( err ) {
         alert(`Ocurrio un error: ${err.error}`)
     }
