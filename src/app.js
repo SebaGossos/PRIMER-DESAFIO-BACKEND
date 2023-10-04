@@ -1,8 +1,9 @@
-import express, { urlencoded } from 'express'
-import mongoose from 'mongoose'
-import handlebars from 'express-handlebars'
-import { cartsRouter, productsRouter, viewRouter, chatRouter } from './routers/index.js'
-import { Server } from 'socket.io'
+import express, { urlencoded } from 'express';
+import mongoose from 'mongoose';
+import handlebars from 'express-handlebars';
+import { cartsRouter, productsRouter, viewRouter, chatRouter } from './routers/index.js';
+import { Server } from 'socket.io';
+import cookieParser from 'cookie-parser';
 
 
 const app = express()
