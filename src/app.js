@@ -1,15 +1,35 @@
 import express, { urlencoded } from 'express';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
-import { cartsRouter, productsRouter, viewRouter, chatRouter } from './routers/index.js';
+import { cartsRouter, productsRouter, viewRouter, chatRouter, sessionRouter } from './routers/index.js';
 import { Server } from 'socket.io';
 import cookieParser from 'cookie-parser';
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
+
+export const PORT = 8080;
+
+const app = express();
 
 
-const app = express()
+const a = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority'
+const b = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/'
+
+
 
 app.use( express.json() )
 app.use( urlencoded({ extended: true }) )
+app.use( cookieParser() )
+app.use( session({
+    store: MongoStore.create({
+        mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
+        dbName: 'sessions',
+        ttl: 15
+    }),
+    secret: '1234',
+    resave: true,
+    saveUninitialized: true
+}))
 
 app.engine( 'handlebars', handlebars.engine() )
 app.set( 'views', './src/views' )
@@ -21,6 +41,7 @@ app.use( express.static('./src/public') )
 app.use( '/api/products', productsRouter )
 app.use( '/api/carts', cartsRouter ) 
 app.use( '/api/chat', chatRouter ) 
+app.use( '/api/sessions', sessionRouter )
 app.use( '/', viewRouter )
 
 try{
@@ -34,7 +55,7 @@ try{
 
 let log = []
 
-export const PORT = 8080;
+
 const httpServer = app.listen( PORT, () => console.log('SERVER UP!!')) 
 
 

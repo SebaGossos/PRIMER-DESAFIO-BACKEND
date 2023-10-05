@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 });
 const uploader = multer({ storage });
 
-export const getProducts = async (req, res) => {
+export const getProducts = async ( req, res ) => {
   try {
     const limit = req.query.limit;
     const page = req.query.page;
@@ -73,11 +73,11 @@ export const getProducts = async (req, res) => {
   }
 }
 
-router.get("/", async (req, res) => {
+router.get("/", async ( req, res ) => {
   try {
     // const result = await productsManagerDB.getProducts();
     const result = await getProducts(req, res);  
-
+    
     res.status(200).json(result);
 
   } catch (err) {
@@ -89,7 +89,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:pid", async (req, res) => {
+router.get("/:pid", async ( req, res ) => {
   const id = req.params.pid;
 
   try {
@@ -101,7 +101,7 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.get("/query/:pcode", async (req, res) => {
+router.get("/query/:pcode", async ( req, res ) => {
   const code = req.params.pcode;
   
   try {
@@ -112,7 +112,7 @@ router.get("/query/:pcode", async (req, res) => {
   }
 });
 
-router.post("/", uploader.single("thumbnail"), async (req, res) => {
+router.post("/", uploader.single("thumbnail"), async ( req, res ) => {
   try {
     const product = JSON.parse(JSON.stringify(req.body));
     const url = req.file?.filename;
@@ -128,7 +128,7 @@ router.post("/", uploader.single("thumbnail"), async (req, res) => {
   }
 });
 
-router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
+router.put("/:pid", uploader.single("thumbnail"), async ( req, res ) => {
   try {
     const id = req.params.pid;
     const product = req.body;
@@ -147,7 +147,7 @@ router.put("/:pid", uploader.single("thumbnail"), async (req, res) => {
   }
 });
 
-router.delete("/:pid", async (req, res) => {
+router.delete("/:pid", async ( req, res ) => {
   const id = req.params.pid;
 
   try {

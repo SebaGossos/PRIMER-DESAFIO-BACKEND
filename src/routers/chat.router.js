@@ -5,7 +5,7 @@ const router = Router();
 const messageManagerDB = new MessageManagerDB()
 
 
-router.get('/', async (req, res) => { 
+router.get('/', async ( req, res ) => { 
     try{
         const log = await messageManagerDB.readMessage()
         console.log( log )
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => { 
+router.post('/', async ( req, res ) => { 
     try{
         const message = req.body
         console.log( message )

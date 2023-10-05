@@ -13,9 +13,30 @@ const productsManagerDB = new ProductManagerDB();
 
 const router = Router();
 
+//! LOGIN
+router.get('/', async( req, res ) => {
+  res.render('login')
+})
+
+router.get('/register', async( req, res ) => {
+  res.render('register')
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 //! PRODUCTS
-router.get("/products", async (req, res) => {
-  const result = await getProducts(req, res)
+router.get("/products", async ( req, res ) => {
+  const result = await getProducts( req, res )
   // const products = await productsManagerDB.getProducts()
   res.render("home", { 
     products: result.payload,
@@ -27,18 +48,17 @@ router.get("/products", async (req, res) => {
   });
 });
 
-router.get("/products/realtimeproducts", async (req, res) => {
+router.get("/products/realtimeproducts", async ( req, res ) => {
   const products = await productsManagerDB.getProducts();
   res.render("realTimeProducts", { products });
 });
 
-
 //! CARTS
-router.get('/carts/:cid', async(req, res) => {
+router.get('/carts/:cid', async( req, res ) => {
   try{
-    const dataCart = await getCarts(req, res);
-    const cart = JSON.parse(JSON.stringify(dataCart));
-    const products = cart.products.map( p => p.pId)
+    const dataCart = await getCarts( req, res );
+    const cart = JSON.parse(JSON.stringify( dataCart ));
+    const products = cart.products.map( p => p.pId )
     console.log( products )
     res.render('cart', { cartId: cart._id, products })
   } catch(err) {
@@ -47,10 +67,8 @@ router.get('/carts/:cid', async(req, res) => {
 
 })
 
-
-
 //! CHATS
-router.get('/chat', async(req, res) => {
+router.get('/chat', async( req, res ) => {
   res.render('chat')
 })
 
