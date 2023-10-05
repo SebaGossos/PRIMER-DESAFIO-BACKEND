@@ -31,7 +31,7 @@ router.post('/register', birthday , async( req, res ) => {
 })
 
 router.get('/logout', ( req, res ) => {
-    //Todo
+
     req.session.destroy( err => {
         if(err) {
             return res.status(500).send({error: err})

@@ -22,21 +22,9 @@ router.get('/register', async( req, res ) => {
   res.render('session/register')
 })
 
-// router.get('/profile', async( req, res ) => {
-//   const result = await getProducts( req, res );
-
-//   console.log( req.session.user )
-
-//   res.render('home', {
-//     products: result.payload,
-//     prevLink: result.prevLink,
-//     nextLink: result.nextLink,
-//     hasPrevPage: result.hasPrevPage,
-//     hasNextPage: result.hasNextPage,
-//     page: result.page,
-//     user: req.user
-//   })
-// })
+router.get('/profile', async( req, res ) => {
+  res.render('session/profile', req.session.user)
+})
  
 
 
