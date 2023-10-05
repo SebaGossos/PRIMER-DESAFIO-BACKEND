@@ -18,7 +18,6 @@ router.post('/login', async( req, res ) => {
     }
     req.session.user = user;
     res.redirect('/products')
-    // res.send('hola estoy en login :)' + `${user}`)
 })
 
 router.post('/register', birthday , async( req, res ) => {
@@ -26,17 +25,19 @@ router.post('/register', birthday , async( req, res ) => {
     const userToRegister = req.body;
     const user = new UserModel( userToRegister )
     await user.save() 
-    console.log( userToRegister ) 
-    // res.send('estoy en register :)')
+
+
     res.redirect('/')
 })
 
 router.get('/logout', ( req, res ) => {
     //Todo
+    req.session.destroy( err => {
+        if(err) {
+            return res.status(500).send({error: err})
+        }else res.redirect('/');
+    })
 
-    const user = req.body
-    console.log( user )
-    res.send('hola estoy en logout :)' + `${user}`)
 })
 
 

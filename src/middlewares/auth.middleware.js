@@ -13,7 +13,7 @@ export const privateRoutes = ( req, res, next ) => {
 }
 
 export const publicRoutes = ( req, res, next ) => {
-    //! REDIRECT TO LOGIN
+    
     if( !req.session.user ) return res.redirect('/')
     next()
 }

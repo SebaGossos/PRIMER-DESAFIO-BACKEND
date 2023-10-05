@@ -12,8 +12,8 @@ export const PORT = 8080;
 const app = express();
 
 
-const a = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority'
-const b = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/'
+// const a = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority'
+// const b = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/'
 
 
 
