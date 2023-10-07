@@ -24,7 +24,7 @@ app.use( session({
     store: MongoStore.create({
         mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
         dbName: 'sessions',
-        ttl: 15
+        // ttl: 15
     }),
     secret: '1234',
     resave: true,
