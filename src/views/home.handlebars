@@ -3,8 +3,19 @@
 <div class="container">
     <h1 class="text-center">PRODUCTS</h1>
     <hr class="mb-4">
-
-
+    {{#if user}}
+    <div class="d-flex justify-content-between align-items-center">
+        <ul>
+            <li>First Name: {{user.first_name}}</li>
+            <li>Last Name: {{user.last_name}}</li>
+            <li>Email: {{user.email}}</li>
+            <li>Age: {{user.age}}</li>
+            <li>Role: {{user.role}}</li>
+        </ul>
+        <a class="btn btn-danger" href="/api/sessions/logout">Log Out</a>
+    </div>
+        <hr class="mb-4">
+    {{/if}}
     <div class="pb-3 text-center" id="pagination">
         {{#if hasPrevPage}}
         <a class="btn btn-primary" href="{{prevLink}}"><</a>
