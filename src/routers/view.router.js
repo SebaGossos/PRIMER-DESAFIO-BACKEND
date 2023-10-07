@@ -2,6 +2,7 @@ import { Router } from "express";
 import { getProducts } from "./products.router.js";
 
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
+import { privateRoutes, publicRoutes } from "../middlewares/auth.middleware.js";
 import { getCarts } from "./cart.router.js";
 
 // import { routProductJSON } from "../routesJSON/routes.js";
@@ -14,7 +15,7 @@ const productsManagerDB = new ProductManagerDB();
 const router = Router();
 
 //! LOGIN
-router.get('/', async( req, res ) => {
+router.get('/', privateRoutes, async( req, res ) => {
   res.render('session/login')
 })
 
@@ -22,7 +23,7 @@ router.get('/register', async( req, res ) => {
   res.render('session/register')
 })
 
-router.get('/profile', async( req, res ) => {
+router.get('/profile', publicRoutes, async( req, res ) => {
   res.render('session/profile', req.session.user)
 })
  
@@ -39,7 +40,7 @@ router.get('/profile', async( req, res ) => {
 
 
 //! PRODUCTS
-router.get("/products", async ( req, res ) => {
+router.get("/products", publicRoutes, async ( req, res ) => {
   const result = await getProducts( req, res )
   // const products = await productsManagerDB.getProducts()
   res.render("home", { 
@@ -53,13 +54,13 @@ router.get("/products", async ( req, res ) => {
   });
 });
 
-router.get("/products/realtimeproducts", async ( req, res ) => {
+router.get("/products/realtimeproducts", publicRoutes, async ( req, res ) => {
   const products = await productsManagerDB.getProducts();
   res.render("realTimeProducts", { products });
 });
 
 //! CARTS
-router.get('/carts/:cid', async( req, res ) => {
+router.get('/carts/:cid', publicRoutes, async( req, res ) => {
   try{
     const dataCart = await getCarts( req, res );
     const cart = JSON.parse(JSON.stringify( dataCart ));
@@ -73,7 +74,7 @@ router.get('/carts/:cid', async( req, res ) => {
 })
 
 //! CHATS
-router.get('/chat', async( req, res ) => {
+router.get('/chat', publicRoutes, async( req, res ) => {
   res.render('chat')
 })
 

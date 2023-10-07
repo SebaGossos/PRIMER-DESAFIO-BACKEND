@@ -1,11 +1,10 @@
 import { Router } from "express";
 import UserModel from '../dao/models/user.model.js';
-import { privateRoutes, publicRoutes } from "../middlewares/auth.middleware.js";
 import { birthday } from "../middlewares/birthdate.middleware.js";
 
 const router = Router();
 
-router.post('/login', privateRoutes,  async( req, res ) => {
+router.post('/login', async( req, res ) => {
     
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email, password }).lean().exec();
