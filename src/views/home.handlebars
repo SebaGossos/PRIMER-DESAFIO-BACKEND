@@ -12,7 +12,10 @@
             <li>Age: {{user.age}}</li>
             <li>Role: {{user.role}}</li>
         </ul>
-        <a class="btn btn-danger" href="/api/sessions/logout">Log Out</a>
+        <div class="d-flex flex-column gap-5">
+            <a class="btn btn-secondary" href="/profile">Profile</a>
+            <a class="btn btn-danger" href="/api/sessions/logout">Log Out</a>
+        </div>
     </div>
         <hr class="mb-4">
     {{/if}}
