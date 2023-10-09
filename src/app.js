@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
 import { cartsRouter, productsRouter, viewRouter, chatRouter, sessionRouter } from './routers/index.js';
 import { Server } from 'socket.io';
-import cookieParser from 'cookie-parser';
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
 
@@ -18,8 +17,7 @@ const app = express();
 
 
 app.use( express.json() )
-app.use( urlencoded({ extended: true }) )
-app.use( cookieParser() )
+app.use( urlencoded({ extended: true }) ) 
 app.use( session({
     store: MongoStore.create({
         mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',

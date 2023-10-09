@@ -26,7 +26,6 @@ router.post('/register', birthday , async( req, res ) => {
     const user = new UserModel( userToRegister )
     await user.save() 
 
-
     res.redirect('/')
 })
 
@@ -39,7 +38,5 @@ router.get('/logout', ( req, res ) => {
     })
 
 })
-
-
 
 export default router; 

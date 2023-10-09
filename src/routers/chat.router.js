@@ -8,21 +8,19 @@ const messageManagerDB = new MessageManagerDB()
 router.get('/', async ( req, res ) => { 
     try{
         const log = await messageManagerDB.readMessage()
-        console.log( log )
-        res.json({ payload: log })
+        res.json({ status: 'success', payload: log })
     }catch( err ) {
-        console.log( err )
+        res.status(400).send({ status: "error", error: err });
     }
 })
 
 router.post('/', async ( req, res ) => { 
     try{
         const message = req.body
-        console.log( message )
         await messageManagerDB.addMessage( message );
-        res.json({ payload: message })
+        res.json({ status: 'success', payload: message })
     }catch( err ) {
-        console.log( err )
+        res.status(400).send({ status: "error", error: err });
     }
 })
 

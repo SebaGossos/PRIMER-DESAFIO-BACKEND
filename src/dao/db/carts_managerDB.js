@@ -9,7 +9,11 @@ export class CartManagerDB{
     
     getCarts = async() => await cartModel.find().lean().exec();
     
-    getCartById = async ( id ) => await cartModel.findById( id ).populate('products.pId');
+    getCartById = async ( id ) => {
+        const cart = await cartModel.findById( id ).populate('products.pId');
+        if ( !cart ) throw `Cart with id: ${ id } not found`
+        return cart;
+    };
     
     addToCart = async ( cid, pid ) => {
 

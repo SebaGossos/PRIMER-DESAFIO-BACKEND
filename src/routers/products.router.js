@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 const uploader = multer({ storage });
 
 export const getProducts = async ( req, res ) => {
-  try {
+
     const limit = req.query.limit;
     const page = req.query.page;
     const sort = req.query.sort;
@@ -64,13 +64,6 @@ export const getProducts = async ( req, res ) => {
       nextLink
     };
     
-  } catch (err) {
-    res.status(500).json({
-      status: "error",
-      error: err,
-      description: "No se encuentran los products por el momento",
-    });
-  }
 }
 
 router.get("/", async ( req, res ) => {

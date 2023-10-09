@@ -16,47 +16,61 @@ const router = Router();
 
 //! LOGIN
 router.get('/', privateRoutes, async( req, res ) => {
-  res.render('session/login')
+  try{
+    res.render('session/login')
+  } catch (err){
+    res.render('errors/error', { error: err })
+  }
 })
 
 router.get('/register', async( req, res ) => {
-  res.render('session/register')
+  try{
+    res.render('session/register')
+  } catch (err){
+    res.render('errors/error', { error: err })
+  }
 })
 
 router.get('/profile', publicRoutes, async( req, res ) => {
-  res.render('session/profile', req.session.user)
+  try{
+    res.render('session/profile', req.session.user)
+  } catch (err){
+    res.render('errors/error', { error: err })
+  }
 })
  
 
 
 
 
-
-
-
-
-
-
-
-
 //! PRODUCTS
 router.get("/products", publicRoutes, async ( req, res ) => {
-  const result = await getProducts( req, res )
-  // const products = await productsManagerDB.getProducts()
-  res.render("home", { 
-    products: result.payload,
-    prevLink: result.prevLink,
-    nextLink: result.nextLink,
-    hasPrevPage: result.hasPrevPage,
-    hasNextPage: result.hasNextPage,
-    page: result.page,
-    user: req.session.user
-  });
+
+  try{
+    const result = await getProducts( req, res )
+    // const products = await productsManagerDB.getProducts()
+    res.render("home", { 
+      products: result.payload,
+      prevLink: result.prevLink,
+      nextLink: result.nextLink,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      page: result.page,
+      user: req.session.user
+    });
+
+  } catch (err){
+    res.render('errors/error', { error: err })
+  }
 });
 
 router.get("/products/realtimeproducts", publicRoutes, async ( req, res ) => {
-  const products = await productsManagerDB.getProducts();
-  res.render("realTimeProducts", { products });
+  try{
+    const products = await productsManagerDB.getProducts();
+    res.render("realTimeProducts", { products });
+  }catch (err){
+    res.render('errors/error', { error: err })
+  }
 });
 
 //! CARTS
@@ -65,17 +79,20 @@ router.get('/carts/:cid', publicRoutes, async( req, res ) => {
     const dataCart = await getCarts( req, res );
     const cart = JSON.parse(JSON.stringify( dataCart ));
     const products = cart.products.map( p => p.pId )
-    console.log( products )
-    res.render('cart', { cartId: cart._id, products })
-  } catch(err) {
-    res.send(500).json({ status: 'error', error: err })
-  }
 
+    res.render('cart', { cartId: cart._id, products })
+  } catch (err) {
+    res.render('errors/error', {error: err})
+  }
 })
 
 //! CHATS
 router.get('/chat', publicRoutes, async( req, res ) => {
-  res.render('chat')
+  try{
+    res.render('chat')
+  }catch (err){
+    res.render('errors/error', { error: err })
+  }
 })
 
 

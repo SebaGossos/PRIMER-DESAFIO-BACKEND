@@ -45,8 +45,8 @@ export class ProductManagerDB {
         if( stock !== undefined && isNaN( Number( stock ) ) ) throw `Must send a valid stock not: ${ stock }`
         if ( category !== undefined && !optCategory.includes( category ) ) throw `Must send a valid Category between 'Agua', 'Jugo', 'Gaseosa'. Not: ${ category }`
 
-        if( isNaN( Number( limit ) ) ) throw `Must send a valid limit not: ${ limit }`
-        if( isNaN( Number( page ) ) ) throw `Must send a valid page not: ${ page }`
+        if( isNaN( Number( limit ) ) || limit[0] === '-' ) throw `Must send a valid limit not: ${ limit }`
+        if( isNaN( Number( page ) ) || page[0] === '-') throw `Must send a valid page not: ${ page }`
         if( sort !== undefined && sort !== 'asc' && sort !== 'desc' ) throw `Must send a valid sort between 'asc' or 'desc' not: ${ sort }`
         
         //? SOLUTION
@@ -57,7 +57,11 @@ export class ProductManagerDB {
         if ( stock ) filterOption.stock = stock;
         if ( category ) filterOption.category = category;
         
-        const res = await productsModel.paginate( filterOption, paginateOption )
+        const res = await productsModel.paginate( filterOption, paginateOption );
+        
+        //! HANDLE ERROR
+        if ( res.totalPages < page ) throw `Must submit a page until: ${ res.totalPages }`
+        
         return res;
     }
 
