@@ -16,9 +16,14 @@
         <input class="btn btn-success" type="submit" value="LOGIN"> | <a class="btn btn-primary" href="/register"> REGISTER</a>
     </form>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     setTimeout(() => {
         document.getElementById('emailInput').value = '';
         document.getElementById('passwordInput').value = '';
     }, 600)
+    if( {{isNotUser}} ){
+        Swal.fire('User or Password wrong!')
+    }
+
 </script>

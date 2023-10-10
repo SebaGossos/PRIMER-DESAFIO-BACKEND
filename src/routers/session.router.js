@@ -7,10 +7,23 @@ const router = Router();
 router.post('/login', async( req, res ) => {
     
     const { email, password } = req.body;
+
+    const isAdmin = email === 'adminCoder@coder.com' && password === 'adminCod3r123'
+                        ? true 
+                        : false;
+
     const user = await UserModel.findOne({ email, password }).lean().exec();
-    if( !user ) {
+    if ( isAdmin ) {
+        req.session.user = { role: 'admin' }
+        return res.redirect('/products')
+    }
+    if( !user && !isAdmin) {
+        req.session.isNotUser = true;
         return res.redirect('/')
     }
+
+    req.session.isNotUser = false;
+
     if( user.email === 'adminCoder@coder.com' && user.password === 'adminCod3r123' ){
         user.role = 'admin';
     }  else {
@@ -21,7 +34,7 @@ router.post('/login', async( req, res ) => {
 })
 
 router.post('/register', birthday , async( req, res ) => {
-
+    // TODO: IF AN USER EXIST RETURN ERROR
     const userToRegister = req.body;
     const user = new UserModel( userToRegister )
     await user.save() 

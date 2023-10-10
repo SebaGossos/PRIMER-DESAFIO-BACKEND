@@ -17,7 +17,9 @@ const router = Router();
 //! LOGIN
 router.get('/', privateRoutes, async( req, res ) => {
   try{
-    res.render('session/login')
+    const isNotUser = req.session.isNotUser;
+    if( isNotUser ) return res.render('session/login', { isNotUser })
+    res.render('session/login', { isNotUser: false })
   } catch (err){
     res.render('errors/error', { error: err })
   }
@@ -56,7 +58,8 @@ router.get("/products", publicRoutes, async ( req, res ) => {
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       page: result.page,
-      user: req.session.user
+      user: req.session.user,
+      isAdmin: req.session.user.role === 'admin'
     });
 
   } catch (err){

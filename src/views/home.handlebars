@@ -6,11 +6,17 @@
     {{#if user}}
     <div class="d-flex justify-content-between align-items-center">
         <ul>
-            <li>First Name: {{user.first_name}}</li>
-            <li>Last Name: {{user.last_name}}</li>
-            <li>Email: {{user.email}}</li>
-            <li>Age: {{user.age}}</li>
-            <li>Role: {{user.role}}</li>
+            {{#if isAdmin }}
+                <h2 class="text-danger">Role: {{user.role}}</h2>
+            {{else}}
+                <li>First Name: {{user.first_name}}</li>
+                <li>Last Name: {{user.last_name}}</li>
+                <li>Email: {{user.email}}</li>
+                <li>Age: {{user.age}}</li>
+                <li>Role: {{user.role}}</li>
+
+            {{/if}}
+
         </ul>
         <div class="d-flex flex-column gap-5">
             <a class="btn btn-secondary" href="/profile">Profile</a>
