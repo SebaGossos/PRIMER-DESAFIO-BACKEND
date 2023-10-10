@@ -36,8 +36,9 @@ router.post('/login', async( req, res ) => {
 router.post('/register', birthday , async( req, res ) => {
     // TODO: IF AN USER EXIST RETURN ERROR
     const userToRegister = req.body;
-    const user = new UserModel( userToRegister )
-    await user.save() 
+    await UserModel.create(userToRegister)
+    // const user = new UserModel( userToRegister )
+    // await user.save() 
 
     res.redirect('/')
 })
