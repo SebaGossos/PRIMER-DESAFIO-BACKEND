@@ -48,7 +48,7 @@ try{
     })
     
 }catch(err) {
-    console.log( err.message )
+    console.log( 'Error to connect DB' )
 }
 
 let log = []
