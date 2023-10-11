@@ -21,7 +21,7 @@ router.get('/', privateRoutes, async( req, res ) => {
     if( isNotUser ) return res.render('session/login', { isNotUser })
     res.render('session/login', { isNotUser: false })
   } catch (err){
-    res.render('errors/error', { error: err })
+    res.render('errors/errorSession', { error: err })
   }
 })
 
@@ -29,7 +29,7 @@ router.get('/register', async( req, res ) => {
   try{
     res.render('session/register')
   } catch (err){
-    res.render('errors/error', { error: err })
+    res.render('errors/errorSession', { error: err })
   }
 })
 
@@ -37,7 +37,7 @@ router.get('/profile', publicRoutes, async( req, res ) => {
   try{
     res.render('session/profile', req.session.user)
   } catch (err){
-    res.render('errors/error', { error: err })
+    res.render('errors/errorSession', { error: err })
   }
 })
  
@@ -63,7 +63,7 @@ router.get("/products", publicRoutes, async ( req, res ) => {
     });
 
   } catch (err){
-    res.render('errors/error', { error: err })
+    res.render('errors/errorPlatform', { error: err })
   }
 });
 
@@ -72,7 +72,7 @@ router.get("/products/realtimeproducts", publicRoutes, async ( req, res ) => {
     const products = await productsManagerDB.getProducts();
     res.render("realTimeProducts", { products });
   }catch (err){
-    res.render('errors/error', { error: err })
+    res.render('errors/errorPlatform', { error: err })
   }
 });
 
@@ -85,7 +85,7 @@ router.get('/carts/:cid', publicRoutes, async( req, res ) => {
 
     res.render('cart', { cartId: cart._id, products })
   } catch (err) {
-    res.render('errors/error', {error: err})
+    res.render('errors/errorPlatform', {error: err})
   }
 })
 
@@ -94,7 +94,7 @@ router.get('/chat', publicRoutes, async( req, res ) => {
   try{
     res.render('chat')
   }catch (err){
-    res.render('errors/error', { error: err })
+    res.render('errors/errorPlatform', { error: err })
   }
 })
 

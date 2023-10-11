@@ -22,8 +22,9 @@
         document.getElementById('emailInput').value = '';
         document.getElementById('passwordInput').value = '';
     }, 600)
-    if( {{isNotUser}} ){
-        Swal.fire('User or Password wrong!')
+    if( {{error}} ){
+        const messageText = `${{{message}}}`
+        Swal.fire( messageText )
     }
 
 </script>
