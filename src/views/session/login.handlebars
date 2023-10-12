@@ -22,9 +22,10 @@
         document.getElementById('emailInput').value = '';
         document.getElementById('passwordInput').value = '';
     }, 600)
-    if( {{error}} ){
-        const messageText = `${{{message}}}`
-        Swal.fire( messageText )
+
+    if( {{userRegister}} ){
+        Swal.fire( 'User Created Successfully!' )
+
     }
 
 </script>

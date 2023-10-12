@@ -6,6 +6,9 @@ import { Server } from 'socket.io';
 import MongoStore from 'connect-mongo';
 import session from 'express-session';
 
+import passport from 'passport';
+import initializePassport from './config/passport.config.js';
+
 export const PORT = 8080;
 
 const app = express();
@@ -28,6 +31,11 @@ app.use( session({
     resave: true,
     saveUninitialized: true
 }))
+
+initializePassport()
+app.use( passport.initialize() )
+app.use( passport.session() )
+
 
 app.engine( 'handlebars', handlebars.engine() )
 app.set( 'views', './src/views' )

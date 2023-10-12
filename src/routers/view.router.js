@@ -18,8 +18,15 @@ const router = Router();
 router.get('/', privateRoutes, async( req, res ) => {
   try{
     const isNotUser = req.session.isNotUser;
+
+    const userRegister = req.session.passport;
+
+    if ( userRegister ) {
+
+      return res.render('session/login', { userRegister: true })
+    }
     if( isNotUser ) return res.render('session/login', { isNotUser })
-    res.render('session/login', { isNotUser: false })
+    res.render('session/login', { userRegister: false })
   } catch (err){
     res.render('errors/errorSession', { error: err })
   }
@@ -40,7 +47,12 @@ router.get('/profile', publicRoutes, async( req, res ) => {
     res.render('errors/errorSession', { error: err })
   }
 })
- 
+
+
+
+
+
+
 
 
 
