@@ -2,17 +2,19 @@ import { Router } from "express";
 import passport from "passport";
 import { birthday } from "../middlewares/birthdate.middleware.js";
 import { UserManagerDB } from "../dao/db/user_managerDB.js";
+import { isAdmin } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 const userManagerDB = new UserManagerDB();
 
 
-router.post('/login', passport.authenticate('login', {failureRedirect: 'failLogin'} ), async( req, res ) => {
+router.post('/login',isAdmin, passport.authenticate('login', {failureRedirect: 'failLogin'} ), async( req, res ) => {
     console.log( req.body )
     if ( !req.user ) {
         return res.status(400).send({ status: 'error', error: 'Invalid Credentials' })
     }
+
     req.session.user = {
         first_name: req.user.first_name,
         last_name: req.user.last_name,

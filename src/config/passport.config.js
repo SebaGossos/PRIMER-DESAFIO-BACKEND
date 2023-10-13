@@ -39,8 +39,9 @@ const initializePassport = () => {
                 ? true 
                 : false;
 
+            // if ( isAdmin ) return done( null, true )
             if ( isAdmin ) {
-                const user = {email: username, role: 'admin'}
+                const user = {email: username, role: 'admin', _id: '123'}
 
                 return done( null, user )
             }
@@ -58,10 +59,12 @@ const initializePassport = () => {
         done( null, user._id )
     })
 
-    passport.deserializeUser( async( id, done) => {
-        const user = await userManagerDB.findById( id );
-        done( null, user )
+    passport.deserializeUser(async (id, done) => {
+        const user = await userManagerDB.findById(id);
+        done(null, user)
     })
+    
+
 
 }
 
