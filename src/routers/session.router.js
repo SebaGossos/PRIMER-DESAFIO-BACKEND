@@ -81,4 +81,16 @@ router.get('/logout', ( req, res ) => {
 
 })
 
+
+router.get('/github', passport.authenticate('github', { scope: ['user:email']}), (req, res)  => {
+
+})
+
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/' }), async( req, res ) => {
+    console.log( 'Callback: ', req.user )
+    req.session.user = req.user;
+    req.session.user.role = 'user'
+    res.redirect('/products')
+})
+
 export default router; 
