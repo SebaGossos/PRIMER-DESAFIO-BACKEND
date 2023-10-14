@@ -9,7 +9,7 @@ const router = Router();
 const userManagerDB = new UserManagerDB();
 
 
-router.post('/login',isAdmin, passport.authenticate('login', {failureRedirect: 'failLogin'} ), async( req, res ) => {
+router.post('/login', isAdmin, passport.authenticate('login', {failureRedirect: 'failLogin'} ), async( req, res ) => {
     console.log( req.body )
     if ( !req.user ) {
         return res.status(400).send({ status: 'error', error: 'Invalid Credentials' })
@@ -82,7 +82,7 @@ router.get('/logout', ( req, res ) => {
 })
 
 
-router.get('/github', passport.authenticate('github', { scope: ['user:email']}), (req, res)  => {
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), (req, res)  => {
 
 })
 
