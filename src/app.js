@@ -25,7 +25,7 @@ app.use( session({
     store: MongoStore.create({
         mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
         dbName: 'sessions',
-        // ttl: 15
+        // ttl: 86400 ----> 1 día
     }),
     secret: '1234',
     resave: true,
@@ -67,7 +67,7 @@ const httpServer = app.listen( PORT, () => console.log('SERVER UP!!'))
 
 const io = new Server( httpServer );
 io.on('connection', socket => {
-    console.log(`Nuevo cliente conectado ${ socket.id}`) 
+    console.log(`Nuevo cliente conectado ${ socket.id }`) 
     socket.on('productList', data => {
         io.emit( 'updatedProducts', data )
     })

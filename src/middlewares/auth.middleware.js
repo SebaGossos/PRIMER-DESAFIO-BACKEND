@@ -1,12 +1,3 @@
-// export const auth = ( req, res, next ) => {
-//     if(req.session.user?.role === 'admin') {
-//         next()
-//     } else {
-//         res.send('Not Allowed')
-//         res.redirect('/')
-//     }
-// }
-
 export const isAdmin = ( req, res, next ) => { 
     const { email, password } = req.body;
     if ( email === 'adminCoder@coder.com' || password === 'adminCod3r123' ) {

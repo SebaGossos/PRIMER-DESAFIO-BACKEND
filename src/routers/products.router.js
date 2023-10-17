@@ -25,12 +25,8 @@ const uploader = multer({ storage });
 
 export const getProducts = async ( req, res ) => {
 
-    const limit = req.query.limit;
-    const page = req.query.page;
-    const sort = req.query.sort;
-    const stock = req.query.stock;
-    const category = req.query.category;
-    
+    const { limit, page, sort, stock, category } = req.query;
+
     const result = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
     const originalUrl = req.originalUrl.at(-1) === '/' ? req.originalUrl.pop() : req.originalUrl;
     const andOrQuestion = originalUrl === '/products' ? '?' : '&';

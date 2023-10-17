@@ -7,6 +7,7 @@ import { createHash, isValidPassword } from "../utils.js";
 import UserModel from "../dao/models/user.model.js";
 
 const localStrategy = local.Strategy
+
 const userManagerDB = new UserManagerDB();
 
 const initializePassport = () => {
@@ -82,6 +83,7 @@ const initializePassport = () => {
             return done('Error to login with github')
         }
     }))
+    
     
 
     passport.serializeUser((user, done) => {

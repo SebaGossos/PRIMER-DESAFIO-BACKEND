@@ -59,6 +59,8 @@ router.post('/login', isAdmin, passport.authenticate('login', {failureRedirect: 
     //     res.render('errors/errorSession', { error: err } )
     // }
 })
+
+
 router.get('/failLogin', ( req, res ) => res.render('errors/errorSession',{error: 'Bad Request, try again with a correct email or password'}))
 
 
@@ -70,6 +72,7 @@ router.post('/register', birthday , passport.authenticate('register', {failureRe
     res.redirect('/')
 })
 router.get('/failRegister', ( req, res ) => res.render('errors/errorSession',{error: 'Email already exist'}))
+
 
 router.get('/logout', ( req, res ) => {
 
