@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="text-center">LOGIN</h1>
     <hr>
-    <form action="/api/sessions/login" method="post">
+    <form action="/api/auth/login" method="post">
 
         <div>
             <label for="emailInput">Email: </label>
@@ -13,19 +13,19 @@
             <input id="passwordInput" placeholder="put your password here" name="password" type="password" required>
         </div>
 
-        <input class="btn btn-success" type="submit" value="LOGIN"> | <a class="btn btn-primary" href="/register"> REGISTER</a> | <a href="/api/sessions/github"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="33px" alt=""></a> 
+        <input class="btn btn-success" type="submit" value="LOGIN"> | <a class="btn btn-primary" href="/register"> REGISTER</a> | <a href="/api/auth/github"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="33px" alt=""></a> 
     </form>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{{!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
 <script>
     setTimeout(() => {
         document.getElementById('emailInput').value = '';
         document.getElementById('passwordInput').value = '';
     }, 600)
 
-    if( {{userRegister}} ){
+    {{!-- if( {{userRegister}} ){
         Swal.fire( 'User Created Successfully!' )
 
-    }
+    } --}}
 
 </script>

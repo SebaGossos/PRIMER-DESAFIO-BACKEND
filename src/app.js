@@ -1,10 +1,11 @@
 import express, { urlencoded } from 'express';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
-import { cartsRouter, productsRouter, viewRouter, chatRouter, sessionRouter } from './routers/index.js';
+import { cartsRouter, productsRouter, viewRouter, chatRouter, authRouter } from './routers/index.js';
 import { Server } from 'socket.io';
 import MongoStore from 'connect-mongo';
-import session from 'express-session';
+// import session from 'express-session';
 
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
@@ -20,21 +21,22 @@ const app = express();
 
 
 app.use( express.json() )
-app.use( urlencoded({ extended: true }) ) 
-app.use( session({
-    store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
-        dbName: 'sessions',
-        // ttl: 86400 ----> 1 día
-    }),
-    secret: '1234',
-    resave: true,
-    saveUninitialized: true
-}))
+app.use( express.urlencoded({ extended: true }) ) 
+app.use( cookieParser('secret') )
+// app.use( session({
+//     // store: MongoStore.create({
+//     //     mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
+//     //     dbName: 'sessions',
+//     // ttl: 86400 ----> 1 día
+//     // }),
+//     secret: '1234',
+//     resave: true,
+//     saveUninitialized: true
+// }))
 
 initializePassport()
 app.use( passport.initialize() )
-app.use( passport.session() )
+// app.use( passport.session() )
 
 
 app.engine( 'handlebars', handlebars.engine() )
@@ -47,8 +49,11 @@ app.use( express.static('./src/public') )
 app.use( '/api/products', productsRouter )
 app.use( '/api/carts', cartsRouter ) 
 app.use( '/api/chat', chatRouter ) 
-app.use( '/api/sessions', sessionRouter )
+app.use( '/api/auth', authRouter )
 app.use( '/', viewRouter )
+app.get('*', async(req, res) => {
+    res.status(404).send('Cannot get the specified endpoint');
+})
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
@@ -62,7 +67,7 @@ try{
 let log = []
 
 
-const httpServer = app.listen( PORT, () => console.log('SERVER UP!!')) 
+const httpServer = app.listen( PORT, () => console.log(`SERVER UP!! http://localhost:${PORT}`) ) 
 
 
 const io = new Server( httpServer );

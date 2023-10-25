@@ -2,8 +2,9 @@ import { Router } from "express";
 import { getProducts } from "./products.router.js";
 
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
-import { privateRoutes, publicRoutes } from "../middlewares/auth.middleware.js";
+
 import { getCarts } from "./cart.router.js";
+import { authToken } from "../utils.js";
 
 // import { routProductJSON } from "../routesJSON/routes.js";
 // import { ProductManagerFS } from "../dao/fs/products_managerFS.js";
@@ -15,18 +16,18 @@ const productsManagerDB = new ProductManagerDB();
 const router = Router();
 
 //! LOGIN
-router.get('/', privateRoutes, async( req, res ) => {
+router.get('/', async( req, res ) => {
   try{
-    const isNotUser = req.session.isNotUser;
+    // const isNotUser = req.authenticate.isNotUser;
 
-    const userRegister = req.session.passport;
+    // const userRegister = req.authenticate.passport;
 
-    if ( userRegister ) {
+    // if ( userRegister ) {
 
-      return res.render('session/login', { userRegister: true })
-    }
-    if( isNotUser ) return res.render('session/login', { isNotUser })
-    res.render('session/login', { userRegister: false })
+    //   return res.render('authenticate/login', { userRegister: true })
+    // }
+    // if( isNotUser ) return res.render('authenticate/login', { isNotUser })
+    res.render('authenticate/login', { userRegister: false })
   } catch (err){
     res.render('errors/errorSession', { error: err })
   }
@@ -34,31 +35,26 @@ router.get('/', privateRoutes, async( req, res ) => {
 
 router.get('/register', async( req, res ) => {
   try{
-    res.render('session/register')
+    res.render('authenticate/register')
   } catch (err){
     res.render('errors/errorSession', { error: err })
   }
 })
 
-router.get('/profile', publicRoutes, async( req, res ) => {
+router.get('/profile',  async( req, res ) => {
   try{
-    res.render('session/profile', req.session.user)
+    // res.render('authenticate/profile', req.authenticate.user)
+    res.render('authenticate/profile', {})
   } catch (err){
     res.render('errors/errorSession', { error: err })
   }
 })
-
-
-
-
-
-
 
 
 
 
 //! PRODUCTS
-router.get("/products", publicRoutes, async ( req, res ) => {
+router.get("/products", authToken,  async ( req, res ) => {
 
   try{
     const result = await getProducts( req, res )
@@ -70,8 +66,8 @@ router.get("/products", publicRoutes, async ( req, res ) => {
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       page: result.page,
-      user: req.session.user,
-      isAdmin: req.session.user.role === 'admin'
+      // user: req.authenticate.user,
+      // isAdmin: req.authenticate.user.role === 'admin'
     });
 
   } catch (err){
@@ -79,7 +75,7 @@ router.get("/products", publicRoutes, async ( req, res ) => {
   }
 });
 
-router.get("/products/realtimeproducts", publicRoutes, async ( req, res ) => {
+router.get("/products/realtimeproducts",  async ( req, res ) => {
   try{
     const products = await productsManagerDB.getProducts();
     res.render("realTimeProducts", { products });
@@ -89,7 +85,7 @@ router.get("/products/realtimeproducts", publicRoutes, async ( req, res ) => {
 });
 
 //! CARTS
-router.get('/carts/:cid', publicRoutes, async( req, res ) => {
+router.get('/carts/:cid', async( req, res ) => {
   try{
     const dataCart = await getCarts( req, res );
     const cart = JSON.parse(JSON.stringify( dataCart ));
@@ -102,7 +98,7 @@ router.get('/carts/:cid', publicRoutes, async( req, res ) => {
 })
 
 //! CHATS
-router.get('/chat', publicRoutes, async( req, res ) => {
+router.get('/chat', async( req, res ) => {
   try{
     res.render('chat')
   }catch (err){
