@@ -17,9 +17,9 @@ export const authToken = ( req, res, next ) => {
     // const token = req.headers.auth;
 
     const token = req.signedCookies['jwt-coder']
-    if( !token ) return res.status(401).send({ error: 'Not Authorized' })
+    if( !token ) return res.status(401).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not authorized' })
     jwt.verify( token, 'secret', ( err, credentials) => {
-        if( err ) return res.status(403).send({ error: 'Not Authorized' })
+        if( err ) return res.status(403).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not authorized' })
         req.user = credentials.user;
         next()
     })

@@ -12,7 +12,8 @@ const userManagerDB = new UserManagerDB();
 const localStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
 
-const cookieExtractor = req => (req && req.signedCookies) ? req.signedCookies['jwt-coder'] : null;
+// const cookieExtractor = req => (req && req.signedCookies) ? req.signedCookies['jwt-coder'] : null;
+const cookieExtractor = req => req?.signedCookies['jwt-coder'] || null;
 
 
 const initializePassport = () => {
@@ -22,8 +23,10 @@ const initializePassport = () => {
         secretOrKey: 'secret'
     }, async(jwt_payload, done) => {
         try {
-            if (jwt_payload.user.role === 'admin') return done(null, jwt_payload)
-            else return done(null, 'error')
+            if ( !jwt_payload.user ) return done(null, 'error')
+            // const user = await userManagerDB.getUserByEmail(jwt_payload.user.email) 
+            // if( !user ) return done(null, false, 'not found user')
+            else return done( null, jwt_payload.user )
         } catch(error) {
             return done(error)
         }
@@ -56,6 +59,7 @@ const initializePassport = () => {
         usernameField: 'email',
     }, async(username, password, done) => {
         try {
+            if ( username === 'adminCoder@coder.com' && password === 'adminCod3r123' ) return done( null, {email: username, role: 'admin'} )
             const user = await userManagerDB.getUserByEmail({ email: username })
             if( !user ) return done( null, false );
             if( !isValidPassword( user, password ) ) return done( null, false );
@@ -73,16 +77,17 @@ const initializePassport = () => {
         clientSecret: '0f3e93baae1f5beffd9ca83307d5064a26e0a20a',
         callbackURL: 'http://localhost:8080/api/auth/githubcallback'
     }, async(accessToken, refreshToken, profile, done) => {
-        console.log( profile )
         try{
             const user = await userManagerDB.getUserByEmail({ email: profile._json.email})
             if ( user ) return done( null, user )
+            console.log( profile )
             const newUser = await userManagerDB.createUser({
                 first_name: profile._json.name,
                 last_name: '',
                 email: profile._json.email,
                 password: '',
                 age: '',
+                role: 'user',
                 source: profile.provider
             })
             return done( null, newUser )
