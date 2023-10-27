@@ -14,12 +14,22 @@
                 <li>Email: {{user.email}}</li>
                 <li>Age: {{user.age}}</li>
                 <li>Role: {{user.role}}</li>
+                <li>cart: {{user.cart}}</li>
 
             {{/if}}
+
 
         </ul>
         <div class="d-flex flex-column gap-5">
             <a class="btn btn-secondary" href="/profile">Profile</a>
+            {{#if isAdmin }}
+
+            {{else}}
+
+                <a class="btn btn-info" href="/carts/{{user.cart}}">Cart</a>
+
+            {{/if}}
+
             <a class="btn btn-danger" href="/api/auth/logout">Log Out</a>
         </div>
     </div>
@@ -57,7 +67,10 @@
             {{#each products}}
                 <tr>
                     <td class="text-nowrap px-1">
-                        <button onclick="addToCart('{{this._id}}')" class="btn btn-success">Add To Cart</button>
+                        {{!-- <form action="/api/carts/{{../user.cart}}/product/{{this._id}}" method="post" >
+                            <input type="submit" class="btn btn-success">Add To Cart</input>
+                        </form> --}}
+                        <button onclick="callApiAddProd( '{{../user.cart}}', '{{this._id}}' )" class="btn btn-success" >Add To Cart</button>
                     </td>
                     <td>{{this.title}}</td>
                     <td>{{this.description}}</td>

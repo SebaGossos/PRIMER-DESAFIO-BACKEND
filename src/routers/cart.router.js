@@ -34,9 +34,9 @@ router.get("/:cid", async ( req, res ) => {
 });
 
 router.post("/", async ( req, res ) => {
-  const data = await cartManagerDB.createCart();
+  const cart = req.user.cart;
   try{
-    res.json({ status: 'success', payload: data });
+    res.json({ status: 'success', payload: cart });
   }catch( err ){
     res.status(400).send({ status: "error", error: err });
   }
@@ -45,6 +45,7 @@ router.post("/", async ( req, res ) => {
 router.post("/:cid/product/:pid", async ( req, res ) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
+  console.log( cid, pid )
 
   try {
     const { addToCartByMongo ,cartAdded } = await cartManagerDB.addToCart(cid, pid);

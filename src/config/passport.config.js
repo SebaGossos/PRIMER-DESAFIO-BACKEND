@@ -2,12 +2,14 @@ import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from 'passport-github2';
 import { UserManagerDB } from "../dao/db/user_managerDB.js";
+import { CartManagerDB } from "../dao/db/carts_managerDB.js";
 import { createHash, isValidPassword } from "../utils.js";
 import jwt from 'passport-jwt'
 
 import UserModel from "../dao/models/user.model.js";
 
 const userManagerDB = new UserManagerDB();
+const cartManagerDB = new CartManagerDB()
 
 const localStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -43,8 +45,10 @@ const initializePassport = () => {
             if ( user ) {
                 return done( null, false, {info: 'error del regis'})
             }
+            const cart = await cartManagerDB.createCart()
+
             const newUser = {
-                first_name, last_name, email, age, password: createHash( password )
+                first_name, last_name, email, age, password: createHash( password ), cart,
             }
             const result = await userManagerDB.createUser(newUser)
 
@@ -88,6 +92,7 @@ const initializePassport = () => {
                 password: '',
                 age: '',
                 role: 'user',
+                cart: '',
                 source: profile.provider
             })
             return done( null, newUser )

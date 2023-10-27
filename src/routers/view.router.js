@@ -45,7 +45,7 @@ router.get('/register', async( req, res ) => {
 
 router.get('/profile', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async( req, res ) => {
   try{
-    console.log( req.user )
+
     // res.render('authenticate/profile', req.authenticate.user)
     const { first_name, last_name, email, age, role } = req.user;
     res.render( 'authenticate/profile', {
@@ -66,8 +66,7 @@ router.get("/products", passport.authenticate('jwt', { failureRedirect:'failToke
 
   try{
     const result = await getProducts( req, res )
-
-    console.log(req.user)
+    const {first_name, last_name, email, age, role, cart} = req.user;
     // const products = await productsManagerDB.getProducts()
     res.render("home", { 
       products: result.payload,
@@ -76,7 +75,7 @@ router.get("/products", passport.authenticate('jwt', { failureRedirect:'failToke
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       page: result.page,
-      user: req.user,
+      user: {first_name, last_name, email, age, role, cart},
       isAdmin: req.user.role === 'admin'
     });
 
@@ -99,7 +98,10 @@ router.get('/carts/:cid', passport.authenticate('jwt', { failureRedirect:'failTo
   try{
     const dataCart = await getCarts( req, res );
     const cart = JSON.parse(JSON.stringify( dataCart ));
-    const products = cart.products.map( p => p.pId )
+    const products = cart.products.map( p => {
+      const prod = {...p.pId, quantity: p.quantity}
+      return prod;
+    })
     
     res.render('cart', { cartId: cart._id, products })
   } catch (err) {

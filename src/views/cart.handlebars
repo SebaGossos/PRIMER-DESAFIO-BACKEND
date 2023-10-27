@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="text-center">CART ID: {{cartId}}</h1>
     <hr class="mb-4">
-
+    {{#if products}}
     <table class="table table-striped-columns">
         <thead>
             <tr>
@@ -9,6 +9,7 @@
                 <th>title</th>
                 <th>description</th>
                 <th>price</th>
+                <th>units</th>
                 <th>code</th>
                 <th>stock</th>
                 <th>category</th>
@@ -21,11 +22,12 @@
             {{#each products}}
                 <tr>
                     <td class="text-nowrap px-1">
-                        <button onclick="" class="btn btn-danger">Delete To Cart</button>
+                        <button onclick="callApiDeleteProd( '{{../cartId}}', '{{this._id}}' )" class="btn btn-danger">Delete To Cart</button>
                     </td>
                     <td>{{this.title}}</td>
                     <td>{{this.description}}</td>
                     <td>{{this.price}}</td>
+                    <td>{{this.quantity}}</td>
                     <td>{{this.code}}</td>
                     <td>{{this.stock}}</td>
                     <td>{{this.category}}</td>
@@ -37,6 +39,8 @@
         </tbody>
     </table>
     
-
-{{cart}}
+    {{else}}
+    <h1>Not Products yet!</h1>
+    {{/if}}
 </div>
+<script src="/carts.js"></script>
