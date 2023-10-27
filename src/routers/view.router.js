@@ -43,30 +43,12 @@ router.get('/register', async( req, res ) => {
   }
 })
 
-router.get('/profile', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async( req, res ) => {
-  try{
-
-    // res.render('authenticate/profile', req.authenticate.user)
-    const { first_name, last_name, email, age, role } = req.user;
-    res.render( 'authenticate/profile', {
-      first_name,
-      last_name,
-      email,
-      age,
-      role
-    } )
-  } catch (err){
-    res.render('errors/errorAuth', { error: err })
-  }
-})
-
-
 //! PRODUCTS
 router.get("/products", passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async ( req, res ) => {
 
   try{
     const result = await getProducts( req, res )
-    const {first_name, last_name, email, age, role, cart} = req.user;
+    const { first_name, last_name, email, age, role, cart } = req.user;
     // const products = await productsManagerDB.getProducts()
     res.render("home", { 
       products: result.payload,
@@ -105,7 +87,7 @@ router.get('/carts/:cid', passport.authenticate('jwt', { failureRedirect:'failTo
     
     res.render('cart', { cartId: cart._id, products })
   } catch (err) {
-    res.render('errors/errorPlatform', {error: err})
+    res.render('errors/errorPlatform', { error: err })
   }
 })
 
@@ -115,6 +97,26 @@ router.get('/chat', passport.authenticate('jwt', { failureRedirect:'failToken', 
     res.render('chat')
   }catch (err){
     res.render('errors/errorPlatform', { error: err })
+  }
+})
+
+//! PROFILE
+router.get('/profile', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async( req, res ) => {
+  try{
+
+    // res.render('authenticate/profile', req.authenticate.user)
+    const { first_name, last_name, email, age, cart, role } = req.user;
+    res.render( 'authenticate/profile', {
+      first_name,
+      last_name,
+      email,
+      age,
+      role,
+      isUser: role === 'user',
+      cartId: cart
+    })
+  } catch (err){
+    res.render('errors/errorAuth', { error: err })
   }
 })
 
