@@ -1,14 +1,7 @@
-import { Router } from "express";
+import MyRouter from "./router.js";
 import { CartManagerDB } from "../dao/db/carts_managerDB.js";
 
-// import { Carts_managerFS } from "../dao/fs/carts_managerFS.js";
-// import { routCartJSON, routProductJSON } from "../routesJSON/routes.js";
-// const cartManager = new Carts_managerFS(routCartJSON, routProductJSON);
-
 const cartManagerDB = new CartManagerDB();
-
-const router = Router();
-
 
 export const getCarts = async ( req, res ) => {
   const cid = req.params.cid;
@@ -16,117 +9,122 @@ export const getCarts = async ( req, res ) => {
   return cart 
 }
 
-router.get('/', async( req, res ) => {
-  try{
-    res.json({ success: await cartManagerDB.getCarts() })
-  }catch( err ) {
-    res.status(400).send({ status: 'error', error: err })
-  }
-})
+export default class CartRouter extends MyRouter {
+  init() {
+    this.get('/', async( req, res ) => {
+      try{
+        res.json({ success: await cartManagerDB.getCarts() })
+      }catch( err ) {
+        res.status(400).send({ status: 'error', error: err })
+      }
+    })
 
-router.get("/:cid", async ( req, res ) => {
-  const id = req.params.cid;
-  try {
-    res.json({ status: 'success', payload: await cartManagerDB.getCartById( id ) })
-  } catch (err) {
-    res.status(400).send({ status: "error", error: err });
-  }
-});
+    this.get("/:cid", async ( req, res ) => {
+      const id = req.params.cid;
+      try {
+        res.json({ status: 'success', payload: await cartManagerDB.getCartById( id ) })
+      } catch (err) {
+        res.status(400).send({ status: "error", error: err });
+      }
+    })
 
-router.post("/", async ( req, res ) => {
-  const cart = req.user.cart;
-  try{
-    res.json({ status: 'success', payload: cart });
-  }catch( err ){
-    res.status(400).send({ status: "error", error: err });
-  }
-});
+    //todo: IF THERE IS NO ERROR, DELETE.
 
-router.post("/:cid/product/:pid", async ( req, res ) => {
-  const cid = req.params.cid;
-  const pid = req.params.pid;
-  console.log( cid, pid )
+    // this.post("/", async ( req, res ) => {
+    //   const cart = req.user.cart;
+    //   try{
+    //     console.log(33)
+    //     res.json({ status: 'success', payload: cart });
+    //   }catch( err ){
+    //     res.status(400).send({ status: "error", error: err });
+    //   }
+    // })
 
-  try {
-    const { addToCartByMongo ,cartAdded } = await cartManagerDB.addToCart(cid, pid);
-    res.json({ status: 'success', message: addToCartByMongo, payload: cartAdded });
-  } catch (err) {
-    res.status(400).send({ status: "error", error: err });
-  }
-});
-
-router.put('/:cid/', async ( req, res ) => {
-  const cid = req.params.cid;
-  const body = req.body;
-
-  try {
-    const { updatedByMongo, cartUpdated } = await cartManagerDB.updateCart( cid, body )
-    res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
-  } catch (err) {
+    this.post("/:cid/product/:pid", async ( req, res ) => {
+      const cid = req.params.cid;
+      const pid = req.params.pid;
     
-    if ( err.httpError ) {
-      res.status(err.httpError).json({ status: 'error', error: err.desc })
-    } else {
-      res.status(500).json({ status: 'error', error: err.message })
-    }
+      try {
+        const { addToCartByMongo ,cartAdded } = await cartManagerDB.addToCart(cid, pid);
+        res.json({ status: 'success', message: addToCartByMongo, payload: cartAdded });
+      } catch (err) {
+        res.status(400).send({ status: "error", error: err });
+      }
+    })
 
+    this.put('/:cid/', async ( req, res ) => {
+      const cid = req.params.cid;
+      const body = req.body;
+    
+      try {
+        const { updatedByMongo, cartUpdated } = await cartManagerDB.updateCart( cid, body )
+        res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
+      } catch (err) {
+        
+        if ( err.httpError ) {
+          res.status(err.httpError).json({ status: 'error', error: err.desc })
+        } else {
+          res.status(500).json({ status: 'error', error: err.message })
+        }
+    
+      }
+    })
+
+    this.put('/:cid/product/:pid', async ( req, res ) => {
+      const cid = req.params.cid;
+      const pid = req.params.pid;
+      const body = req.body;
+    
+      try {
+        const { updatedByMongo, cartUpdated } = await cartManagerDB.updateQuantity( cid, pid, body );
+        res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
+    
+      } catch (err) {
+    
+        if ( err.httpError ) {
+          res.status(err.httpError).json({ status: 'error', error: err.desc })
+        } else {
+          res.status(500).json({ status: 'error', error: err.message })
+        }
+    
+      }
+    })
+
+    this.delete('/:cid', async ( req, res ) => {
+      const cid = req.params.cid;
+      
+      try{
+        const cartDeleted = await cartManagerDB.deleteProductsByCart( cid );
+        res.json({ status: 'success', payload: cartDeleted })
+    
+      } catch (err) {
+    
+        if ( err.httpError ) {
+          res.status(err.httpError).json({ status: 'error', error: err.desc })
+        } else {
+          res.status(500).json({ status: 'error', error: err.message })
+        }
+    
+      }
+    })
+    
+    this.delete('/:cid/product/:pid', async ( req, res ) => {
+      const cid = req.params.cid;
+      const pid = req.params.pid;
+    
+      try {
+        const { updatedByMongo ,cartToUpdate } = await cartManagerDB.deleteProductByCart(cid, pid)
+        res.json({ status: 'success', message: updatedByMongo, payload: cartToUpdate })
+      } catch (err) {
+    
+        if ( err.httpError ) {
+          res.status(err.httpError).json({ status: 'error', error: err.desc })
+        } else {
+          res.status(500).json({ status: 'error', error: err.message })
+        }
+    
+      }
+    })
+    
   }
-})
-
-router.put('/:cid/product/:pid', async ( req, res ) => {
-  const cid = req.params.cid;
-  const pid = req.params.pid;
-  const body = req.body;
-
-  try {
-    const { updatedByMongo, cartUpdated } = await cartManagerDB.updateQuantity( cid, pid, body );
-    res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
-
-  } catch (err) {
-
-    if ( err.httpError ) {
-      res.status(err.httpError).json({ status: 'error', error: err.desc })
-    } else {
-      res.status(500).json({ status: 'error', error: err.message })
-    }
-
-  }
-})
-
-router.delete('/:cid', async ( req, res ) => {
-  const cid = req.params.cid;
-  
-  try{
-    const cartDeleted = await cartManagerDB.deleteProductsByCart( cid );
-    res.json({ status: 'success', payload: cartDeleted })
-
-  } catch (err) {
-
-    if ( err.httpError ) {
-      res.status(err.httpError).json({ status: 'error', error: err.desc })
-    } else {
-      res.status(500).json({ status: 'error', error: err.message })
-    }
-
-  }
-})
-
-router.delete('/:cid/product/:pid', async ( req, res ) => {
-  const cid = req.params.cid;
-  const pid = req.params.pid;
-
-  try {
-    const { updatedByMongo ,cartToUpdate } = await cartManagerDB.deleteProductByCart(cid, pid)
-    res.json({ status: 'success', message: updatedByMongo, payload: cartToUpdate })
-  } catch (err) {
-
-    if ( err.httpError ) {
-      res.status(err.httpError).json({ status: 'error', error: err.desc })
-    } else {
-      res.status(500).json({ status: 'error', error: err.message })
-    }
-
-  }
-})
-
-export default router;
+}

@@ -1,11 +1,19 @@
-import express, { urlencoded } from 'express';
+import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
 import { cartsRouter, productsRouter, viewRouter, chatRouter, authRouter } from './routers/index.js';
 import { Server } from 'socket.io';
-import MongoStore from 'connect-mongo';
-// import session from 'express-session';
+
+
+// import { fork } from 'child_process'
+
+//! CUSTOMS ROUTERS
+const customAuthRouter = new authRouter();
+const customProductRouter = new productsRouter();
+const customCartRouter = new cartsRouter()
+const customChatRouter = new chatRouter()
+
 
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
@@ -43,46 +51,49 @@ app.engine( 'handlebars', handlebars.engine() )
 app.set( 'views', './src/views' )
 app.set( 'view engine', 'handlebars' )
 
-// app.use('/app' ,express.static('./public'))
 app.use( express.static('./src/public') )
 
-app.use( '/api/products', productsRouter )
-app.use( '/api/carts', cartsRouter ) 
-app.use( '/api/chat', chatRouter ) 
-app.use( '/api/auth', authRouter )
+app.use( '/api/products', customProductRouter.getRouter() )
+app.use( '/api/carts', customCartRouter.getRouter() ) 
+app.use( '/api/chat', customChatRouter.getRouter() ) 
+app.use( '/api/auth', customAuthRouter.getRouter() ) 
 app.use( '/', viewRouter )
-app.get('*', async(req, res) => {
-    res.status(404).send('Cannot get the specified endpoint');
-})
+
+app.get( '*', async(req, res) => res.status(404).render('errors/errorPlatform',{ error: 'Cannot get the specified endpoint' } ) )
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
         dbName: 'ecommerce'
     })
-    
 }catch(err) {
     console.log( 'Error to connect DB' )
 }
 
-let log = []
 
 
 const httpServer = app.listen( PORT, () => console.log(`SERVER UP!! http://localhost:${PORT}`) ) 
 
 
+
+let log = []
+
 const io = new Server( httpServer );
 io.on('connection', socket => {
-    console.log(`Nuevo cliente conectado ${ socket.id }`) 
+    console.log(`Nuevo cliente conectado ${ socket.id }`)
+
+    //! realTimeProducts
     socket.on('productList', data => {
         io.emit( 'updatedProducts', data )
     })
+
+    //! chat
     socket.on('logDB', data => {
         log = data;
         io.emit('log', log.reverse())
     })
+
     socket.on('message', data => {
         log.push( data );
         io.emit('log', log.reverse())
     })
 })
-

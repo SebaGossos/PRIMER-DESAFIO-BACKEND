@@ -20,16 +20,7 @@ const router = Router();
 //! LOGIN
 router.get('/', async( req, res ) => {
   try{
-    // const isNotUser = req.authenticate.isNotUser;
-
-    // const userRegister = req.authenticate.passport;
-
-    // if ( userRegister ) {
-
-    //   return res.render('authenticate/login', { userRegister: true })
-    // }
-    // if( isNotUser ) return res.render('authenticate/login', { isNotUser })
-    res.render('authenticate/login', { userRegister: false })
+    res.clearCookie('jwt-coder').render('authenticate/login', { userRegister: false })
   } catch (err){
     res.render('errors/errorAuth', { error: err })
   }
@@ -49,7 +40,7 @@ router.get("/products", passport.authenticate('jwt', { failureRedirect:'failToke
   try{
     const result = await getProducts( req, res )
     const { first_name, last_name, email, age, role, cart } = req.user;
-    // const products = await productsManagerDB.getProducts()
+
     res.render("home", { 
       products: result.payload,
       prevLink: result.prevLink,
@@ -104,7 +95,6 @@ router.get('/chat', passport.authenticate('jwt', { failureRedirect:'failToken', 
 router.get('/profile', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async( req, res ) => {
   try{
 
-    // res.render('authenticate/profile', req.authenticate.user)
     const { first_name, last_name, email, age, cart, role } = req.user;
     res.render( 'authenticate/profile', {
       first_name,

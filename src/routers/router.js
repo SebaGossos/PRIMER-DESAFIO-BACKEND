@@ -16,6 +16,18 @@ export default class MyRouter {
         this.router.get( path, this.applyCallbacks( callbacks ) )
     }
 
+    post( path, ...callbacks ) {
+        this.router.post( path, this.applyCallbacks( callbacks ) )
+    }
+
+    put( path, ...callbacks ) {
+        this.router.put( path, this.applyCallbacks( callbacks ) )
+    }
+    
+    delete( path, ...callbacks ) {
+        this.router.delete( path, this.applyCallbacks( callbacks ) )
+    }
+
     applyCallbacks( callbacks ) {
         return callbacks.map( callback => async(...params) => {
             try{

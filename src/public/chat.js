@@ -21,6 +21,7 @@ Swal.fire({
     chatBox.addEventListener('keyup', e => {
         if( e.key === 'Enter' ) {
             if (chatBox.value.trim().length > 0 ) {
+                console.log( user )
                 fetch('/api/chat',{
                     method: 'post',
                     body: JSON.stringify({
@@ -46,7 +47,7 @@ socket.on('log', log => {
     logElement.innerText = ''
     let message = '';
     for( let i = 0; i < log.length; i++ ){
-        message += `<p><i>${log[i].user}</i>: ${log[i].message}</p>`
+        message += `<p><i>${log[i].first_name}</i>: ${log[i].message}</p>`
     }
     logElement.innerHTML = message;
 })

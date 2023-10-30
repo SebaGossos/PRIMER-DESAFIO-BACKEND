@@ -3,6 +3,6 @@ export class MessageManagerDB {
 
     readMessage = async() => await messagesModels.find().lean().exec();
 
-    addMessage = async( message ) => await messagesModels.create( message );
+    addMessage = async( data ) => await messagesModels.create( data );
     
 }
