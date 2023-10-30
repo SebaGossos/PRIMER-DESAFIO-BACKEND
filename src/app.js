@@ -70,10 +70,7 @@ try{
     console.log( 'Error to connect DB' )
 }
 
-
-
 const httpServer = app.listen( PORT, () => console.log(`SERVER UP!! http://localhost:${PORT}`) ) 
-
 
 
 let log = []
