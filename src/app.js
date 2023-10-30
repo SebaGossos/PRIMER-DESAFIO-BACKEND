@@ -11,8 +11,9 @@ import { Server } from 'socket.io';
 //! CUSTOMS ROUTERS
 const customAuthRouter = new authRouter();
 const customProductRouter = new productsRouter();
-const customCartRouter = new cartsRouter()
-const customChatRouter = new chatRouter()
+const customCartRouter = new cartsRouter();
+const customChatRouter = new chatRouter();
+const customViewRouter = new viewRouter();
 
 
 import passport from 'passport';
@@ -53,11 +54,11 @@ app.set( 'view engine', 'handlebars' )
 
 app.use( express.static('./src/public') )
 
+app.use( '/api/auth', customAuthRouter.getRouter() ) 
 app.use( '/api/products', customProductRouter.getRouter() )
 app.use( '/api/carts', customCartRouter.getRouter() ) 
 app.use( '/api/chat', customChatRouter.getRouter() ) 
-app.use( '/api/auth', customAuthRouter.getRouter() ) 
-app.use( '/', viewRouter )
+app.use( '/', customViewRouter.getRouter() )
 
 app.get( '*', async(req, res) => res.status(404).render('errors/errorPlatform',{ error: 'Cannot get the specified endpoint' } ) )
 

@@ -22,7 +22,7 @@ export default class ChatRouter extends MyRouter {
             console.log(req.user, 33)
             try{
                 const { first_name } = req.user;
-                console.log( first_name )
+
                 const { message } = req.body;
                 const data = {
                     first_name,
