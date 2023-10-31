@@ -37,6 +37,12 @@ export default class MyRouter {
             }
         })
     }
-    
+
+    // handlePolicies = policies => (req, res, next) => {
+    //     if( policies.includes('PUBLIC') ) return next()
+    //     else {
+    //         const token = 
+    //     }
+    // }    
     
 }
