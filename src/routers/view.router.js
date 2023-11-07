@@ -16,23 +16,23 @@ const viewController = new ViewController()
 export default class ViewRouter extends MyRouter {
   init() {
     
-    //! LOGIN
+    //? LOGIN
     this.get('/', ['PUBLIC'], viewController.login)
 
     this.get('/register', ['PUBLIC'], viewController.register)
 
-    //! PRODUCTS
+    //? PRODUCTS
     this.get("/products", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  viewController.products);
 
     this.get("/products/realtimeproducts", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.realTimeProducts);
 
-    //! CARTS
+    //? CARTS
     this.get('/carts/:cid', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.cartId )
 
-    //! CHATS
+    //? CHATS
     this.get('/chat', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.chat)
 
-    //! PROFILE
+    //? PROFILE
     this.get('/profile', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.profile)
 
     this.get('/failToken', ['PUBLIC'], viewController.failToken)

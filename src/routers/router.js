@@ -1,5 +1,6 @@
 import { Router } from "express";
 import jwt from 'jsonwebtoken';
+import config from "../config/config.js";
 
 export default class MyRouter {
     constructor(){
@@ -46,7 +47,7 @@ export default class MyRouter {
             if( !token ) {
                 return res.status(401).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not Authenticated' })
             }
-            return jwt.verify(token, 'secret', (err, credentials) => {
+            return jwt.verify(token, config.jwt.keyToken, (err, credentials) => {
                 if( err ) return res.status(403).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not Authenticated' })
                 if( !policies.includes(credentials.user.role.toUpperCase()) ) return res.render('errors/errorPlatform', { error: 'Not Authorized' });
                 req.user = credentials.user;

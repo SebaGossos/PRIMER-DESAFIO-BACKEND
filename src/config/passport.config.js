@@ -5,6 +5,13 @@ import { UserManagerDB } from "../dao/db/user_managerDB.js";
 import { CartManagerDB } from "../dao/db/carts_managerDB.js";
 import { createHash, isValidPassword } from "../utils.js";
 import jwt from 'passport-jwt'
+import config from "./config.js";
+
+
+const emailAdmin = config.admin.adminEmail;
+const passwordAdmin = config.admin.adminPassword;
+
+
 
 import UserModel from "../dao/models/user.model.js";
 
@@ -22,7 +29,7 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: jwt.ExtractJwt.fromExtractors([ cookieExtractor ]),
-        secretOrKey: 'secret'
+        secretOrKey: config.jwt.keyToken
     }, async(jwt_payload, done) => {
         try{
             const user = jwt_payload.user ? jwt_payload.user : false;
@@ -30,15 +37,6 @@ const initializePassport = () => {
         } catch( err ) {
             return done( err )
         }
-        // try {
-        //     if ( !jwt_payload.user ) return done(null, 'error')
-        //     if ( jwt_payload.user.email === 'adminCoder@coder.com' && jwt_payload.user.password === 'adminCod3r123' ) return done( null, jwt_payload.user )
-        //     const user = await userManagerDB.getUserByEmail({ email: jwt_payload.user.email }) 
-        //     if( !user ) return done(null, false, 'not found user')
-        //     else return done( null, jwt_payload.user )
-        // } catch(error) {
-        //     return done(error)
-        // }
     }))
 
     passport.use('register', new localStrategy({
@@ -69,8 +67,10 @@ const initializePassport = () => {
     passport.use('login', new localStrategy({
         usernameField: 'email',
     }, async(username, password, done) => {
+
+        
         try {
-            if ( username === 'adminCoder@coder.com' && password === 'adminCod3r123' ) return done( null, {email: username, password, role: 'admin', first_name: 'admin'} )
+            if ( username === emailAdmin && password === passwordAdmin ) return done( null, {email: username, password, role: 'admin', first_name: 'admin'} )
             const user = await userManagerDB.getUserByEmail({ email: username })
             if( !user ) return done( null, false, {err: 'no se encuentra estoy en passport '} );
             if( !isValidPassword( user, password ) ) return done( null, false );
@@ -88,9 +88,9 @@ const initializePassport = () => {
 
 
     passport.use('github', new GitHubStrategy({
-        clientID:'Iv1.5c7fc3c28a580495',
-        clientSecret: '0f3e93baae1f5beffd9ca83307d5064a26e0a20a',
-        callbackURL: 'http://localhost:8080/api/auth/githubcallback'
+        clientID: config.gitHubPassport.clientId,
+        clientSecret: config.gitHubPassport.clientSecret,
+        callbackURL: config.gitHubPassport.callbackURL
     }, async( accessToken, refreshToken, profile, done) => {
         try{
             const user = await userManagerDB.getUserByEmail({ email: profile._json.email})
@@ -114,7 +114,7 @@ const initializePassport = () => {
     }))
     
     
-
+    // !ESTO ERA PARA SESSIONS
     // passport.serializeUser((user, done) => {
     //     done( null, user._id )
     // })
