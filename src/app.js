@@ -31,7 +31,7 @@ const app = express();
 
 app.use( express.json() )
 app.use( express.urlencoded({ extended: true }) ) 
-app.use( cookieParser('secret') )
+app.use( cookieParser( config.cookie.keyCookie ) )
 // app.use( session({
 //     // store: MongoStore.create({
 //     //     mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
