@@ -1,11 +1,9 @@
 import passport from "passport";
 import { birthday } from "../middlewares/birthdate.middleware.js";
-import { generateToken } from "../utils.js";
 import MyRouter from "./router.js";
-import AuthController from "../controllers/authControllers.js";
+import AuthController from "../controllers/authController.js";
 
 const authController = new AuthController()
-
 
 export default class AuthRouter extends MyRouter {
     init(){

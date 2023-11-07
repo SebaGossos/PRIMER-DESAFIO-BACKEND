@@ -1,7 +1,10 @@
 import MyRouter from "./router.js";
 import { CartManagerDB } from "../dao/db/carts_managerDB.js";
+import CartController from "../controllers/cartController.js";
 
 const cartManagerDB = new CartManagerDB();
+
+const cartController = new CartController()
 
 export const getCarts = async ( req, res ) => {
   const cid = req.params.cid;
@@ -11,22 +14,19 @@ export const getCarts = async ( req, res ) => {
 
 export default class CartRouter extends MyRouter {
   init() {
-    this.get('/', ['PUBLIC'], async( req, res ) => {
-      try{
-        res.json({ success: await cartManagerDB.getCarts() })
-      }catch( err ) {
-        res.status(400).send({ status: 'error', error: err })
-      }
-    })
+    this.get('/', ['PUBLIC'], cartController.getCarts)
 
-    this.get("/:cid", ['PUBLIC'], async ( req, res ) => {
-      const id = req.params.cid;
-      try {
-        res.json({ status: 'success', payload: await cartManagerDB.getCartById( id ) })
-      } catch (err) {
-        res.status(400).send({ status: "error", error: err });
-      }
-    })
+    this.get("/:cid", ['PUBLIC'], cartController.getCartById)
+    
+    this.post("/:cid/product/:pid", ['PUBLIC'], cartController.getProductInCartById)
+    
+    this.put('/:cid/', ['PUBLIC'], cartController.updateCartById)
+    
+    this.put('/:cid/product/:pid', ['PUBLIC'], cartController.updateQuantityProdByCart)
+    
+    this.delete('/:cid', ['PUBLIC'], cartController.deleteCartById)
+    
+    this.delete('/:cid/product/:pid', ['PUBLIC'], cartController.deleteProdInCartById)
 
     //todo: IF THERE IS NO ERROR, DELETE.
 
@@ -39,92 +39,6 @@ export default class CartRouter extends MyRouter {
     //     res.status(400).send({ status: "error", error: err });
     //   }
     // })
-
-    this.post("/:cid/product/:pid", ['PUBLIC'], async ( req, res ) => {
-      const cid = req.params.cid;
-      const pid = req.params.pid;
-    
-      try {
-        const { addToCartByMongo ,cartAdded } = await cartManagerDB.addToCart(cid, pid);
-        res.json({ status: 'success', message: addToCartByMongo, payload: cartAdded });
-      } catch (err) {
-        res.status(400).send({ status: "error", error: err });
-      }
-    })
-
-    this.put('/:cid/', ['PUBLIC'], async ( req, res ) => {
-      const cid = req.params.cid;
-      const body = req.body;
-    
-      try {
-        const { updatedByMongo, cartUpdated } = await cartManagerDB.updateCart( cid, body )
-        res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
-      } catch (err) {
-        
-        if ( err.httpError ) {
-          res.status(err.httpError).json({ status: 'error', error: err.desc })
-        } else {
-          res.status(500).json({ status: 'error', error: err.message })
-        }
-    
-      }
-    })
-
-    this.put('/:cid/product/:pid', ['PUBLIC'], async ( req, res ) => {
-      const cid = req.params.cid;
-      const pid = req.params.pid;
-      const body = req.body;
-    
-      try {
-        const { updatedByMongo, cartUpdated } = await cartManagerDB.updateQuantity( cid, pid, body );
-        res.json({ status: 'success', message: updatedByMongo, payload: cartUpdated })
-    
-      } catch (err) {
-    
-        if ( err.httpError ) {
-          res.status(err.httpError).json({ status: 'error', error: err.desc })
-        } else {
-          res.status(500).json({ status: 'error', error: err.message })
-        }
-    
-      }
-    })
-
-    this.delete('/:cid', ['PUBLIC'], async ( req, res ) => {
-      const cid = req.params.cid;
-      
-      try{
-        const cartDeleted = await cartManagerDB.deleteProductsByCart( cid );
-        res.json({ status: 'success', payload: cartDeleted })
-    
-      } catch (err) {
-    
-        if ( err.httpError ) {
-          res.status(err.httpError).json({ status: 'error', error: err.desc })
-        } else {
-          res.status(500).json({ status: 'error', error: err.message })
-        }
-    
-      }
-    })
-    
-    this.delete('/:cid/product/:pid', ['PUBLIC'], async ( req, res ) => {
-      const cid = req.params.cid;
-      const pid = req.params.pid;
-    
-      try {
-        const { updatedByMongo ,cartToUpdate } = await cartManagerDB.deleteProductByCart(cid, pid)
-        res.json({ status: 'success', message: updatedByMongo, payload: cartToUpdate })
-      } catch (err) {
-    
-        if ( err.httpError ) {
-          res.status(err.httpError).json({ status: 'error', error: err.desc })
-        } else {
-          res.status(500).json({ status: 'error', error: err.message })
-        }
-    
-      }
-    })
     
   }
 }
