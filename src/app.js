@@ -6,7 +6,7 @@ import { Command } from 'commander';
 import { fork } from 'child_process'
 
 import { Server } from 'socket.io';
-import { cartsRouter, productsRouter, viewRouter, chatRouter, authRouter } from './routers/index.js';
+import { customAuthRouter, customProductRouter, customCartRouter, customChatRouter, customViewRouter } from './routers/index.js';
 import config from './config/config.js'
  
 const program = new Command();
@@ -14,14 +14,6 @@ program
     .option('-p <port>', 'Puerto del servidor', 8080 )
     .option('--mode <mode>', 'Modo de ejecución', 'production')
 program.parse()
-
-
-//! CUSTOMS ROUTERS
-const customAuthRouter = new authRouter();
-const customProductRouter = new productsRouter();
-const customCartRouter = new cartsRouter();
-const customChatRouter = new chatRouter();
-const customViewRouter = new viewRouter();
 
 
 import passport from 'passport';
