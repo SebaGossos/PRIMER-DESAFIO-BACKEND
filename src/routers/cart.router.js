@@ -11,7 +11,7 @@ export const getCarts = async ( req, res ) => {
 
 export default class CartRouter extends MyRouter {
   init() {
-    this.get('/', async( req, res ) => {
+    this.get('/', ['PUBLIC'], async( req, res ) => {
       try{
         res.json({ success: await cartManagerDB.getCarts() })
       }catch( err ) {
@@ -19,7 +19,7 @@ export default class CartRouter extends MyRouter {
       }
     })
 
-    this.get("/:cid", async ( req, res ) => {
+    this.get("/:cid", ['PUBLIC'], async ( req, res ) => {
       const id = req.params.cid;
       try {
         res.json({ status: 'success', payload: await cartManagerDB.getCartById( id ) })
@@ -40,7 +40,7 @@ export default class CartRouter extends MyRouter {
     //   }
     // })
 
-    this.post("/:cid/product/:pid", async ( req, res ) => {
+    this.post("/:cid/product/:pid", ['PUBLIC'], async ( req, res ) => {
       const cid = req.params.cid;
       const pid = req.params.pid;
     
@@ -52,7 +52,7 @@ export default class CartRouter extends MyRouter {
       }
     })
 
-    this.put('/:cid/', async ( req, res ) => {
+    this.put('/:cid/', ['PUBLIC'], async ( req, res ) => {
       const cid = req.params.cid;
       const body = req.body;
     
@@ -70,7 +70,7 @@ export default class CartRouter extends MyRouter {
       }
     })
 
-    this.put('/:cid/product/:pid', async ( req, res ) => {
+    this.put('/:cid/product/:pid', ['PUBLIC'], async ( req, res ) => {
       const cid = req.params.cid;
       const pid = req.params.pid;
       const body = req.body;
@@ -90,7 +90,7 @@ export default class CartRouter extends MyRouter {
       }
     })
 
-    this.delete('/:cid', async ( req, res ) => {
+    this.delete('/:cid', ['PUBLIC'], async ( req, res ) => {
       const cid = req.params.cid;
       
       try{
@@ -108,7 +108,7 @@ export default class CartRouter extends MyRouter {
       }
     })
     
-    this.delete('/:cid/product/:pid', async ( req, res ) => {
+    this.delete('/:cid/product/:pid', ['PUBLIC'], async ( req, res ) => {
       const cid = req.params.cid;
       const pid = req.params.pid;
     

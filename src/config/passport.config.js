@@ -24,22 +24,28 @@ const initializePassport = () => {
         jwtFromRequest: jwt.ExtractJwt.fromExtractors([ cookieExtractor ]),
         secretOrKey: 'secret'
     }, async(jwt_payload, done) => {
-        try {
-            if ( !jwt_payload.user ) return done(null, 'error')
-            if ( jwt_payload.user.email === 'adminCoder@coder.com' && jwt_payload.user.password === 'adminCod3r123' ) return done( null, jwt_payload.user )
-            const user = await userManagerDB.getUserByEmail({ email: jwt_payload.user.email }) 
-            if( !user ) return done(null, false, 'not found user')
-            else return done( null, jwt_payload.user )
-        } catch(error) {
-            return done(error)
+        try{
+            const user = jwt_payload.user ? jwt_payload.user : false;
+            return done( null, user )
+        } catch( err ) {
+            return done( err )
         }
+        // try {
+        //     if ( !jwt_payload.user ) return done(null, 'error')
+        //     if ( jwt_payload.user.email === 'adminCoder@coder.com' && jwt_payload.user.password === 'adminCod3r123' ) return done( null, jwt_payload.user )
+        //     const user = await userManagerDB.getUserByEmail({ email: jwt_payload.user.email }) 
+        //     if( !user ) return done(null, false, 'not found user')
+        //     else return done( null, jwt_payload.user )
+        // } catch(error) {
+        //     return done(error)
+        // }
     }))
 
     passport.use('register', new localStrategy({
         passReqToCallback: true,
         usernameField: 'email'
     }, async(req, username, password, done ) => {
-        const { first_name, last_name, email, age } = req.body;
+        const { first_name, last_name, age } = req.body;
         try{
             
             const user = await userManagerDB.getUserByEmail({ email: username })
@@ -49,7 +55,7 @@ const initializePassport = () => {
             const cart = await cartManagerDB.createCart()
 
             const newUser = {
-                first_name, last_name, email, age, password: createHash( password ), cart,
+                first_name, last_name, email: username, age, password: createHash( password ), cart,
             }
             const result = await userManagerDB.createUser( newUser )
 
@@ -66,10 +72,14 @@ const initializePassport = () => {
         try {
             if ( username === 'adminCoder@coder.com' && password === 'adminCod3r123' ) return done( null, {email: username, password, role: 'admin', first_name: 'admin'} )
             const user = await userManagerDB.getUserByEmail({ email: username })
-            if( !user ) return done( null, false );
+            if( !user ) return done( null, false, {err: 'no se encuentra estoy en passport '} );
             if( !isValidPassword( user, password ) ) return done( null, false );
-            user.role = 'user';
-            return done( null, user )
+            else {
+                user.role = 'user';
+                const { password, ...rest } = user;
+                const userWithOutPassword = rest;
+                return done( null, userWithOutPassword )
+            }
 
         } catch( err ) {
             done( err )

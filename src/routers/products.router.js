@@ -61,7 +61,7 @@ export const getProducts = async ( req, res ) => {
 
 export default class ProductsRouter extends MyRouter {
   init(){
-    this.get("/", async ( req, res ) => {
+    this.get("/", ['PUBLIC'], async ( req, res ) => {
       try {
         const result = await getProducts(req, res);  
         
@@ -76,7 +76,7 @@ export default class ProductsRouter extends MyRouter {
       }
     })
 
-    this.get("/:pid", async ( req, res ) => {
+    this.get("/:pid", ['PUBLIC'], async ( req, res ) => {
       const id = req.params.pid;
 
       try {
@@ -87,7 +87,7 @@ export default class ProductsRouter extends MyRouter {
       }
     })
     
-    this.get("/query/:pcode", async ( req, res ) => {
+    this.get("/query/:pcode", ['PUBLIC'], async ( req, res ) => {
       const code = req.params.pcode;
       
       try {
@@ -98,7 +98,7 @@ export default class ProductsRouter extends MyRouter {
       }
     })
     
-    this.post("/", uploader.single("thumbnail"), async ( req, res ) => {
+    this.post("/", ['PUBLIC'], uploader.single("thumbnail"), async ( req, res ) => {
       try {
         const product = JSON.parse(JSON.stringify(req.body));
         const url = req.file?.filename;
@@ -114,7 +114,7 @@ export default class ProductsRouter extends MyRouter {
       }
     })
 
-    this.put("/:pid", uploader.single("thumbnail"), async ( req, res ) => {
+    this.put("/:pid", ['PUBLIC'], uploader.single("thumbnail"), async ( req, res ) => {
 
       try {
         const id = req.params.pid;
@@ -133,7 +133,7 @@ export default class ProductsRouter extends MyRouter {
       }
     })
     
-    this.delete("/:pid", async ( req, res ) => {
+    this.delete("/:pid", ['PUBLIC'], async ( req, res ) => {
       const id = req.params.pid;
     
       try {

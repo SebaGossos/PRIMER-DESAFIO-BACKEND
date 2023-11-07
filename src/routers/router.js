@@ -1,4 +1,5 @@
 import { Router } from "express";
+import jwt from 'jsonwebtoken';
 
 export default class MyRouter {
     constructor(){
@@ -12,23 +13,23 @@ export default class MyRouter {
         return this.router;
     }
 
-    get( path, ...callbacks ) {
-        this.router.get( path, this.applyCallbacks( callbacks ) )
+    get( path, policies, ...callbacks ) {
+        this.router.get( path, this.#handlePolicies( policies ), this.#applyCallbacks( callbacks ) )
     }
 
-    post( path, ...callbacks ) {
-        this.router.post( path, this.applyCallbacks( callbacks ) )
+    post( path, policies, ...callbacks ) {
+        this.router.post( path, this.#handlePolicies( policies ), this.#applyCallbacks( callbacks ) )
     }
 
-    put( path, ...callbacks ) {
-        this.router.put( path, this.applyCallbacks( callbacks ) )
+    put( path, policies, ...callbacks ) {
+        this.router.put( path, this.#handlePolicies( policies ), this.#applyCallbacks( callbacks ) )
     }
     
-    delete( path, ...callbacks ) {
-        this.router.delete( path, this.applyCallbacks( callbacks ) )
+    delete( path, policies, ...callbacks ) {
+        this.router.delete( path, this.#handlePolicies( policies ), this.#applyCallbacks( callbacks ) )
     }
 
-    applyCallbacks( callbacks ) {
+    #applyCallbacks( callbacks ) {
         return callbacks.map( callback => async(...params) => {
             try{
                 await callback.apply( this, params );
@@ -38,11 +39,22 @@ export default class MyRouter {
         })
     }
 
-    // handlePolicies = policies => (req, res, next) => {
-    //     if( policies.includes('PUBLIC') ) return next()
-    //     else {
-    //         const token = 
-    //     }
-    // }    
+    #handlePolicies = (policies=['PUBLIC']) => (req, res, next) => {
+        if( policies.includes('PUBLIC') ) return next()
+        else {
+            const token = req.signedCookies['jwt-coder'];
+            if( !token ) {
+                return res.status(401).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not Authenticated' })
+            }
+            return jwt.verify(token, 'secret', (err, credentials) => {
+                if( err ) return res.status(403).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not Authenticated' })
+                if( !policies.includes(credentials.user.role.toUpperCase()) ) return res.render('errors/errorPlatform', { error: 'Not Authorized' });
+                req.user = credentials.user;
+                return next()
+            })
+        }
+    }    
+
+
     
 }

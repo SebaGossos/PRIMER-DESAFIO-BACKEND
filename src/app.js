@@ -2,11 +2,19 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
-import { cartsRouter, productsRouter, viewRouter, chatRouter, authRouter } from './routers/index.js';
+import { Command } from 'commander';
+import { fork } from 'child_process'
+
 import { Server } from 'socket.io';
+import { cartsRouter, productsRouter, viewRouter, chatRouter, authRouter } from './routers/index.js';
+import config from './config/config.js'
+ 
+const program = new Command();
+program
+    .option('-p <port>', 'Puerto del servidor', 8080 )
+    .option('--mode <mode>', 'Modo de ejecución', 'production')
+program.parse()
 
-
-// import { fork } from 'child_process'
 
 //! CUSTOMS ROUTERS
 const customAuthRouter = new authRouter();
@@ -19,7 +27,7 @@ const customViewRouter = new viewRouter();
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 
-export const PORT = 8080;
+export const PORT = config.port;
 
 const app = express();
 
@@ -60,7 +68,7 @@ app.use( '/api/carts', customCartRouter.getRouter() )
 app.use( '/api/chat', customChatRouter.getRouter() ) 
 app.use( '/', customViewRouter.getRouter() )
 
-app.get( '*', async(req, res) => res.status(404).render('errors/errorPlatform',{ error: 'Cannot get the specified endpoint' } ) )
+app.get( '*', async(req, res) => res.status(404).render('errors/errorAuth',{ error: 'Cannot get the specified endpoint' } ) )
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
@@ -69,6 +77,8 @@ try{
 }catch(err) {
     console.log( 'Error to connect DB' )
 }
+
+
 
 const httpServer = app.listen( PORT, () => console.log(`SERVER UP!! http://localhost:${PORT}`) ) 
 

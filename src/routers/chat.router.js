@@ -9,7 +9,7 @@ const messageManagerDB = new MessageManagerDB()
 
 export default class ChatRouter extends MyRouter {
     init() {
-        this.get('/', async ( req, res ) => { 
+        this.get('/', ['PUBLIC'], async ( req, res ) => { 
             try{
                 const log = await messageManagerDB.readMessage()
                 res.json({ status: 'success', payload: log })
@@ -18,8 +18,7 @@ export default class ChatRouter extends MyRouter {
             }
         })
 
-        this.post('/', passport.authenticate('jwt', { failureRedirect: 'failChat' , session: false }), async ( req, res ) => { 
-            console.log(req.user, 33)
+        this.post('/', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failChat' , session: false }), async ( req, res ) => { 
             try{
                 const { first_name } = req.user;
 
@@ -36,6 +35,6 @@ export default class ChatRouter extends MyRouter {
             }
         })
 
-        this.get('/failChat', ( req, res ) => res.render('errors/errorAuth',{error: 'Fail chat'}))
+        this.get('/failChat', ['PUBLIC'], ( req, res ) => res.render('errors/errorAuth',{error: 'Fail chat'}))
     }
 }

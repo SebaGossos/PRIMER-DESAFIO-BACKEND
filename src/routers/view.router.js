@@ -14,25 +14,24 @@ export default class ViewRouter extends MyRouter {
   init() {
     
     //! LOGIN
-    this.get('/', async( req, res ) => {
+    this.get('/', ['PUBLIC'], async( req, res ) => {
       try{
-        console.log()
         res.clearCookie('jwt-coder').render('authenticate/login', { userRegister: false })
       } catch (err){
         res.render('errors/errorAuth', { error: err })
       }
     })
 
-    this.get('/register', async( req, res ) => {
+    this.get('/register', ['PUBLIC'], async( req, res ) => {
       try{
-        res.render('authenticate/register')
+        res.clearCookie('jwt-coder').render('authenticate/register')
       } catch (err){
         res.render('errors/errorAuth', { error: err })
       }
     })
 
     //! PRODUCTS
-    this.get("/products", passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async ( req, res ) => {
+    this.get("/products", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async ( req, res ) => {
 
       try{
         const result = await getProducts( req, res )
@@ -54,7 +53,7 @@ export default class ViewRouter extends MyRouter {
       }
     });
 
-    this.get("/products/realtimeproducts", passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), async ( req, res ) => {
+    this.get("/products/realtimeproducts", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), async ( req, res ) => {
       try{
         const products = await productsManagerDB.getProducts();
         res.render("realTimeProducts", { products });
@@ -64,7 +63,7 @@ export default class ViewRouter extends MyRouter {
     });
 
     //! CARTS
-    this.get('/carts/:cid', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), async( req, res ) => {
+    this.get('/carts/:cid', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), async( req, res ) => {
       try{
         const dataCart = await getCarts( req, res );
         const cart = JSON.parse(JSON.stringify( dataCart ));
@@ -80,7 +79,7 @@ export default class ViewRouter extends MyRouter {
     })
 
     //! CHATS
-    this.get('/chat', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), async( req, res ) => {
+    this.get('/chat', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), async( req, res ) => {
       try{
         res.render('chat')
       }catch (err){
@@ -89,7 +88,7 @@ export default class ViewRouter extends MyRouter {
     })
 
     //! PROFILE
-    this.get('/profile', passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async( req, res ) => {
+    this.get('/profile', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  async( req, res ) => {
       try{
 
         const { first_name, last_name, email, age, cart, role } = req.user;
@@ -107,7 +106,7 @@ export default class ViewRouter extends MyRouter {
       }
     })
 
-    this.get('/failToken', ( req, res ) => res.clearCookie('jwt-coder').render('errors/errorAuth',{error: 'Error to Authenticate'}))
+    this.get('/failToken', ['PUBLIC'], ( req, res ) => res.clearCookie('jwt-coder').render('errors/errorAuth',{error: 'Error to Authenticate'}))
     
   }
 }
