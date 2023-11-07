@@ -2,39 +2,15 @@ import passport from "passport";
 
 import MyRouter from "./router.js";
 
-import { MessageManagerDB } from "../dao/db/message_managerDB.js";
-const messageManagerDB = new MessageManagerDB()
-
-
+import ChatController from "../controllers/chatController.js"; 
+const chatController = new ChatController()
 
 export default class ChatRouter extends MyRouter {
     init() {
-        this.get('/', ['PUBLIC'], async ( req, res ) => { 
-            try{
-                const log = await messageManagerDB.readMessage()
-                res.json({ status: 'success', payload: log })
-            }catch( err ) {
-                res.status(400).send({ status: "error", error: err });
-            }
-        })
+        this.get( '/', ['PUBLIC'], chatController.logChat )
 
-        this.post('/', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failChat' , session: false }), async ( req, res ) => { 
-            try{
-                const { first_name } = req.user;
+        this.post( '/', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failChat' , session: false }), chatController.saveMessage )
 
-                const { message } = req.body;
-                const data = {
-                    first_name,
-                    message,
-                    expireAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) //? --> 1 Week to expires the log
-                }
-                await messageManagerDB.addMessage( data );
-                res.json({ status: 'success', payload: data })
-            }catch( err ) {
-                res.status(400).send({ status: "error", error: err });
-            }
-        })
-
-        this.get('/failChat', ['PUBLIC'], ( req, res ) => res.render('errors/errorAuth',{error: 'Fail chat'}))
+        this.get( '/failChat', ['PUBLIC'], chatController.failChat )
     }
 }

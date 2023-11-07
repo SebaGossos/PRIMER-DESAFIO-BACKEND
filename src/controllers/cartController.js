@@ -10,6 +10,7 @@ export default class CartController {
           res.status(400).send({ status: 'error', error: err })
         }
     }
+    
     async getCartById( req, res ){
         const id = req.params.cid;
         try {
@@ -102,5 +103,6 @@ export default class CartController {
           }
       
         }
-      }
+    }
+
 }

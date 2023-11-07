@@ -21,7 +21,6 @@ Swal.fire({
     chatBox.addEventListener('keyup', e => {
         if( e.key === 'Enter' ) {
             if (chatBox.value.trim().length > 0 ) {
-                console.log( user )
                 fetch('/api/chat',{
                     method: 'post',
                     body: JSON.stringify({
