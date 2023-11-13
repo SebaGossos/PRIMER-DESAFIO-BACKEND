@@ -1,9 +1,11 @@
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
 const productsManagerDB = new ProductManagerDB();
 
-import { getProducts } from "../routers/products.router.js";
 import { getCarts } from "../routers/cart.router.js";
 
+
+import { ProductService } from "../repositories/index.js";
+import { PORT } from "../app.js";
 
 export default class ViewController {
 
@@ -26,16 +28,19 @@ export default class ViewController {
     async products( req, res ){
 
         try{
-          const result = await getProducts( req, res )
           const { first_name, last_name, email, age, role, cart } = req.user;
-  
+          const { payload, totalPages, prevPage, nextPage, prevLink, nextLink, page, hasPrevPage, hasNextPage } = await ProductService.getAllPaginate( req, PORT );
+          
+          // const { payload, totalPages, prevPage, nextPage, prevLink, nextLink, page, hasPrevPage, hasNextPage } = await getProducts( req, res )
+          
+          
           res.render("home", { 
-            products: result.payload,
-            prevLink: result.prevLink,
-            nextLink: result.nextLink,
-            hasPrevPage: result.hasPrevPage,
-            hasNextPage: result.hasNextPage,
-            page: result.page,
+            products: payload,
+            prevLink,
+            nextLink,
+            hasPrevPage,
+            hasNextPage,
+            page,
             user: {first_name, last_name, email, age, role, cart},
             isAdmin: req.user.role === 'admin'
           });
@@ -47,7 +52,7 @@ export default class ViewController {
 
     async realTimeProducts( req, res ) {
         try{
-          const products = await productsManagerDB.getProducts();
+          const products = await ProductService.getAll();
           res.render("realTimeProducts", { products });
         }catch (err){
           res.render('errors/errorPlatform', { error: err })

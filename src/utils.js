@@ -1,3 +1,4 @@
+import multer from "multer";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt'
@@ -37,5 +38,14 @@ export const passportCall = strategy => {
     }
 }
 
+
+export const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "src/public/images/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
 
 export default __dirname;

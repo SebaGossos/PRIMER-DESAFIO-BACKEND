@@ -4,8 +4,7 @@ import MyRouter from "./router.js";
 import { ProductManagerDB } from "../dao/db/products_managerDB.js";
 const productsManagerDB = new ProductManagerDB();
 
-import { getProducts } from "./products.router.js";
-import { getCarts } from "./cart.router.js";
+
 
 
 import ViewController from "../controllers/viewController.js";
