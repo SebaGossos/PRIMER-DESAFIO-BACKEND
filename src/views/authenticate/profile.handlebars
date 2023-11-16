@@ -9,10 +9,10 @@
             <li>Email: {{email}}</li>
             <li>Age: {{age}}</li>
             <li>Role: {{role}}</li>
-            <li>Role: {{cart}}</li>
+            <li>Cart: {{cartId}}</li>
         </ul>
     </div>
     <div>
-        <a class="btn btn-success" href="/products">Products</a> | <a class="btn btn-danger" href="/api/auth/logout">Log Out</a> {{#if isUser}}| <a class="btn btn-info" href="/carts/{{cartId}}">Cart</a> {{/if}}
+        <a class="btn btn-success" href="/products">Products</a> | <a class="btn btn-danger" href="/api/auth/logout">Log Out</a> {{#if isUser}}| <a class="btn btn-info" href="/carts/{{cartId}}">Cart</a> | <a class="btn btn-warning" href="/chat">Chat</a> {{/if}}
     </div>
 </div>

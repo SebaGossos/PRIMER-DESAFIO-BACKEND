@@ -23,8 +23,9 @@
         <div class="d-flex flex-column gap-5">
             <a class="btn btn-secondary" href="/profile">Profile</a>
             {{#if isAdmin }}
-
+                <a class="btn btn-info" href="/products/realtimeproducts">Real Time Products</a>
             {{else}}
+                <a class="btn btn-warning" href="/chat">Chat</a>
 
                 <a class="btn btn-info" href="/carts/{{user.cart}}">Cart</a>
 
@@ -51,7 +52,10 @@
     <table class="table table-striped-columns">
         <thead>
             <tr>
-                <th>add to cart</th>
+                {{#unless isAdmin}}
+                    <th>add to cart</th>
+                {{/unless}}
+
                 <th>title</th>
                 <th>description</th>
                 <th>price</th>
@@ -66,12 +70,11 @@
         <tbody>
             {{#each products}}
                 <tr>
-                    <td class="text-nowrap px-1">
-                        {{!-- <form action="/api/carts/{{../user.cart}}/product/{{this._id}}" method="post" >
-                            <input type="submit" class="btn btn-success">Add To Cart</input>
-                        </form> --}}
-                        <button onclick="callApiAddProd( '{{../user.cart}}', '{{this._id}}' )" class="btn btn-success" >Add To Cart</button>
-                    </td>
+                    {{#unless ../isAdmin}}
+                        <td class="text-nowrap px-1">
+                            <button onclick="callApiAddProd( '{{../user.cart}}', '{{this._id}}' )" class="btn btn-success" >Add To Cart</button>
+                        </td>
+                    {{/unless}}
                     <td>{{this.title}}</td>
                     <td>{{this.description}}</td>
                     <td>{{this.price}}</td>

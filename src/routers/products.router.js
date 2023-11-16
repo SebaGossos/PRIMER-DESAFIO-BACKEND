@@ -14,16 +14,16 @@ const uploader = multer({ storage });
 export default class ProductsRouter extends MyRouter {
   init(){
 
-    this.get("/", ['PUBLIC'], productController.getAll)
+    this.get("/", ['USER','ADMIN'], productController.getAll)
 
-    this.get("/:pid", ['PUBLIC'], productController.getById)
+    this.get("/:pid", ['USER','ADMIN'], productController.getById)
     
-    this.get("/query/:pcode", ['PUBLIC'], productController.getByCode)
+    this.get("/query/:pcode", ['USER','ADMIN'], productController.getByCode)
     
-    this.post("/", ['PUBLIC'], uploader.single("thumbnail"), productController.create)
+    this.post("/", ['ADMIN'], uploader.single("thumbnail"), productController.create)
 
-    this.put("/:pid", ['PUBLIC'], uploader.single("thumbnail"), productController.updated)
+    this.put("/:pid", ['ADMIN'], uploader.single("thumbnail"), productController.updated)
     
-    this.delete("/:pid", ['PUBLIC'], productController.delete)
+    this.delete("/:pid", ['ADMIN'], productController.delete)
   }
 }

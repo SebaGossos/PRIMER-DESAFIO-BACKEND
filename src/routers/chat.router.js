@@ -7,9 +7,9 @@ const chatController = new ChatController()
 
 export default class ChatRouter extends MyRouter {
     init() {
-        this.get( '/', ['PUBLIC'], chatController.logChat )
+        this.get( '/', ['USER'], chatController.getAll )
 
-        this.post( '/', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failChat' , session: false }), chatController.saveMessage )
+        this.post( '/', ['USER'], passport.authenticate('jwt', { failureRedirect: 'failChat' , session: false }), chatController.create )
 
         this.get( '/failChat', ['PUBLIC'], chatController.failChat )
     }

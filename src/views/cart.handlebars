@@ -38,9 +38,15 @@
             {{/each}}
         </tbody>
     </table>
+    <div class="d-flex justify-content-center mb-3">
+        <button onclick="deleteProducts('{{cartId}}')" class="btn btn-warning">Empty cart</button>
+    </div>
     
     {{else}}
     <h1>Not Products yet!</h1>
     {{/if}}
+    <div class="d-flex justify-content-center">
+        <a class="btn btn-success text-center" href="/products">PRODUCTS</a>
+    </div>
 </div>
 <script src="/carts.js"></script>

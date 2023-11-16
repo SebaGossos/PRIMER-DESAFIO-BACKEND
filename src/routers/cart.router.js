@@ -6,27 +6,27 @@ const cartManagerDB = new CartManagerDB();
 
 const cartController = new CartController()
 
-export const getCarts = async ( req, res ) => {
-  const cid = req.params.cid;
-  const cart = await cartManagerDB.getCartById( cid )
-  return cart 
-}
+// export const getCarts = async ( req, res ) => {
+//   const cid = req.params.cid;
+//   const cart = await cartManagerDB.getCartById( cid )
+//   return cart 
+// }
 
 export default class CartRouter extends MyRouter {
   init() {
-    this.get('/', ['PUBLIC'], cartController.getCarts)
+    this.get('/', ['PUBLIC'], cartController.getAll)
 
-    this.get("/:cid", ['PUBLIC'], cartController.getCartById)
+    this.get("/:cid", ['PUBLIC'], cartController.getById)
     
-    this.post("/:cid/product/:pid", ['PUBLIC'], cartController.getProductInCartById)
+    this.post("/:cid/product/:pid", ['USER'], cartController.addToCart)
     
-    this.put('/:cid/', ['PUBLIC'], cartController.updateCartById)
+    this.put('/:cid/', ['USER'], cartController.update)
     
-    this.put('/:cid/product/:pid', ['PUBLIC'], cartController.updateQuantityProdByCart)
+    this.put('/:cid/product/:pid', ['USER'], cartController.updateQuantity)
     
-    this.delete('/:cid', ['PUBLIC'], cartController.deleteCartById)
+    this.delete('/:cid', ['PUBLIC'], cartController.delete)
     
-    this.delete('/:cid/product/:pid', ['PUBLIC'], cartController.deleteProdInCartById)
+    this.delete('/:cid/product/:pid', ['PUBLIC'], cartController.deleteProdById)
 
     //todo: IF THERE IS NO ERROR, DELETE.
 

@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 
-export default mongoose.model( 'messages' , new mongoose.Schema({
+mongoose.set('strictQuery', false)
+
+export default mongoose.model( 'chats' , new mongoose.Schema({
     // _id: false,
-    first_name: String,
+    user: String,
     message: String,
     expireAt: { type: Date, expires: '1w' }
 }));

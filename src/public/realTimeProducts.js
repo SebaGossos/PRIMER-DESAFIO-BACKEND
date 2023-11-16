@@ -65,6 +65,7 @@ createBtn.addEventListener("click", (evt) => {
     .then(() => fetch("/api/products"))
     .then((result) => result.json())
     .then((result) => {
+      
       if (result.status === "error") throw new Error(result.error);
       socket.emit("productList", result.payload);
       alert(

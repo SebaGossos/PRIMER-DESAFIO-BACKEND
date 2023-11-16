@@ -1,4 +1,7 @@
 import { generateToken } from "../utils.js";
+import UserDTO from "../dto/user.dto.js";
+
+
 export default class AuthController {
     
     //!REGISTER
@@ -7,7 +10,8 @@ export default class AuthController {
    
     //!LOGIN
     loginUser = ( req, res ) => { 
-        const user = req.user;
+
+        const user = new UserDTO( req.user );
         const accessToken = generateToken( user );
         return res.cookie('jwt-coder', accessToken, { signed: true }).redirect('/products')
     }

@@ -89,11 +89,11 @@ io.on('connection', socket => {
     //! chat
     socket.on('logDB', data => {
         log = data;
-        io.emit('log', log.reverse())
+        // io.emit('log', log.reverse())
     })
 
     socket.on('message', data => {
-        log.push( data );
-        io.emit('log', log.reverse())
+        log.unshift( data );
+        io.emit('log', log)
     })
 })

@@ -23,13 +23,13 @@ export default class ViewRouter extends MyRouter {
     //? PRODUCTS
     this.get("/products", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  viewController.products);
 
-    this.get("/products/realtimeproducts", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.realTimeProducts);
+    this.get("/products/realtimeproducts", ['ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.realTimeProducts);
 
     //? CARTS
-    this.get('/carts/:cid', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.cartId )
+    this.get('/carts/:cid', ['USER'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.cartId )
 
     //? CHATS
-    this.get('/chat', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.chat)
+    this.get('/chat', ['USER'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.chat)
 
     //? PROFILE
     this.get('/profile', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.profile)

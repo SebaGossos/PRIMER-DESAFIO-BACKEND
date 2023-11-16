@@ -1,131 +1,154 @@
 import passport from "passport";
 import local from "passport-local";
-import GitHubStrategy from 'passport-github2';
+import GitHubStrategy from "passport-github2";
 import { UserManagerDB } from "../dao/db/user_managerDB.js";
 import { CartManagerDB } from "../dao/db/carts_managerDB.js";
 import { createHash, isValidPassword } from "../utils.js";
-import jwt from 'passport-jwt'
+import jwt from "passport-jwt";
 import config from "./config.js";
-
 
 const emailAdmin = config.admin.adminEmail;
 const passwordAdmin = config.admin.adminPassword;
 
-
-
 import UserModel from "../dao/models/user.model.js";
+import { CartService } from "../repositories/index.js";
 
 const userManagerDB = new UserManagerDB();
-const cartManagerDB = new CartManagerDB()
+const cartManagerDB = new CartManagerDB();
 
 const localStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
 
 // const cookieExtractor = req => (req && req.signedCookies) ? req.signedCookies['jwt-coder'] : null;
-const cookieExtractor = req => req?.signedCookies['jwt-coder'] || null;
-
+const cookieExtractor = (req) => req?.signedCookies["jwt-coder"] || null;
 
 const initializePassport = () => {
-
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: jwt.ExtractJwt.fromExtractors([ cookieExtractor ]),
-        secretOrKey: config.jwt.keyToken
-    }, async(jwt_payload, done) => {
-        try{
-            const user = jwt_payload.user ? jwt_payload.user : false;
-            return done( null, user )
-        } catch( err ) {
-            return done( err )
-        }
-    }))
-
-    passport.use('register', new localStrategy({
-        passReqToCallback: true,
-        usernameField: 'email'
-    }, async(req, username, password, done ) => {
-        const { first_name, last_name, age } = req.body;
-        try{
-            
-            const user = await userManagerDB.getUserByEmail({ email: username })
-            if ( user ) {
-                return done( null, false, {info: 'error del regis'})
-            }
-            const cart = await cartManagerDB.createCart()
-
-            const newUser = {
-                first_name, last_name, email: username, age, password: createHash( password ), cart,
-            }
-            const result = await userManagerDB.createUser( newUser )
-
-            return done( null, result )
-
-        } catch ( err ) {
-            return done( err )
-        }
-    }))
-
-    passport.use('login', new localStrategy({
-        usernameField: 'email',
-    }, async(username, password, done) => {
-
-        
+  passport.use(
+    "jwt",
+    new JWTStrategy(
+      {
+        jwtFromRequest: jwt.ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: config.jwt.keyToken,
+      },
+      async (jwt_payload, done) => {
         try {
-            if ( username === emailAdmin && password === passwordAdmin ) return done( null, {email: username, password, role: 'admin', first_name: 'admin'} )
-            const user = await userManagerDB.getUserByEmail({ email: username })
-            if( !user ) return done( null, false, {err: 'no se encuentra estoy en passport '} );
-            if( !isValidPassword( user, password ) ) return done( null, false );
-            else {
-                user.role = 'user';
-                const { password, ...rest } = user;
-                const userWithOutPassword = rest;
-                return done( null, userWithOutPassword )
-            }
-
-        } catch( err ) {
-            done( err )
+          const user = jwt_payload.user ? jwt_payload.user : false;
+          return done(null, user);
+        } catch (err) {
+          return done(err);
         }
-    }))
+      }
+    )
+  );
 
+  passport.use(
+    "register",
+    new localStrategy(
+      {
+        passReqToCallback: true,
+        usernameField: "email",
+      },
+      async (req, username, password, done) => {
+        const { first_name, last_name, age } = req.body;
+        try {
+          const user = await userManagerDB.getUserByEmail({ email: username });
+          if (user) {
+            return done(null, false, { info: "error del regis" });
+          }
+          const cart = await CartService.create();
 
-    passport.use('github', new GitHubStrategy({
+          const newUser = {
+            first_name,
+            last_name,
+            email: username,
+            age,
+            password: createHash(password),
+            cart,
+          };
+          const result = await userManagerDB.createUser(newUser);
+
+          return done(null, result);
+        } catch (err) {
+          return done(err);
+        }
+      }
+    )
+  );
+
+  passport.use(
+    "login",
+    new localStrategy(
+      {
+        usernameField: "email",
+      },
+      async (username, password, done) => {
+        try {
+          if (username === emailAdmin && password === passwordAdmin)
+            return done(null, {
+              email: username,
+              password,
+              role: "admin",
+              first_name: "admin",
+            });
+          const user = await userManagerDB.getUserByEmail({ email: username });
+          if (!user)
+            return done(null, false, {
+              err: "no se encuentra estoy en passport ",
+            });
+          if (!isValidPassword(user, password)) return done(null, false);
+          else {
+            user.role = "user";
+            return done(null, user);
+          }
+        } catch (err) {
+          done(err);
+        }
+      }
+    )
+  );
+
+  passport.use(
+    "github",
+    new GitHubStrategy(
+      {
         clientID: config.gitHubPassport.clientId,
         clientSecret: config.gitHubPassport.clientSecret,
-        callbackURL: config.gitHubPassport.callbackURL
-    }, async( accessToken, refreshToken, profile, done) => {
-        try{
-            const user = await userManagerDB.getUserByEmail({ email: profile._json.email})
-            if ( user ) return done( null, user )
+        callbackURL: config.gitHubPassport.callbackURL,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          const user = await userManagerDB.getUserByEmail({
+            email: profile._json.email,
+          });
+          if (user) return done(null, user);
 
-            const newUser = await userManagerDB.createUser({
-                first_name: profile._json.name,
-                last_name: '',
-                email: profile._json.email,
-                password: '',
-                age: '',
-                role: 'user',
-                cart: await cartManagerDB.createCart(),
-                source: profile.provider
-            })
-            return done( null, newUser )
-
-        } catch(err) {
-            return done( err )
+          const newUser = await userManagerDB.createUser({
+            first_name: profile._json.name,
+            last_name: "",
+            email: profile._json.email,
+            password: "",
+            age: "",
+            role: "user",
+            cart: await CartService.create(),
+            source: profile.provider,
+          });
+          return done(null, newUser);
+        } catch (err) {
+          return done(err);
         }
-    }))
-    
-    
-    // !ESTO ERA PARA SESSIONS
-    // passport.serializeUser((user, done) => {
-    //     done( null, user._id )
-    // })
+      }
+    )
+  );
 
-    // passport.deserializeUser(async (id, done) => {
-    //     const user = await userManagerDB.findById(id);
-    //     done(null, user)
-    // })
-    
+  // !ESTO ERA PARA SESSIONS
+  // passport.serializeUser((user, done) => {
+  //     done( null, user._id )
+  // })
 
-
-}
+  // passport.deserializeUser(async (id, done) => {
+  //     const user = await userManagerDB.findById(id);
+  //     done(null, user)
+  // })
+};
 
 export default initializePassport;

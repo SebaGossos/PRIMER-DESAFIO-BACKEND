@@ -46,9 +46,11 @@ export default class ProductsMongo {
         //! HANDLE ERROR
         if ( totalPages < page ) throw `Must submit a page until: ${ totalPages }`
 
+
         const originalUrl = req.originalUrl.at(-1) === '/' ? req.originalUrl.pop() : req.originalUrl;
 
         const andOrQuestion = originalUrl === '/products' ? '?' : '&';
+
 
         let prevLink;
         if ( !page ){
@@ -58,6 +60,12 @@ export default class ProductsMongo {
             prevLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
         }
 
+        if ( prevPage === 1 && !originalUrl.includes('&')) {
+            const cleanEndPoint = originalUrl.replace(`?page=${page}`, '')
+            prevLink = `http://${ req.hostname}:${PORT}${cleanEndPoint}`
+            console.log( prevLink )
+        }
+
         let nextLink
         if ( !page ){
             nextLink = `http://${req.hostname}:${PORT}${originalUrl}${andOrQuestion}page=${nextPage}`;
@@ -65,7 +73,7 @@ export default class ProductsMongo {
             const modifyLink = originalUrl.replace(`page=${req.query.page}`,`page=${nextPage}`);
             nextLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
         }
-        
+
         return {
             status: 'success',
             payload: docs,
