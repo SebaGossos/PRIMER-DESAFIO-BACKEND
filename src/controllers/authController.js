@@ -4,9 +4,9 @@ import UserDTO from "../dto/user.dto.js";
 
 export default class AuthController {
     
-    //!REGISTER
+    //!REGISTER        
     registerUser = ( req, res ) => res.redirect('/')
-    failRegister = ( req, res ) => res.render('errors/errorAuth',{error: 'Email already existt'})
+    failRegister = ( req, res ) => res.render('errors/errorAuth',{error: 'Email already exist'})
    
     //!LOGIN
     loginUser = ( req, res ) => { 

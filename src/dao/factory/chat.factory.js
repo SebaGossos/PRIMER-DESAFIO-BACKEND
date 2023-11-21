@@ -10,6 +10,6 @@ if ( persistance === 'MONGO' ) {
 }
 
 if ( persistance === 'FILE' ) {
-    const { default: ChatFile } = await import('../fs/chat_managerFS.js')
+    const { default: ChatFile } = await import('../fs/chatFS.js')
     Chat = ChatFile;
 }

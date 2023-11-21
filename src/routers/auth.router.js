@@ -1,9 +1,9 @@
 import passport from "passport";
-import { birthday } from "../middlewares/birthdate.middleware.js";
-import MyRouter from "./router.js";
-import AuthController from "../controllers/authController.js";
 
-const authController = new AuthController()
+import MyRouter from "./router.js";
+import { authController } from '../controllers/index.js'
+
+import { birthday } from "../middlewares/birthdate.middleware.js";
 
 export default class AuthRouter extends MyRouter {
     init(){

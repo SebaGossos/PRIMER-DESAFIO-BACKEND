@@ -1,49 +1,5 @@
-import { ProductManagerDB } from "../dao/db/products_managerDB.js";
-const productsManagerDB = new ProductManagerDB();
-
 import { ProductService } from "../repositories/index.js";
-
 import { PORT } from "../app.js";
-
-// export const getProducts = async ( req, res ) => {
-
-//   const { limit, page, sort, stock, category } = req.query;
-
-//   const { docs, totalPages, prevPage, nextPage, page: pagePaginate, hasPrevPage, hasNextPage } = await productsManagerDB.paginate({ stock, category },{ limit, page, sort });
-
-//   const originalUrl = req.originalUrl.at(-1) === '/' ? req.originalUrl.pop() : req.originalUrl;
-//   const andOrQuestion = originalUrl === '/products' ? '?' : '&';
-
-//   let prevLink;
-//   if ( !page ){
-//     prevLink = `http://${req.hostname}:${PORT}${originalUrl}${andOrQuestion}page=${prevPage}`;
-//   } else {
-//     const modifyLink = originalUrl.replace(`page=${req.query.page}`,`page=${prevPage}`);
-//     prevLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
-//   }
-
-//   let nextLink
-//   if ( !page ){
-//     nextLink = `http://${req.hostname}:${PORT}${originalUrl}${andOrQuestion}page=${nextPage}`;
-//   } else {
-//     const modifyLink = originalUrl.replace(`page=${req.query.page}`,`page=${nextPage}`);
-//     nextLink = `http://${ req.hostname }:${PORT}${modifyLink}`;
-//   }
-
-//   return {
-//     status: 'success',
-//     payload: docs,
-//     page: pagePaginate,
-//     totalPages,
-//     prevPage,
-//     nextPage,
-//     hasPrevPage,
-//     hasNextPage,
-//     prevLink,
-//     nextLink
-//   };
-
-// }
 
 export default class ProductController {
   async getAll(req, res) {
@@ -126,7 +82,6 @@ export default class ProductController {
       product.stock = +product.stock;
       product.status = product.status === "true";
 
-      // await productManagerFS.updateProduct(id, product);
       await ProductService.update(id, product);
       res.json(product);
     } catch (err) {
@@ -136,7 +91,6 @@ export default class ProductController {
 
   async delete(req, res) {
     const id = req.params.pid;
-    console.log(id);
 
     try {
       await ProductService.deleteById(id);

@@ -1,0 +1,14 @@
+import AuthController from "./authController.js";
+export const authController = new AuthController
+
+import CartController from "./cartController.js";
+export const cartController = new CartController
+
+import ChatController from "./chatController.js";
+export const chatController = new ChatController
+
+import ProductController from "./productController.js";
+export const productController = new ProductController
+
+import ViewController from "./viewController.js";
+export const viewController = new ViewController

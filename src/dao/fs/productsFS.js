@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 
-export class ProductManagerFS {
+export class ProductsFile {
     #_path;
     constructor( path ){
         this.#_path = path;
@@ -24,12 +24,29 @@ export class ProductManagerFS {
         return products
     }
 
-    async generateId (){
+    getAll = async() => await this.#prodJSON();
+
+    getById = async( id ) => {
         const products = await this.#prodJSON()
-        return products.at(-1)?.id + 1 || 1;
+        const product = products.find( p => p.code === id )
+        if ( !product ) throw `DIN´T FOUND A PRODUCT WITH ID: ${ id }`
+
+        return product
     }
 
-    async addProduct( product ){
+    getByCode = async( code ) => {
+        const products = await this.#prodJSON()
+        const product = products.find( p => p.code === code.toString() )
+        if ( !product ) throw `DIN´T FOUND A PRODUCT WITH CODE: ${ code }`
+
+        return product
+    }
+
+    getAllPaginate = async(req, PORT) => {
+
+    }
+
+    async create( product ){
         const { id, title, description, price, thumbnail, code, stock, category, status=true } = product
         if ( id ) throw "Don't try to send an ID in the body, because it will be auto-incremented";
         if ( !title || !description || !price || !code || !stock || !category ) throw 'Must submit all required fields'
@@ -43,18 +60,8 @@ export class ProductManagerFS {
         await this.#prodJSON( product )
         return product
     }
-
-    getProducts = async() => await this.#prodJSON();
-
-    getProductsById = async( id ) => {
-        const products = await this.#prodJSON()
-        const product = products.find( p => p.id === id )
-        if ( !product ) throw `DIN´T FOUND A PRODUCT WITH ID: ${ id }`
-
-        return product
-    }
     
-    async updateProduct( id, product){
+    async update( id, product){
         //! ERROR HANDLER
         const { title, description, price, thumbnail, code, stock, category, status=true } = product
         if ( product.id ) throw 'Don´t have to send an ID in the body petition'
@@ -74,12 +81,17 @@ export class ProductManagerFS {
         return products
     }
 
-    async deleteProduct( id ) {
+    async deleteById( id ) {
         let products = await this.getProducts()
         if ( !products.some( p => p.id === id )) throw `ID: ${ id } not found`;
 
         products = products.filter( p => p.id !== id )
         await this.#prodJSON( null, products )
         return products;
+    }
+
+    async generateId (){
+        const products = await this.#prodJSON()
+        return products.at(-1)?.id + 1 || 1;
     }
 }

@@ -1,15 +1,7 @@
 import passport from "passport";
 
 import MyRouter from "./router.js";
-import { ProductManagerDB } from "../dao/db/products_managerDB.js";
-const productsManagerDB = new ProductManagerDB();
-
-
-
-
-import ViewController from "../controllers/viewController.js";
-const viewController = new ViewController()
-
+import { viewController } from "../controllers/index.js";
 
 
 export default class ViewRouter extends MyRouter {

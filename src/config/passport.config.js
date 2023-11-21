@@ -1,8 +1,6 @@
 import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
-import { UserManagerDB } from "../dao/db/user_managerDB.js";
-import { CartManagerDB } from "../dao/db/carts_managerDB.js";
 import { createHash, isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
@@ -10,11 +8,7 @@ import config from "./config.js";
 const emailAdmin = config.admin.adminEmail;
 const passwordAdmin = config.admin.adminPassword;
 
-import UserModel from "../dao/models/user.model.js";
-import { CartService } from "../repositories/index.js";
-
-const userManagerDB = new UserManagerDB();
-const cartManagerDB = new CartManagerDB();
+import { CartService, UserService } from "../repositories/index.js";
 
 const localStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -51,21 +45,21 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, age } = req.body;
         try {
-          const user = await userManagerDB.getUserByEmail({ email: username });
+          const user = await UserService.getByEmail({ email: username });
           if (user) {
             return done(null, false, { info: "error del regis" });
           }
           const cart = await CartService.create();
 
-          const newUser = {
+          const result = await UserService.create({
             first_name,
             last_name,
             email: username,
             age,
             password: createHash(password),
             cart,
-          };
-          const result = await userManagerDB.createUser(newUser);
+            source: 'ourApp'
+          });
 
           return done(null, result);
         } catch (err) {
@@ -90,7 +84,7 @@ const initializePassport = () => {
               role: "admin",
               first_name: "admin",
             });
-          const user = await userManagerDB.getUserByEmail({ email: username });
+          const user = await UserService.getByEmail({ email: username });
           if (!user)
             return done(null, false, {
               err: "no se encuentra estoy en passport ",
@@ -117,12 +111,12 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const user = await userManagerDB.getUserByEmail({
+          const user = await UserService.getByEmail({
             email: profile._json.email,
           });
           if (user) return done(null, user);
 
-          const newUser = await userManagerDB.createUser({
+          const newUser = await UserService.create({
             first_name: profile._json.name,
             last_name: "",
             email: profile._json.email,
@@ -146,7 +140,7 @@ const initializePassport = () => {
   // })
 
   // passport.deserializeUser(async (id, done) => {
-  //     const user = await userManagerDB.findById(id);
+  //     const user = await UserService.findById(id);
   //     done(null, user)
   // })
 };

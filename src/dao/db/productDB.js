@@ -1,9 +1,9 @@
-import productsModel from "../models/products.models.js";
+import { productModel } from "../../models/Product.js";
 
 export default class ProductsMongo {
 
     getAll = async() => {
-        const products = await productsModel.find().lean().exec();
+        const products = await productModel.find().lean().exec();
         const productsWithIdAsString = products.map( p => {
             p._id = p._id.toString();
             return p;
@@ -41,7 +41,7 @@ export default class ProductsMongo {
 
         const { limit, page, sort, stock, category } = req.query;
 
-        const { docs, totalPages, prevPage, nextPage, page: pagePaginate, hasPrevPage, hasNextPage } = await productsModel.paginate( filterOption, paginateOption );
+        const { docs, totalPages, prevPage, nextPage, page: pagePaginate, hasPrevPage, hasNextPage } = await productModel.paginate( filterOption, paginateOption );
         
         //! HANDLE ERROR
         if ( totalPages < page ) throw `Must submit a page until: ${ totalPages }`
@@ -63,7 +63,6 @@ export default class ProductsMongo {
         if ( prevPage === 1 && !originalUrl.includes('&')) {
             const cleanEndPoint = originalUrl.replace(`?page=${page}`, '')
             prevLink = `http://${ req.hostname}:${PORT}${cleanEndPoint}`
-            console.log( prevLink )
         }
 
         let nextLink
@@ -88,10 +87,10 @@ export default class ProductsMongo {
         };
     }
 
-    getById = async( id ) => await productsModel.findById({ _id: id });
+    getById = async( id ) => await productModel.findById({ _id: id });
 
     getByCode = async( code ) => {
-        const product = await productsModel.findOne({ code: code }).lean().exec();
+        const product = await productModel.findOne({ code: code }).lean().exec();
         if( !product ) throw `Dind´t found the product with code: ${ code }.`
         product._id = product._id.toString();
         return product
@@ -112,17 +111,17 @@ export default class ProductsMongo {
         product.thumbnail = thumbnail.length === 0 ? ["Without image"] : thumbnail;
         product.status = status
 
-        // productsModel.create( product )
+        // productModel.create( product )
 
-        const productGenerated = new productsModel( product )
+        const productGenerated = new productModel( product )
         
         await productGenerated.save()
 
         
     }
 
-    update = async( id, product ) =>  await productsModel.findByIdAndUpdate( id, product, { returnDocument: 'after' } );
+    update = async( id, product ) =>  await productModel.findByIdAndUpdate( id, product, { returnDocument: 'after' } );
 
-    deleteById = async( id ) => await productsModel.findByIdAndDelete( id );
+    deleteById = async( id ) => await productModel.findByIdAndDelete( id );
 
 }

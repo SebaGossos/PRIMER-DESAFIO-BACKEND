@@ -10,6 +10,6 @@ if ( persistance === 'MONGO' ) {
 }
 
 if ( persistance === 'FILE' ) {
-    const { default: ProductFile } = await import('../fs/products_managerFS.js')
+    const { default: ProductsFile } = await import('../fs/productsFS.js')
     Product = ProductFile;
 }

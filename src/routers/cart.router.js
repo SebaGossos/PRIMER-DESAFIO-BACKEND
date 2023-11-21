@@ -1,16 +1,6 @@
 import MyRouter from "./router.js";
-import { CartManagerDB } from "../dao/db/carts_managerDB.js";
-import CartController from "../controllers/cartController.js";
+import { cartController } from "../controllers/index.js";
 
-const cartManagerDB = new CartManagerDB();
-
-const cartController = new CartController()
-
-// export const getCarts = async ( req, res ) => {
-//   const cid = req.params.cid;
-//   const cart = await cartManagerDB.getCartById( cid )
-//   return cart 
-// }
 
 export default class CartRouter extends MyRouter {
   init() {

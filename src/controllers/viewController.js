@@ -1,8 +1,3 @@
-import { ProductManagerDB } from "../dao/db/products_managerDB.js";
-const productsManagerDB = new ProductManagerDB();
-
-// import { getCarts } from "../routers/cart.router.js";
-
 import { CartService, ProductService } from "../repositories/index.js";
 import { PORT } from "../app.js";
 

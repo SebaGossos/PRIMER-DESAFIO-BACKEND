@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
-
-export default class User {
+class User {
 
     static get model() {
         return 'users'
     }
 
     static get schema() {
-        return {
+        const instanceMongo = new mongoose.Schema({
             first_name: String,
             last_name: String,
             email: {type:String, unique: true},
@@ -19,8 +18,11 @@ export default class User {
             },
             role: { type: String, default: 'user' },
             source: String
-        }
+        })
+
+        return instanceMongo
     }
     
 }
+export const userModel = mongoose.model( User.model, User.schema );
 

@@ -1,6 +1,3 @@
-import { CartManagerDB } from "../dao/db/carts_managerDB.js";
-const cartManagerDB = new CartManagerDB();
-
 import { CartService } from "../repositories/index.js";
 
 export default class CartController {

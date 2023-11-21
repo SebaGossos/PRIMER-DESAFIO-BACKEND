@@ -1,4 +1,4 @@
-import cartModel from "../models/carts.models.js";
+import { cartModel } from "../../models/Cart.js";
 //TODO: preguntar por esta importacion al tutor o profe porque cuando descomento me crashea la app, QUIERO ENTENDEEER
 // import { ProductService } from "../../repositories/index.js";
 import ProductsMongo from "./productDB.js";

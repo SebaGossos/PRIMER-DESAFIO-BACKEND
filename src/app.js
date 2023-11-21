@@ -5,6 +5,7 @@ import handlebars from 'express-handlebars';
 import { Command } from 'commander';
 import { fork } from 'child_process'
 
+
 import { Server } from 'socket.io';
 import { customAuthRouter, customProductRouter, customCartRouter, customChatRouter, customViewRouter } from './routers/index.js';
 import config from './config/config.js'
@@ -23,6 +24,21 @@ export const PORT = config.port;
 
 const app = express();
 
+//! ------------ Test FS ------------ 
+
+// import { ProductsFile } from './dao/fs/productsFS.js';
+// const productsFS = new ProductsFile('./data/products.json')
+
+// const test = async() => {
+  
+//     console.log( await productsFS.getByCode('abc123456789') ) 
+// }
+
+// test()
+
+
+
+//! ---------------------------------
 
 // const a = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority'
 // const b = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/'
@@ -32,6 +48,7 @@ const app = express();
 app.use( express.json() )
 app.use( express.urlencoded({ extended: true }) ) 
 app.use( cookieParser( config.cookie.keyCookie ) )
+
 // app.use( session({
 //     // store: MongoStore.create({
 //     //     mongoUrl: 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority',
@@ -42,6 +59,7 @@ app.use( cookieParser( config.cookie.keyCookie ) )
 //     resave: true,
 //     saveUninitialized: true
 // }))
+
 
 initializePassport()
 app.use( passport.initialize() )

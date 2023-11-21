@@ -1,12 +1,11 @@
 
-import MyRouter from "./router.js";
-
-import ProductController from "../controllers/productController.js";
-const productController = new ProductController()
-
 import multer from "multer";
 
+import MyRouter from "./router.js";
+import { productController } from "../controllers/index.js";
+
 import { storage } from "../utils.js";
+
 
 const uploader = multer({ storage });
 

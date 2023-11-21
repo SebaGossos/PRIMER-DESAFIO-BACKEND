@@ -2,8 +2,7 @@ import passport from "passport";
 
 import MyRouter from "./router.js";
 
-import ChatController from "../controllers/chatController.js"; 
-const chatController = new ChatController()
+import { chatController } from "../controllers/index.js"; 
 
 export default class ChatRouter extends MyRouter {
     init() {
