@@ -16,7 +16,8 @@ class Cart {
                         ref: 'products'
                     },
                     quantity: Number
-                }]
+                }],
+                default: []
             }
         })
 
@@ -24,4 +25,5 @@ class Cart {
     }
     
 }
+mongoose.set('strictQuery', false)
 export const cartModel = mongoose.model( Cart.model, Cart.schema );

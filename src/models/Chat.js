@@ -15,4 +15,5 @@ class Chat {
     }
     
 }
+mongoose.set('strictQuery', false)
 export const chatModel = mongoose.model( Chat.model, Chat.schema );

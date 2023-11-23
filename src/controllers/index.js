@@ -12,3 +12,6 @@ export const productController = new ProductController
 
 import ViewController from "./viewController.js";
 export const viewController = new ViewController
+
+import TicketController from "./ticketController.js";
+export const ticketController = new TicketController

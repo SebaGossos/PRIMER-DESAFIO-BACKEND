@@ -1,5 +1,6 @@
 import MyRouter from "./router.js";
 import { cartController } from "../controllers/index.js";
+import { ticketController } from "../controllers/index.js";
 
 
 export default class CartRouter extends MyRouter {
@@ -7,6 +8,8 @@ export default class CartRouter extends MyRouter {
     this.get('/', ['PUBLIC'], cartController.getAll)
 
     this.get("/:cid", ['PUBLIC'], cartController.getById)
+
+    this.get('/:cid/purchase', ['USER'], ticketController.purchase)
     
     this.post("/:cid/product/:pid", ['USER'], cartController.addToCart)
     

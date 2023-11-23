@@ -15,12 +15,13 @@ class Product {
             code: { type: String, required: true, unique: true, active:true },
             stock: { type: Number, required: true },
             category: { type: String, required: true },
-            status: { type: Boolean, required: true },
-            thumbnail: { type: [String], required: true }
+            status: { type: Boolean, default: true },
+            thumbnail: { type: [String], default:[] }
         })
         instanceMongo.plugin( mongoosePaginate )
         return instanceMongo
     }
 }
 
+mongoose.set('strictQuery', false)
 export const productModel = mongoose.model( Product.model, Product.schema );

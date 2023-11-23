@@ -14,12 +14,35 @@ const callApiDeleteProd = async( cid , pid ) => {
 
 const deleteProducts = async( cid ) => {
     try{
-        await fetch(`/api/carts/${ cid }`,{
-            method: 'delete'
-        })
-        alert(`Empty Cart`)
-        location.reload()
+        Swal.fire({ title: 'Empty Cart?', showCancelButton: true })
+            .then( async(result) => {
+                if (result.isConfirmed) {
+                    await fetch(`/api/carts/${ cid }`,{
+                        method: 'delete'
+                    })
+                    location.reload()
+                }
+            })
     } catch ( err ) {
         alert(`Ocurrio un error: ${err.error}`)
     }
 }
+
+const purchase = async( cid ) => {
+    try {
+        const response = await fetch(`/api/carts/${ cid }/purchase`)
+        const { status, payload} = await response.json()
+        const { withoutStock, ticket } = payload;
+
+        console.log( !ticket )
+        
+        if( withoutStock?.length > 0 && !ticket ) {
+            Swal.fire('Without Stock at the moment!')
+        }
+        // Swal.fire({ title: 'Empty Cart?', showCancelButton: true })
+
+    } catch( err ){
+        console.log( err )
+    }
+}
+ 

@@ -9,7 +9,7 @@
                 <th>title</th>
                 <th>description</th>
                 <th>price</th>
-                <th>units</th>
+                <th>quantity</th>
                 <th>code</th>
                 <th>stock</th>
                 <th>category</th>
@@ -40,6 +40,7 @@
     </table>
     <div class="d-flex justify-content-center mb-3">
         <button onclick="deleteProducts('{{cartId}}')" class="btn btn-warning">Empty cart</button>
+        <button onclick="purchase('{{cartId}}')" class="btn btn-primary ms-3">Purchase</button>
     </div>
     
     {{else}}
@@ -49,4 +50,5 @@
         <a class="btn btn-success text-center" href="/products">PRODUCTS</a>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/carts.js"></script>

@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
 import { Command } from 'commander';
+import cors from 'cors'
 import { fork } from 'child_process'
 
 
@@ -46,6 +47,7 @@ const app = express();
 
 
 app.use( express.json() )
+app.use( cors() )
 app.use( express.urlencoded({ extended: true }) ) 
 app.use( cookieParser( config.cookie.keyCookie ) )
 

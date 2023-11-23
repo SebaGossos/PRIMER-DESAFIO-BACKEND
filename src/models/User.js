@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-class User {
+export default class User {
 
     static get model() {
         return 'users'
@@ -7,11 +7,11 @@ class User {
 
     static get schema() {
         const instanceMongo = new mongoose.Schema({
-            first_name: String,
-            last_name: String,
-            email: {type:String, unique: true},
-            age: Number,
-            password: String,
+            first_name: { type: String, required: true },
+            last_name: { type: String, required: true },
+            email: { type: String, unique: true, required: true },
+            age: { type: Number, required: true },
+            password: { type: String, required: true },
             cart: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'carts'
@@ -24,5 +24,33 @@ class User {
     }
     
 }
+mongoose.set('strictQuery', false)
 export const userModel = mongoose.model( User.model, User.schema );
+// class User {
+
+//     static get model() {
+//         return 'users'
+//     }
+
+//     static get schema() {
+//         const instanceMongo = new mongoose.Schema({
+//             first_name: { type: String, required: true },
+//             last_name: { type: String, required: true },
+//             email: { type: String, unique: true, required: true },
+//             age: { type: Number, required: true },
+//             password: { type: String, required: true },
+//             cart: {
+//                 type: mongoose.Schema.Types.ObjectId,
+//                 ref: 'carts'
+//             },
+//             role: { type: String, default: 'user' },
+//             source: String
+//         })
+
+//         return instanceMongo
+//     }
+    
+// }
+// mongoose.set('strictQuery', false)
+// export const userModel = mongoose.model( User.model, User.schema );
 

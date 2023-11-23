@@ -18,4 +18,9 @@ import { User } from "../dao/factory/user.factory.js";
 import UserRepository from "./user.repository.js";
 export const UserService = new UserRepository( new User );
 
+//? ---- TICKETS ----
+import { Ticket } from "../dao/factory/ticket.factory.js";
+import TicketRepositoy from "./ticket.repository.js";
+export const TicketService = new TicketRepositoy( new Ticket );
+
 
