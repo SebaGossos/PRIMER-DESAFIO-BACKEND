@@ -37,9 +37,16 @@ const purchase = async( cid ) => {
         console.log( !ticket )
         
         if( withoutStock?.length > 0 && !ticket ) {
-            Swal.fire('Without Stock at the moment!')
+            return Swal.fire('Without Stock at the moment!')
         }
-        // Swal.fire({ title: 'Empty Cart?', showCancelButton: true })
+        if( ticket ) {
+            Swal.fire(`Purchase made successfully!`)
+                .then( async(result) => {
+                    if (result.isConfirmed) {
+                        location.reload()
+                    }
+                })
+        }
 
     } catch( err ){
         console.log( err )
