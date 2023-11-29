@@ -87,7 +87,7 @@ export default class ProductsMongo {
         };
     }
 
-    getById = async( id ) => await productModel.findById({ _id: id });
+    getById = async( id ) => await productModel.findById({ _id: id }).lean().exec();
 
     getByCode = async( code ) => {
         const product = await productModel.findOne({ code: code }).lean().exec();

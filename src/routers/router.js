@@ -41,6 +41,7 @@ export default class MyRouter {
     }
 
     #handlePolicies = (policies=['PUBLIC']) => (req, res, next) => {
+
         if( policies.includes('PUBLIC') ) return next()
         else {
             const token = req.signedCookies['jwt-coder'];

@@ -61,13 +61,13 @@ export default class TicketMongo {
         //! UPDATE PRODUCTS DB
         for( const prod of products ) {
             const id = prod._id;
-            const algo = await productModel.findByIdAndUpdate( id, prod, { returnDocument: 'after' } )
+            const something = await productModel.findByIdAndUpdate( id, prod, { returnDocument: 'after' } )
         }
 
         //! CREATE TICKET DB
         let cartPrice;
         const productsTicket = productPurchased.filter( prod => {
-            if( prod.totalPriceCart ) {
+            if( prod.totalPriceCart || prod.totalPriceCart === 0 ) {
                 cartPrice = prod.totalPriceCart
                 return false
             }
@@ -80,7 +80,9 @@ export default class TicketMongo {
             amount: cartPrice,
             purchaser: email,
         }
+
         const saveTicket = await ticketModel.create( ticket )
+
         return saveTicket;
     }
 
@@ -96,5 +98,5 @@ export default class TicketMongo {
         return response;
 
     }
-    
+
 }

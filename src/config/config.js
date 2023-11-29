@@ -24,5 +24,9 @@ export default {
     },
     cookie: {
         keyCookie: process.env.KEY_COOKIE
+    },
+    nodemailer: {
+        user: process.env.NODEMAILER_USER,
+        pass: process.env.NODEMAILER_PASS
     }
 }

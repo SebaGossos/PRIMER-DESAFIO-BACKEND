@@ -139,28 +139,9 @@ export default class CartsMongo {
 
 
     const cartUpdated = await cartModel.findByIdAndUpdate( cid, cart, { returnDocument: "after" } )
-    console.log( cartUpdated )
-
-   
-
-    // const existProd = await this.productsDAO.getById(pid);
-    // if (!existProd) throw `Dind´t found the product id: ${pid}`;
-
-    // let cart = JSON.parse(JSON.stringify(data, null, 2));
-    // const prodIndex = cart.products.findIndex((p) => p.pId === pid);
-
-    // if (prodIndex > -1) {
-    //   cart.products[prodIndex].quantity++;
-    // } else {
-    //   cart.products.push({ pId: pid, quantity: 1 });
-    // }
-
-    // const addToCartByMongo = await cartModel.updateOne({ _id: cid }, cart);
-
-    // return { addToCartByMongo, cartAdded: cart };
+    
+    return cartUpdated;
   };
-
-
 
   delete = async (cid) => {
     // const cartDeleted = await cartModel.findByIdAndDelete(cid);
