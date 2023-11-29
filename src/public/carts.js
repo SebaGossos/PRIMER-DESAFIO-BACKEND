@@ -36,17 +36,14 @@ const purchase = async( cid ) => {
         const response = await fetch(`/api/carts/${ cid }/purchase`)
         const { status, payload} = await response.json()
         let { withoutStock, ticket } = payload;
-        console.log( ticket )
         
         if( withoutStock?.length > 0 && !ticket ) {
             return Swal.fire('Without Stock at the moment!')
         }
         if( ticket ) {
-            // TODO: FOR THE TICKET EMAIL
             let wantTheEmail = false;
 
             const next = await Swal.fire(`Purchase made successfully!`)
-
 
             if( next ) {
                 await Swal.fire({
@@ -81,9 +78,7 @@ const purchase = async( cid ) => {
                     }
                 });
                 if (email) {
-                    console.log(':)')
                     let ticketUpdated = { ...ticket, emailToSend: email }
-                    console.log( ticketUpdated )
        
                     const response = await fetch('/api/carts/getbill',{
                         method: 'post',
@@ -93,19 +88,13 @@ const purchase = async( cid ) => {
                         body: JSON.stringify({ ticket: ticketUpdated })
                     })
                     const data = await response.json()
-                    console.log( data )
-                    // Swal.fire(`Sent ticket to: ${email}`);
+                    if ( data.status.toUpperCase() === 'SUCCESS') {
+                        await Swal.fire(data.message)
+                        location.reload()
+                    } else console.log(data.error)
                 }
             }
-            // console.log( email )
 
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            // Swal.fire(`Purchase made successfully!`)
-            //     .then( async(result) => {
-            //         if (result.isConfirmed) {
-            //             location.reload()
-            //         }
-            //     })
         }
 
     } catch( err ){

@@ -10,7 +10,7 @@ const getBill = async( req, res ) => {
 
     let ticket = req.body.ticket;
 
-    const destinatario = ticket.emailToSend
+    const addressee = ticket.emailToSend
     
     let productsTicket = ticket.products;
 
@@ -69,7 +69,7 @@ const getBill = async( req, res ) => {
 
     let message = {
         from: 'Dpto Ventas - Coder <codershop@coderhouse.com>',
-        to: destinatario,
+        to: addressee,
         subject: `Finish purchase successfully`,
         html: mail
     }
@@ -77,9 +77,9 @@ const getBill = async( req, res ) => {
 
     transporter.sendMail(message)
         .then(() => {
-            return res.status(200).json({ message: 'Yo have received an email' })
+            return res.status(200).json({ status: 'success', message: `Yo have received an email on ${ addressee }` })
         })
-        .catch(err => res.status(500).json({ err }))
+        .catch(err => res.status(500).json({ status: 'error', error:err }))
 
 }
 export default getBill;
