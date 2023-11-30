@@ -8,6 +8,7 @@ import { fork } from 'child_process'
 
 
 import { Server } from 'socket.io';
+import errorHandler from './middlewares/errors.js';
 import { customAuthRouter, customProductRouter, customCartRouter, customChatRouter, customViewRouter } from './routers/index.js';
 import config from './config/config.js'
  
@@ -21,34 +22,19 @@ program.parse()
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 
+
+// import { EErrosProducts } from './service/errors/index.js';
+
 export const PORT = config.port;
 
 const app = express();
 
-//! ------------ Test FS ------------ 
-
-// import { ProductsFile } from './dao/fs/productsFS.js';
-// const productsFS = new ProductsFile('./data/products.json')
-
-// const test = async() => {
-  
-//     console.log( await productsFS.getByCode('abc123456789') ) 
-// }
-
-// test()
-
-
-
-//! ---------------------------------
-
-// const a = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority'
-// const b = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/'
 
 
 
 app.use( express.json() )
 app.use( cors() )
-app.use( express.urlencoded({ extended: true }) ) 
+app.use( express.urlencoded({ extended: true }) )
 app.use( cookieParser( config.cookie.keyCookie ) )
 
 // app.use( session({
@@ -79,8 +65,16 @@ app.use( '/api/products', customProductRouter.getRouter() )
 app.use( '/api/carts', customCartRouter.getRouter() ) 
 app.use( '/api/chat', customChatRouter.getRouter() ) 
 app.use( '/', customViewRouter.getRouter() )
+// app.get('/test-error', (req, res, next) => {
+//     const error = new Error('Este es un error de prueba');
+//     error.code = EErrosProducts.INVALID_TYPES_ERROR;
+//     next(error);
+// });
+
+app.use( errorHandler )
 
 app.get( '*', async(req, res) => res.status(404).render('errors/errorAuth',{ error: 'Cannot get the specified endpoint' } ) )
+
 
 try{
     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{

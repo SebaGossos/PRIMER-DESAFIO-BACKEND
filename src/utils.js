@@ -4,6 +4,9 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
 import config from './config/config.js';
+import { v4 as uuidv4 } from 'uuid'
+import { fakerES as faker } from "@faker-js/faker";
+
 
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = dirname( __filename );
@@ -36,6 +39,20 @@ export const passportCall = strategy => {
             next()
         })(req, res, next)
     }
+}
+
+export const createMockingProducts = async() => {
+  return {
+    id: faker.database.mongodbObjectId(),
+    title: faker.commerce.product(),
+    description: faker.commerce.productDescription(),
+    price: faker.commerce.price(),
+    code: uuidv4(),
+    stock: 100,
+    category: faker.commerce.productAdjective(),
+    status: true,
+    thumbnail: faker.image.avatar()
+  }
 }
 
 

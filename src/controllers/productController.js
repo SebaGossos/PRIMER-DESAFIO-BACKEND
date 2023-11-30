@@ -1,5 +1,6 @@
 import { ProductService } from "../repositories/index.js";
 import { PORT } from "../app.js";
+import { createMockingProducts } from "../utils.js";
 
 export default class ProductController {
   async getAll(req, res) {
@@ -15,6 +16,16 @@ export default class ProductController {
         error: err,
         description: "No se encuentran los products por el momento",
       });
+    }
+  }
+
+  async mockingProducts( req, res ) {
+    let products = []
+    for ( let i=0; i < 101; i++) products.push( await createMockingProducts() )
+    try{
+      res.status(200).json( products )
+    } catch( err ) {
+      res.status(500).json( err )
     }
   }
 
@@ -56,19 +67,18 @@ export default class ProductController {
     }
   }
 
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const product = JSON.parse(JSON.stringify(req.body));
       const url = req.file?.filename;
       product.thumbnail = url ? `${Date.now()}-${url}` : undefined;
-      product.price = +product.price;
-      product.stock = +product.stock;
       product.status = product.status === "true";
 
-      await ProductService.create(product);
+      const algo = await ProductService.create(product);
+      console.log( algo )
       res.status(200).json(product);
-    } catch (err) {
-      res.status(400).send({ status: "error", error: err });
+    } catch (error) {
+      next(error)
     }
   }
 

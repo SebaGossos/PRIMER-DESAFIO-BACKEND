@@ -1,4 +1,6 @@
 import { productModel } from "../../models/Product.js";
+import { CustomError, EErros, ErrorInfoProd } from "../../service/errors/index.js";
+
 
 export default class ProductsMongo {
 
@@ -106,8 +108,15 @@ export default class ProductsMongo {
         status=true,
         thumbnail=['Without image']
     }){
-        if ( !title || !description || !price || !code || !stock || !category ) throw 'Must submit all required fields'
         const product = { title, description, price, code, stock, category, status, thumbnail }
+        if ( !title || !description || !price || !code || !stock || !category ) {
+            CustomError.createError({
+                name: 'Product create Error',
+                cause: ErrorInfoProd( product ),
+                message: 'Error while trying to create a product',
+                code: EErros.INVALID_TYPES_ERROR
+            })
+        }
         product.thumbnail = thumbnail.length === 0 ? ["Without image"] : thumbnail;
         product.status = status
 
