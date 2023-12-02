@@ -29,41 +29,45 @@ export default class ProductController {
     }
   }
 
-  async getAllPaginate(req, res) {
+  async getAllPaginate(req, res, next) {
     try {
       // const result = await getProducts(req, res);
 
       const resultDao = await ProductService.getAllPaginate(req, PORT);
 
       res.status(200).json(resultDao);
-    } catch (err) {
+    } catch (error) {
+
+      next( error )
       res.status(500).json({
         status: "error",
-        error: err,
+        error: error,
         description: "No se encuentran los products por el momento",
       });
     }
   }
 
-  async getById(req, res) {
+  async getById(req, res, next) {
     const id = req.params.pid;
 
     try {
       const result = await ProductService.getById(id);
       return res.status(200).json({ payload: result });
-    } catch (err) {
-      return res.status(400).send({ status: "error", error: err });
+    } catch (error) {
+      next( error )
+      // return res.status(400).send({ status: "error", error: err });
     }
   }
 
-  async getByCode(req, res) {
+  async getByCode(req, res, next) {
     const code = req.params.pcode;
 
     try {
       const prod = await ProductService.getByCode(code);
       return res.status(200).json({ payload: prod });
-    } catch (err) {
-      return res.status(400).send({ status: "error", error: err });
+    } catch (error) {
+      next( error )
+      // return res.status(400).send({ status: "error", error: err });
     }
   }
 
@@ -74,8 +78,7 @@ export default class ProductController {
       product.thumbnail = url ? `${Date.now()}-${url}` : undefined;
       product.status = product.status === "true";
 
-      const algo = await ProductService.create(product);
-      console.log( algo )
+      await ProductService.create(product);
       res.status(200).json(product);
     } catch (error) {
       next(error)

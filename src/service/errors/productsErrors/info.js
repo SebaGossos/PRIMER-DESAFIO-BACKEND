@@ -1,4 +1,4 @@
-const ErrorInfoProd = product => {
+export const ErrorInfoProd = product => {
     return `
     Uno o mas properties están incompletos o son inválidos.
     Lista de propiedades obligatorias:
@@ -11,4 +11,7 @@ const ErrorInfoProd = product => {
         - thumbnail: Must be Array with string. ( ${product.thumbnail} - type: ${typeof product.thumbnail}  )
     `
 }
-export default ErrorInfoProd
+
+export const ErrorInfoGetByCode = code => `WRONG CODE WAS SEND: ${ code } => ${ typeof code } , you must submit a string with the correct code to continue.`
+
+export const ErrorInfoGetById = pid => `WRONG ID WAS SEND: ${ pid } => ${ typeof pid } , Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer.`;

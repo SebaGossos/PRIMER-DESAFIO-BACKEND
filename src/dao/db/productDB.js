@@ -1,5 +1,5 @@
 import { productModel } from "../../models/Product.js";
-import { CustomError, EErros, ErrorInfoProd } from "../../service/errors/index.js";
+import { CustomError, EErros, ErrorInfoProd, ErrorInfoGetByCode, ErrorInfoGetById } from "../../service/errors/index.js";
 
 
 export default class ProductsMongo {
@@ -89,11 +89,33 @@ export default class ProductsMongo {
         };
     }
 
-    getById = async( id ) => await productModel.findById({ _id: id }).lean().exec();
+    getById = async( id ) => {
+        let prod;
+        try{
+            prod = await productModel.findById({ _id: id }).lean().exec();
+        } catch( error ) {
+            // console.log( error )
+            CustomError.createError({
+                name: 'Product Get Id Error',
+                cause: ErrorInfoGetById(  id ),
+                message: 'Error while trying to get a product with the correct id',
+                code: EErros.INVALID_TYPES_ERROR
+            })
+        }
+        return prod;
+    }
 
     getByCode = async( code ) => {
         const product = await productModel.findOne({ code: code }).lean().exec();
-        if( !product ) throw `Dind´t found the product with code: ${ code }.`
+
+        if( !product ) {
+            CustomError.createError({
+                name: 'Product get Code Error',
+                cause: ErrorInfoGetByCode( code ),
+                message: 'Error while trying to get a code',
+                code: EErros.INVALID_TYPES_ERROR
+            })
+        }
         product._id = product._id.toString();
         return product
     }
@@ -120,13 +142,10 @@ export default class ProductsMongo {
         product.thumbnail = thumbnail.length === 0 ? ["Without image"] : thumbnail;
         product.status = status
 
-        // productModel.create( product )
-
         const productGenerated = new productModel( product )
         
         await productGenerated.save()
 
-        
     }
 
     update = async( id, product ) =>  await productModel.findByIdAndUpdate( id, product, { returnDocument: 'after' } );

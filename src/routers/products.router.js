@@ -17,7 +17,7 @@ export default class ProductsRouter extends MyRouter {
 
     this.get('/mockingproducts', ['PUBLIC'], productController.mockingProducts)
 
-    this.get("/:pid", ['USER','ADMIN'], productController.getById)
+    this.get("/:pid", ['USER','ADMIN', 'PUBLIC'], productController.getById)
     
     this.get("/query/:pcode", ['USER','ADMIN'], productController.getByCode)
     

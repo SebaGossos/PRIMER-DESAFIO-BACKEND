@@ -20,7 +20,7 @@ export default class ViewController {
     }
   }
 
-  async products(req, res) {
+  async products(req, res, next) {
     try {
       const { first_name, last_name, email, age, role, cart } = req.user;
       const {
@@ -47,8 +47,9 @@ export default class ViewController {
         user: { first_name, last_name, email, age, role, cart },
         isAdmin: req.user.role === "admin",
       });
-    } catch (err) {
-      res.render("errors/errorPlatform", { error: err });
+    } catch (error) {
+      next( error )
+      res.render("errors/errorPlatform", { error });
     }
   }
 
