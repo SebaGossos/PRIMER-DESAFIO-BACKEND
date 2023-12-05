@@ -1,15 +1,16 @@
 import dotenv from 'dotenv';
 
-const environment = 'PRODUCTION';
+const environment = 'DEV';
 
 dotenv.config({
-    path: environment === 'PRODUCTION' ? './.env.production' : './.env.development'
+    path: environment === 'PROD' ? './.env.production' : './.env.development'
 });
 
 export default {
     port: process.env.PORT,
     mongoUrl: process.env.MONGO_URL,
     persistance: process.env.PERSISTANCE,
+    environment,
     admin: {
         adminEmail: process.env.ADMIN_EMAIL,
         adminPassword: process.env.ADMIN_PASSWORD

@@ -21,6 +21,7 @@ program.parse()
 
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
+import logger from './logger.js';
 
 
 // import { EErrosProducts } from './service/errors/index.js';
@@ -65,6 +66,15 @@ app.use( '/api/products', customProductRouter.getRouter() )
 app.use( '/api/carts', customCartRouter.getRouter() ) 
 app.use( '/api/chat', customChatRouter.getRouter() ) 
 app.use( '/', customViewRouter.getRouter() )
+app.use( '/loggerTest', ( req, res, next) => {
+    logger.debug('Logger debug')
+    logger.http('Logger http')
+    logger.info('Logger info')
+    logger.warning('Logger warning')
+    logger.error('Logger error')
+    logger.fatal('Logger fatal')
+    res.send('okk')
+})
 // app.get('/test-error', (req, res, next) => {
 //     const error = new Error('Este es un error de prueba');
 //     error.code = EErrosProducts.INVALID_TYPES_ERROR;
@@ -84,9 +94,7 @@ try{
     console.log( 'Error to connect DB' )
 }
 
-
-
-const httpServer = app.listen( PORT, () => console.log(`SERVER UP!! http://localhost:${PORT}`) ) 
+const httpServer = app.listen( PORT, () => logger.debug(`SERVER UP!! http://localhost:${PORT}`) ) 
 
 
 let log = []
