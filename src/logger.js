@@ -5,20 +5,20 @@ const environment = config.environment;
 
 const winstonCustom = {
     levels: {
-        debug:0,
-        http:1,
-        info:2,
-        warning:3,
-        error:4,
-        fatal:5
+        fatal:0,
+        error:1,
+        warning:2,
+        info:3,
+        http:4,
+        debug:5
     },
     colors: {
-        debug:'white',
-        http:'green',
-        info:'blue',
-        warning:'yellow',
-        error:'magenta',
-        fatal:'red'
+        fatal:'white',
+        error:'green',
+        warning:'blue',
+        info:'yellow',
+        http:'magenta',
+        debug:'red'
     }
 }
 

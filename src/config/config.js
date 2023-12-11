@@ -1,16 +1,24 @@
 import dotenv from 'dotenv';
+import { Command } from 'commander';
 
-const environment = 'DEV';
+const program = new Command();
+program
+    .option('-p <port>', 'Puerto del servidor', 8080 )
+    .option('--mode <mode>', 'Modo de ejecución', 'DEV')
+program.parse()
+
+const environment = program.opts().mode; 
 
 dotenv.config({
     path: environment === 'PROD' ? './.env.production' : './.env.development'
 });
 
 export default {
-    port: process.env.PORT,
+    port: program.opts().p,
     mongoUrl: process.env.MONGO_URL,
     persistance: process.env.PERSISTANCE,
     environment,
+    program,
     admin: {
         adminEmail: process.env.ADMIN_EMAIL,
         adminPassword: process.env.ADMIN_PASSWORD

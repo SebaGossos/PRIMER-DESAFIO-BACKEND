@@ -2,7 +2,6 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
-import { Command } from 'commander';
 import cors from 'cors'
 import { fork } from 'child_process'
 
@@ -11,21 +10,18 @@ import { Server } from 'socket.io';
 import errorHandler from './middlewares/errors.js';
 import { customAuthRouter, customProductRouter, customCartRouter, customChatRouter, customViewRouter } from './routers/index.js';
 import config from './config/config.js'
- 
-const program = new Command();
-program
-    .option('-p <port>', 'Puerto del servidor', 8080 )
-    .option('--mode <mode>', 'Modo de ejecución', 'production')
-program.parse()
+
 
 
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import logger from './logger.js';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 
 
 // import { EErrosProducts } from './service/errors/index.js';
 
+console.log( config.port )
 export const PORT = config.port;
 
 const app = express();
@@ -81,7 +77,7 @@ app.use( '/loggerTest', ( req, res, next) => {
 //     next(error);
 // });
 
-app.use( errorHandler )
+app.use( errorHandler ) 
 
 app.get( '*', async(req, res) => res.status(404).render('errors/errorAuth',{ error: 'Cannot get the specified endpoint' } ) )
 
