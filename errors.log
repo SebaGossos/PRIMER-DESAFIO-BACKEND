@@ -1,1 +1,5 @@
 {"level":"debug","message":"SERVER UP!! http://localhost:8080"}
+{"level":"info","message":"Logger info"}
+{"level":"warning","message":"Logger warning"}
+{"level":"error","message":"Logger error"}
+{"level":"fatal","message":"Logger fatal"}
