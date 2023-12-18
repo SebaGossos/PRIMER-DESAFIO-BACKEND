@@ -81,16 +81,3 @@ export const getBill = async( req, res ) => {
         .catch(err => res.status(500).json({ status: 'error', error:err }))
 
 };
-
-// export const forgetPassword = async( req, res ) => res.render("authenticate/forget_password")
-
-// export const recoveryPassword = async( req, res ) => {
-//     const email = req.body.email;
-    
-//     const user = await UserService.getByEmail( email )
-
-//     if( !user ) return res.render('errors/errorAuth', { error: 'User Email not found try again with a correct email' })
-//     console.log( user )
-
-//     res.send({ hola:33 })
-// }

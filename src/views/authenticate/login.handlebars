@@ -25,9 +25,7 @@
         document.getElementById('passwordInput').value = '';
     }, 600)
 
-    {{!-- if( {{userRegister}} ){
-        Swal.fire( 'User Created Successfully!' )
-
-    } --}}
-
+    if( {{messageRecovery}} ){
+        Swal.fire( 'We send an email to recover the password successfully!' )
+    }
 </script>

@@ -1,12 +1,17 @@
 import { CartService, ProductService, UserService } from "../repositories/index.js";
 import { PORT } from "../app.js";
 
+
 export default class ViewController {
   async login(req, res) {
     try {
+      let messageRecovery = false;
+      if( process.env.isPasswordRecovery === 'true' ) messageRecovery = true;
+      process.env.isPasswordRecovery = false;
+
       res
-        .clearCookie("jwt-coder")
-        .render("authenticate/login", { userRegister: false });
+      .clearCookie("jwt-coder")
+      .render("authenticate/login", { messageRecovery });
     } catch (err) {
       res.render("errors/errorAuth", { error: err });
     }
@@ -18,13 +23,70 @@ export default class ViewController {
 
   async recoveryPassword( req, res ) {
     const email = req.body.email;
-    console.log( email )
     const user = await UserService.getByEmail( email )
-
     if( !user ) return res.render('errors/errorAuth', { error: 'User Email not found try again with a correct email' })
-    console.log( user )
 
-    res.send({ hola:33 })
+    //TODO: 
+
+    // let configNodeMailer = {
+    //     service: 'gmail',
+    //     auth: {
+    //         user: config.nodemailer.user,
+    //         pass: config.nodemailer.pass
+    //     }
+    // }
+
+    // let transporter = nodemailer.createTransport(configNodeMailer)
+
+    // let Mailgenerator = new Mailgen({
+    //     theme: 'default',
+    //     product: {
+    //         name: 'Coder Shop',
+    //         link:'http://www.coderhouse.com'
+    //     }
+    // })
+    
+    // let response = {
+    //     body: {
+    //         intro: "Your bill has arrived!",
+    //         table: {
+    //             data: productsPurchased.map( p => {
+    //                 return {
+    //                     title: p.title,
+    //                     description: p.description,
+    //                     price: 0,
+    //                     code: p.code,
+    //                     stock: p.stock,
+    //                     category: p.category,
+    //                     thumbnail: p.thumbnail,
+    //                     status: p.status,
+    //                     quantity: p.quantity
+    //                 }
+    //             })
+    //         },
+    //         outro: 'Looking forward to do more business'
+    //     }
+    // }
+    // let mail = Mailgenerator.generate(response)
+
+    // let message = {
+    //     from: 'Dpto Ventas - Coder <codershop@coderhouse.com>',
+    //     to: addressee,
+    //     subject: `Finish purchase successfully`,
+    //     html: mail
+    // }
+
+
+    // transporter.sendMail(message)
+    //     .then(() => {
+    //         return res.status(200).json({ status: 'success', message: `Yo have received an email on ${ addressee }` })
+    //     })
+    //     .catch(err => res.status(500).json({ status: 'error', error:err }))
+    
+    
+    process.env.isPasswordRecovery = true
+    
+    res.redirect('/')
   }
 
   async register(req, res) {
