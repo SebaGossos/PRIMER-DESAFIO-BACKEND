@@ -2,7 +2,7 @@ import { userModel } from '../../models/User.js';
 import { createHash, isValidPassword } from '../../utils.js';
 
 export default class UserMongo {
-    getByEmail = async( email ) => await userModel.findOne( email ).lean().exec();
+    getByEmail = async( email ) => await userModel.findOne({ email }).lean().exec();
     getByEmailForLogin = async({ email }) => {
         //! HANDLE ERRORS
         const user = await userModel.findOne({ email }).lean().exec();

@@ -45,7 +45,7 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, age } = req.body;
         try {
-          const user = await UserService.getByEmail({ email: username });
+          const user = await UserService.getByEmail( username );
           if (user) {
             return done(null, false, { info: "error del regis" });
           }
@@ -84,7 +84,7 @@ const initializePassport = () => {
               role: "admin",
               first_name: "admin",
             });
-          const user = await UserService.getByEmail({ email: username });
+          const user = await UserService.getByEmail( username );
           if (!user)
             return done(null, false, {
               err: "no se encuentra estoy en passport ",
@@ -111,9 +111,7 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const user = await UserService.getByEmail({
-            email: profile._json.email,
-          });
+          const user = await UserService.getByEmail(profile._json.email);
           if (user) return done(null, user);
 
           const newUser = await UserService.create({

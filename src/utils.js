@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import multer from "multer";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -65,4 +66,13 @@ export const storage = multer.diskStorage({
   },
 });
 
+export const initMongoDB = async() => {
+  try{
+    await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
+        dbName: 'ecommerce'
+    })
+  }catch(err) {
+      console.log( 'Error to connect DB' )
+  }
+}
 export default __dirname;

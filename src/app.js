@@ -1,6 +1,5 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
 import handlebars from 'express-handlebars';
 import cors from 'cors'
 import { fork } from 'child_process'
@@ -16,12 +15,9 @@ import config from './config/config.js'
 import passport from 'passport';
 import initializePassport from './config/passport.config.js';
 import logger from './logger.js';
-import { CLIENT_RENEG_LIMIT } from 'tls';
-
 
 // import { EErrosProducts } from './service/errors/index.js';
 
-console.log( config.port )
 export const PORT = config.port;
 
 const app = express();
@@ -82,13 +78,13 @@ app.use( errorHandler )
 app.get( '*', async(req, res) => res.status(404).render('errors/errorAuth',{ error: 'Cannot get the specified endpoint' } ) )
 
 
-try{
-    await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
-        dbName: 'ecommerce'
-    })
-}catch(err) {
-    console.log( 'Error to connect DB' )
-}
+// try{
+//     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
+//         dbName: 'ecommerce'
+//     })
+// }catch(err) {
+//     console.log( 'Error to connect DB' )
+// }
 
 const httpServer = app.listen( PORT, () => logger.debug(`SERVER UP!! http://localhost:${PORT}`) ) 
 

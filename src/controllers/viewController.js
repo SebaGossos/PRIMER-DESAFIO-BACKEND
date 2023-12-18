@@ -1,4 +1,4 @@
-import { CartService, ProductService } from "../repositories/index.js";
+import { CartService, ProductService, UserService } from "../repositories/index.js";
 import { PORT } from "../app.js";
 
 export default class ViewController {
@@ -10,6 +10,21 @@ export default class ViewController {
     } catch (err) {
       res.render("errors/errorAuth", { error: err });
     }
+  }
+
+  async forgetPassword( req, res ) {
+    res.render("authenticate/forget_password")
+  }
+
+  async recoveryPassword( req, res ) {
+    const email = req.body.email;
+    console.log( email )
+    const user = await UserService.getByEmail( email )
+
+    if( !user ) return res.render('errors/errorAuth', { error: 'User Email not found try again with a correct email' })
+    console.log( user )
+
+    res.send({ hola:33 })
   }
 
   async register(req, res) {

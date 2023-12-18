@@ -1,11 +1,10 @@
 import nodemailer from 'nodemailer'
 import Mailgen from 'mailgen'
-import { ProductService } from "../repositories/index.js";
+import { ProductService, UserService } from "../repositories/index.js";
 
 import config from '../config/config.js'
 
-const getBill = async( req, res ) => {
-    
+export const getBill = async( req, res ) => {
     let productsPurchased = [];
 
     let ticket = req.body.ticket;
@@ -81,5 +80,17 @@ const getBill = async( req, res ) => {
         })
         .catch(err => res.status(500).json({ status: 'error', error:err }))
 
-}
-export default getBill;
+};
+
+// export const forgetPassword = async( req, res ) => res.render("authenticate/forget_password")
+
+// export const recoveryPassword = async( req, res ) => {
+//     const email = req.body.email;
+    
+//     const user = await UserService.getByEmail( email )
+
+//     if( !user ) return res.render('errors/errorAuth', { error: 'User Email not found try again with a correct email' })
+//     console.log( user )
+
+//     res.send({ hola:33 })
+// }

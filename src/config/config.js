@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { Command } from 'commander';
+import { initMongoDB } from '../utils.js';
 
 const program = new Command();
 program
@@ -12,6 +13,8 @@ const environment = program.opts().mode;
 dotenv.config({
     path: environment === 'PROD' ? './.env.production' : './.env.development'
 });
+
+if( process.env.PERSISTANCE === 'MONGO' ) await initMongoDB()
 
 export default {
     port: program.opts().p,

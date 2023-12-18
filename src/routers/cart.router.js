@@ -1,7 +1,7 @@
 import MyRouter from "./router.js";
 import { cartController } from "../controllers/index.js";
 import { ticketController } from "../controllers/index.js";
-import getBill from "../controllers/checkoutController.js";
+import { getBill } from "../controllers/checkoutController.js";
 
 
 

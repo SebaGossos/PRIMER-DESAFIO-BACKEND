@@ -2,6 +2,9 @@ import passport from "passport";
 
 import MyRouter from "./router.js";
 import { viewController } from "../controllers/index.js";
+// import { forgetPassword, recoveryPassword } from "../controllers/checkoutController.js";
+
+
 
 
 export default class ViewRouter extends MyRouter {
@@ -11,6 +14,10 @@ export default class ViewRouter extends MyRouter {
     this.get('/', ['PUBLIC'], viewController.login)
 
     this.get('/register', ['PUBLIC'], viewController.register)
+
+    this.get('/forget-password', ['PUBLIC'], viewController.forgetPassword )
+
+    this.post('/recovery', ['PUBLIC'], viewController.recoveryPassword)
 
     //? PRODUCTS
     this.get("/products", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  viewController.products);
