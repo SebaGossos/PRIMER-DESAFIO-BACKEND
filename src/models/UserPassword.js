@@ -8,7 +8,7 @@ export default class UserPassword {
 
     static get schema() {
         return new mongoose.Schema({
-            email: { type: String, ref: 'users' },
+            email: { type: String, require: true, ref: 'users' },
             token: { type: String, require: true },
             isUsed: { type: Boolean, default: false },
             createdAt: { type: Date, default: Date.now, expireAfterSeconds: 3600 }

@@ -48,7 +48,6 @@ export default class ProductsMongo {
         //! HANDLE ERROR
         if ( totalPages < page ) throw `Must submit a page until: ${ totalPages }`
 
-
         const originalUrl = req.originalUrl.at(-1) === '/' ? req.originalUrl.pop() : req.originalUrl;
 
         const andOrQuestion = originalUrl === '/products' ? '?' : '&';

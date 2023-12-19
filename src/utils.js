@@ -42,21 +42,6 @@ export const passportCall = strategy => {
     }
 }
 
-export const createMockingProducts = async() => {
-  return {
-    id: faker.database.mongodbObjectId(),
-    title: faker.commerce.product(),
-    description: faker.commerce.productDescription(),
-    price: faker.commerce.price(),
-    code: uuidv4(),
-    stock: 100,
-    category: faker.commerce.productAdjective(),
-    status: true,
-    thumbnail: faker.image.avatar()
-  }
-}
-
-
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "src/public/images/");
@@ -75,4 +60,29 @@ export const initMongoDB = async() => {
       console.log( 'Error to connect DB' )
   }
 }
+
+export const createMockingProducts = async() => {
+  return {
+    id: faker.database.mongodbObjectId(),
+    title: faker.commerce.product(),
+    description: faker.commerce.productDescription(),
+    price: faker.commerce.price(),
+    code: uuidv4(),
+    stock: 100,
+    category: faker.commerce.productAdjective(),
+    status: true,
+    thumbnail: faker.image.avatar()
+  }
+}
+
+export const generateRandonString = ( num ) => {
+  return [...Array( num ) ].map(() => {
+    const randomNum = ~~(Math.random() * 36);
+    return randomNum.toString( 36 )
+  })
+  .join('')
+  .toUpperCase();
+}
+
+
 export default __dirname;

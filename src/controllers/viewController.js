@@ -1,5 +1,9 @@
 import { CartService, ProductService, UserService } from "../repositories/index.js";
 import { PORT } from "../app.js";
+import nodemailer from 'nodemailer';
+import Mailgen from "mailgen";
+import config from "../config/config.js";
+import { generateRandonString } from "../utils.js";
 
 
 export default class ViewController {
@@ -22,71 +26,67 @@ export default class ViewController {
   }
 
   async recoveryPassword( req, res ) {
-    const email = req.body.email;
-    const user = await UserService.getByEmail( email )
+
+    const addressee = req.body.email;
+    const user = await UserService.getByEmail( addressee )
     if( !user ) return res.render('errors/errorAuth', { error: 'User Email not found try again with a correct email' })
+
+    const PORT = config.port;
+    const token = generateRandonString(22)
+    const urlRecovery = `http://${req.hostname}:${PORT}/verify-token/${ token }`;
+    
+    console.log( urlRecovery )
 
     //TODO: 
 
-    // let configNodeMailer = {
-    //     service: 'gmail',
-    //     auth: {
-    //         user: config.nodemailer.user,
-    //         pass: config.nodemailer.pass
-    //     }
-    // }
+    let configNodeMailer = {
+        service: 'gmail',
+        auth: {
+            user: config.nodemailer.user,
+            pass: config.nodemailer.pass
+        }
+    }
 
-    // let transporter = nodemailer.createTransport(configNodeMailer)
+    let transporter = nodemailer.createTransport(configNodeMailer)
 
-    // let Mailgenerator = new Mailgen({
-    //     theme: 'default',
-    //     product: {
-    //         name: 'Coder Shop',
-    //         link:'http://www.coderhouse.com'
-    //     }
-    // })
+    let Mailgenerator = new Mailgen({
+        theme: 'default',
+        product: {
+            name: 'Coder App',
+            link:'http://www.coderhouse.com'
+        }
+    })
     
-    // let response = {
-    //     body: {
-    //         intro: "Your bill has arrived!",
-    //         table: {
-    //             data: productsPurchased.map( p => {
-    //                 return {
-    //                     title: p.title,
-    //                     description: p.description,
-    //                     price: 0,
-    //                     code: p.code,
-    //                     stock: p.stock,
-    //                     category: p.category,
-    //                     thumbnail: p.thumbnail,
-    //                     status: p.status,
-    //                     quantity: p.quantity
-    //                 }
-    //             })
-    //         },
-    //         outro: 'Looking forward to do more business'
-    //     }
-    // }
-    // let mail = Mailgenerator.generate(response)
+    let response = {
+        body: {
+            intro: "YOUR LINK TO RECOVER YOUR PASSWORD IS HERE, YOU ONLY HAVE 1 HOUR TO USE IT",
+            outro: urlRecovery
+        }
+    }
+    let mail = Mailgenerator.generate(response)
 
-    // let message = {
-    //     from: 'Dpto Ventas - Coder <codershop@coderhouse.com>',
-    //     to: addressee,
-    //     subject: `Finish purchase successfully`,
-    //     html: mail
-    // }
-
-
-    // transporter.sendMail(message)
-    //     .then(() => {
-    //         return res.status(200).json({ status: 'success', message: `Yo have received an email on ${ addressee }` })
-    //     })
-    //     .catch(err => res.status(500).json({ status: 'error', error:err }))
+    let message = {
+        from: 'DEPARTMENT SECURITY - Coder <codershop@coderhouse.com>',
+        to: addressee,
+        subject: `Finish purchase successfully`,
+        html: mail
+    }
     
     
-    process.env.isPasswordRecovery = true
+    transporter.sendMail(message)
+    .then(() => {
+          process.env.isPasswordRecovery = true
+          return res.redirect('/')
+        })
+        .catch(err => res.status(500).json({ status: 'error', error:err }))
     
-    res.redirect('/')
+    
+    
+  }
+
+  //TODO:
+  async changePassword( req, res ) {
+    const token = req.params.passToken;
   }
 
   async register(req, res) {
