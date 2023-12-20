@@ -1,91 +1,94 @@
-import { CartService, ProductService, UserService } from "../repositories/index.js";
+import {
+  CartService,
+  ProductService,
+  UserService,
+} from "../repositories/index.js";
 import { PORT } from "../app.js";
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
 import config from "../config/config.js";
-import { generateRandonString } from "../utils.js";
-
+import { generateRandonString } from "../utilis/utils.js";
 
 export default class ViewController {
   async login(req, res) {
     try {
       let messageRecovery = false;
-      if( process.env.isPasswordRecovery === 'true' ) messageRecovery = true;
+      if (process.env.isPasswordRecovery === "true") messageRecovery = true;
       process.env.isPasswordRecovery = false;
 
       res
-      .clearCookie("jwt-coder")
-      .render("authenticate/login", { messageRecovery });
+        .clearCookie("jwt-coder")
+        .render("authenticate/login", { messageRecovery });
     } catch (err) {
       res.render("errors/errorAuth", { error: err });
     }
   }
 
-  async forgetPassword( req, res ) {
-    res.render("authenticate/forget_password")
+  async forgetPassword(req, res) {
+    res.render("authenticate/forget_password");
   }
 
-  async recoveryPassword( req, res ) {
-
+  async recoveryPassword(req, res) {
     const addressee = req.body.email;
-    const user = await UserService.getByEmail( addressee )
-    if( !user ) return res.render('errors/errorAuth', { error: 'User Email not found try again with a correct email' })
+    const user = await UserService.getByEmail(addressee);
+    if (!user)
+      return res.render("errors/errorAuth", {
+        error: "User Email not found try again with a correct email",
+      });
 
     const PORT = config.port;
-    const token = generateRandonString(22)
-    const urlRecovery = `http://${req.hostname}:${PORT}/verify-token/${ token }`;
-    
-    console.log( urlRecovery )
+    const token = generateRandonString(22);
+    const urlRecovery = `http://${req.hostname}:${PORT}/verify-token/${token}`;
 
-    //TODO: 
+    console.log(urlRecovery);
+
+    //TODO:
 
     let configNodeMailer = {
-        service: 'gmail',
-        auth: {
-            user: config.nodemailer.user,
-            pass: config.nodemailer.pass
-        }
-    }
+      service: "gmail",
+      auth: {
+        user: config.nodemailer.user,
+        pass: config.nodemailer.pass,
+      },
+    };
 
-    let transporter = nodemailer.createTransport(configNodeMailer)
+    let transporter = nodemailer.createTransport(configNodeMailer);
 
     let Mailgenerator = new Mailgen({
-        theme: 'default',
-        product: {
-            name: 'Coder App',
-            link:'http://www.coderhouse.com'
-        }
-    })
-    
+      theme: "default",
+      product: {
+        name: "Coder App",
+        link: "http://www.coderhouse.com",
+      },
+    });
+
     let response = {
-        body: {
-            intro: "YOUR LINK TO RECOVER YOUR PASSWORD IS HERE, YOU ONLY HAVE 1 HOUR TO USE IT",
-            outro: urlRecovery
-        }
-    }
-    let mail = Mailgenerator.generate(response)
+      body: {
+        intro:
+          "YOUR LINK TO RECOVER YOUR PASSWORD IS HERE, YOU ONLY HAVE 1 HOUR TO USE IT",
+        outro: urlRecovery,
+      },
+    };
+    let mail = Mailgenerator.generate(response);
 
     let message = {
-        from: 'DEPARTMENT SECURITY - Coder <codershop@coderhouse.com>',
-        to: addressee,
-        subject: `Finish purchase successfully`,
-        html: mail
-    }
-    
-    
-    transporter.sendMail(message)
-    .then(() => {
-          process.env.isPasswordRecovery = true
-          return res.redirect('/')
-        })
-        .catch(err => res.status(500).json({ status: 'error', error:err }))
-    
-    
-    
+      from: "DEPARTMENT SECURITY - Coder <codershop@coderhouse.com>",
+      to: addressee,
+      subject: `Finish purchase successfully`,
+      html: mail,
+    };
+
+    transporter
+      .sendMail(message)
+      .then(() => {
+        process.env.isPasswordRecovery = true;
+        return res.redirect("/");
+      })
+      .catch((err) => res.status(500).json({ status: "error", error: err }));
   }
 
   //TODO:
-  async changePassword( req, res ) {
+  async changePassword(req, res) {
     const token = req.params.passToken;
   }
 
@@ -125,7 +128,7 @@ export default class ViewController {
         isAdmin: req.user.role === "admin",
       });
     } catch (error) {
-      next( error )
+      next(error);
       res.render("errors/errorPlatform", { error });
     }
   }

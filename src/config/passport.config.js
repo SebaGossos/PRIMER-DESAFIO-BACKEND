@@ -1,7 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword } from "../utilis/utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
 
@@ -45,7 +45,7 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, age } = req.body;
         try {
-          const user = await UserService.getByEmail( username );
+          const user = await UserService.getByEmail(username);
           if (user) {
             return done(null, false, { info: "error del regis" });
           }
@@ -58,7 +58,7 @@ const initializePassport = () => {
             age,
             password: createHash(password),
             cart,
-            source: 'ourApp'
+            source: "ourApp",
           });
 
           return done(null, result);
@@ -84,7 +84,7 @@ const initializePassport = () => {
               role: "admin",
               first_name: "admin",
             });
-          const user = await UserService.getByEmail( username );
+          const user = await UserService.getByEmail(username);
           if (!user)
             return done(null, false, {
               err: "no se encuentra estoy en passport ",

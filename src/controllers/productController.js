@@ -1,6 +1,6 @@
 import { ProductService } from "../repositories/index.js";
 import { PORT } from "../app.js";
-import { createMockingProducts } from "../utils.js";
+import { createMockingProducts } from "../utilis/utils.js";
 
 export default class ProductController {
   async getAll(req, res) {
@@ -19,13 +19,13 @@ export default class ProductController {
     }
   }
 
-  async mockingProducts( req, res ) {
-    let products = []
-    for ( let i=0; i < 101; i++) products.push( await createMockingProducts() )
-    try{
-      res.status(200).json( products )
-    } catch( err ) {
-      res.status(500).json( err )
+  async mockingProducts(req, res) {
+    let products = [];
+    for (let i = 0; i < 101; i++) products.push(await createMockingProducts());
+    try {
+      res.status(200).json(products);
+    } catch (err) {
+      res.status(500).json(err);
     }
   }
 
@@ -37,8 +37,7 @@ export default class ProductController {
 
       res.status(200).json(resultDao);
     } catch (error) {
-
-      next( error )
+      next(error);
       res.status(500).json({
         status: "error",
         error: error,
@@ -54,7 +53,7 @@ export default class ProductController {
       const result = await ProductService.getById(id);
       return res.status(200).json({ payload: result });
     } catch (error) {
-      next( error )
+      next(error);
       // return res.status(400).send({ status: "error", error: err });
     }
   }
@@ -66,7 +65,7 @@ export default class ProductController {
       const prod = await ProductService.getByCode(code);
       return res.status(200).json({ payload: prod });
     } catch (error) {
-      next( error )
+      next(error);
       // return res.status(400).send({ status: "error", error: err });
     }
   }
@@ -81,7 +80,7 @@ export default class ProductController {
       await ProductService.create(product);
       res.status(200).json(product);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
