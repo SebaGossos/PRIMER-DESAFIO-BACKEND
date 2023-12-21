@@ -8,6 +8,7 @@ import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
 import config from "../config/config.js";
 import { generateRandonString } from "../utilis/utils.js";
+import { userPasswordModel } from "../models/UserPassword.js";
 
 export default class ViewController {
   async login(req, res) {
@@ -41,8 +42,6 @@ export default class ViewController {
     const urlRecovery = `http://${req.hostname}:${PORT}/verify-token/${token}`;
 
     console.log(urlRecovery);
-
-    //TODO:
 
     let configNodeMailer = {
       service: "gmail",
@@ -80,16 +79,30 @@ export default class ViewController {
 
     transporter
       .sendMail(message)
-      .then(() => {
+      .then( async() => {
         process.env.isPasswordRecovery = true;
-        return res.redirect("/");
+        try {
+          //SAVE MODEL USERPASSWORD
+          const userPassword = new userPasswordModel({
+            email: addressee,
+            token
+          })
+          userPassword.save()
+          return res.redirect("/");
+        } catch( error ) {
+          console.log(error)
+        }
       })
       .catch((err) => res.status(500).json({ status: "error", error: err }));
   }
 
-  //TODO:
-  async changePassword(req, res) {
+  async verifyToken(req, res) {
+    // Find Token in DB
     const token = req.params.passToken;
+    const userP = await userPasswordModel.findOne({ token })
+    if( !userP ) return res.render("errors/errorAuth", { error: 'Your time to change your password has just expired' });
+
+    return res.render('authenticate/put_password')
   }
 
   async register(req, res) {

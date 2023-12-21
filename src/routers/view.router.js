@@ -19,7 +19,7 @@ export default class ViewRouter extends MyRouter {
 
     this.post('/recovery', ['PUBLIC'], viewController.recoveryPassword)
 
-    this.post('/verify-token/:passToken', ['PUBLIC'], viewController.changePassword )
+    this.get('/verify-token/:passToken', ['PUBLIC'], viewController.verifyToken )
 
     //? PRODUCTS
     this.get("/products", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  viewController.products);

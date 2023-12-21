@@ -11,11 +11,11 @@ export default class UserPassword {
             email: { type: String, require: true, ref: 'users' },
             token: { type: String, require: true },
             isUsed: { type: Boolean, default: false },
-            createdAt: { type: Date, default: Date.now, expireAfterSeconds: 3600 }
+            createdAt: { type: Date, default: Date.now, expires: 3600 }
         })
     }
 }
 
 mongoose.set( 'strictQuery', false )
 
-export const UserPasswordModel = mongoose.model( UserPassword.model, UserPassword.schema )
+export const userPasswordModel = mongoose.model( UserPassword.model, UserPassword.schema )

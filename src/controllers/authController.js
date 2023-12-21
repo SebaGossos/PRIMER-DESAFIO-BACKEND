@@ -1,6 +1,5 @@
-import { generateToken } from "../utilis/utils.js";
+import { createHash, isValidPassword, generateToken } from "../utilis/utils.js";
 import UserDTO from "../dto/user.dto.js";
-
 export default class AuthController {
   //!REGISTER
   registerUser = (req, res) => res.redirect("/");
@@ -20,6 +19,12 @@ export default class AuthController {
       error: "Bad Request, try again with a correct email or password",
     });
 
+  //!CHANGEPASSWORD
+  changePassword = ( req, res ) => {
+    console.log(33)
+    res.send({si: 'SIUUUU'})
+  }
+  
   //!GITHUBLOGIN
   loginGithub = (req, res) => {};
   githubCallback = async (req, res) => {
