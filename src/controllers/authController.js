@@ -1,5 +1,7 @@
-import { createHash, isValidPassword, generateToken } from "../utilis/utils.js";
+import { isValidPassword, createHash, generateToken } from "../utilis/utils.js";
 import UserDTO from "../dto/user.dto.js";
+import { userPasswordModel } from "../models/UserPassword.js";
+import { UserService } from "../repositories/index.js";
 export default class AuthController {
   //!REGISTER
   registerUser = (req, res) => res.redirect("/");
@@ -20,8 +22,23 @@ export default class AuthController {
     });
 
   //!CHANGEPASSWORD
-  changePassword = ( req, res ) => {
-    console.log(33)
+  changePassword = async( req, res ) => {
+    const password = req.body.password;
+    const token = req.body.token;
+
+    const userPDB = await userPasswordModel.findOne({ token })
+    if( !userPDB ) return res.json({ status: 'error', error: 'There was a mistake' });
+    const email = userPDB.email;
+    
+    const user = await UserService.getByEmail( email )
+    
+    const isSamePass = isValidPassword( user, password )
+    if( isSamePass ) return res.json({ status: 'error', error: 'You can not put the same password try again' });
+  
+    const newPassword = createHash( password )
+
+    await UserService.update( email, { password: newPassword } )
+    
     res.send({si: 'SIUUUU'})
   }
   

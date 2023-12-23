@@ -8,5 +8,6 @@ export default class UserRepository {
     create = async( user ) => await this.dao.create( user );
     createForRegister = async( user ) => await this.dao.createForRegister( user )
     findById = async( id ) => await this.dao.findById( id )
+    update = async( email, data ) => await this.dao.update( email, data )
     
 }

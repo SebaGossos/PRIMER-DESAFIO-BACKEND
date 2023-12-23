@@ -41,8 +41,6 @@ export default class ViewController {
     const token = generateRandonString(22);
     const urlRecovery = `http://${req.hostname}:${PORT}/verify-token/${token}`;
 
-    console.log(urlRecovery);
-
     let configNodeMailer = {
       service: "gmail",
       auth: {
