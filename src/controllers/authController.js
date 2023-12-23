@@ -39,7 +39,7 @@ export default class AuthController {
 
     await UserService.update( email, { password: newPassword } )
     
-    res.send({si: 'SIUUUU'})
+    res.json({status: 'success',message: 'Your password just been change'})
   }
   
   //!GITHUBLOGIN

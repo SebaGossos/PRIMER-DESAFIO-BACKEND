@@ -21,8 +21,15 @@ buttonChange.addEventListener('click', e => {
             })
         })
         .then( res => res.json() )
-        .then( res => {
-            console.log( res )
+        .then( async res => {
+
+            if( res.status === 'error' ) {
+                await Swal.fire(res.error)  
+            } else {
+                await Swal.fire(res.message)
+                window.location.href = 'http://localhost:8080/'
+            }
         })
+        .catch( error => console.log( error ) )
     }
 })

@@ -41,7 +41,6 @@ export default class UserMongo {
   update = async ( email, data ) => {
     // console.log( email, data, 33 )
     const algo = await userModel.findOneAndUpdate({email},{ password: data.password})
-    console.log( algo )
     return algo
   }
 }
