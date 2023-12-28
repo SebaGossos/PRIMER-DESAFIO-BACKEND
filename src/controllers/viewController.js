@@ -109,13 +109,10 @@ export default class ViewController {
       res.render("errors/errorAuth", { error: err });
     }
   }
-
+  
   async products(req, res, next) {
     try {
-      const user = await UserService.getByEmail( req.user.email )
-      const { first_name, last_name, email, age, role, cart } = user; 
-      const newToken = generateToken( user )
-      // req.cookie("jwt-coder", newToken, { signed: true })
+      let user;
 
       const {
         payload,
@@ -128,8 +125,13 @@ export default class ViewController {
         hasPrevPage,
         hasNextPage,
       } = await ProductService.getAllPaginate(req, PORT);
+      
+      user = req.user;
+      if(req.user.role !== 'admin') user = await UserService.getByEmail( req.user.email )
 
-      return res.cookie("jwt-coder", newToken, { signed: true }).render("home", {
+      const { first_name, last_name, email, age, role, cart } = user;
+
+      const objectToHandlebars = {
         products: payload,
         prevLink,
         nextLink,
@@ -142,7 +144,12 @@ export default class ViewController {
           isPremium: role === "premium",
           isUser: role === 'user'
         },
-      });
+      }
+
+      const newToken = generateToken( user )
+      
+      return res.cookie("jwt-coder", newToken, { signed: true }).render("home", objectToHandlebars);
+ 
     } catch (error) {
       next(error);
       res.render("errors/errorPlatform", { error });

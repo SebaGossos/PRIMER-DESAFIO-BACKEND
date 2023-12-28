@@ -19,7 +19,7 @@ export default class ProductsRouter extends MyRouter {
 
     this.post(
       "/",
-      ["ADMIN", "PUBLIC"],
+      ["ADMIN"],
       uploader.single("thumbnail"),
       productController.create
     );
@@ -31,6 +31,6 @@ export default class ProductsRouter extends MyRouter {
       productController.updated
     );
 
-    this.delete("/:pid", ["ADMIN"], productController.delete);
+    this.delete("/:pid", ["ADMIN", 'PREMIUM'], productController.delete);
   }
 }
