@@ -39,8 +39,16 @@ export default class UserMongo {
   };
 
   update = async ( email, data ) => {
-    // console.log( email, data, 33 )
-    const algo = await userModel.findOneAndUpdate({email},{ password: data.password})
-    return algo
+
+    const dataToUpdate = {}
+    const isDataToChange = [ 'first_name', 'last_name', 'email', 'age', 'password', 'role' ]
+
+    for( const prop in data ) {
+      if(!isDataToChange.includes(prop)) return false; 
+      dataToUpdate[prop] = data[prop]
+    }
+
+    const updated = await userModel.findOneAndUpdate({email}, dataToUpdate )
+    return updated
   }
 }

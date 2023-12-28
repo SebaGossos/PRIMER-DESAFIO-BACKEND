@@ -7,7 +7,7 @@ import { PORT } from "../app.js";
 import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
 import config from "../config/config.js";
-import { generateRandonString } from "../utilis/utils.js";
+import { generateToken,generateRandonString } from "../utilis/utils.js";
 import { userPasswordModel } from "../models/UserPassword.js";
 
 export default class ViewController {
@@ -75,8 +75,7 @@ export default class ViewController {
       html: mail,
     };
 
-    transporter
-      .sendMail(message)
+    transporter.sendMail(message)
       .then( async() => {
         process.env.isPasswordRecovery = true;
         try {
@@ -113,7 +112,11 @@ export default class ViewController {
 
   async products(req, res, next) {
     try {
-      const { first_name, last_name, email, age, role, cart } = req.user;
+      const user = await UserService.getByEmail( req.user.email )
+      const { first_name, last_name, email, age, role, cart } = user; 
+      const newToken = generateToken( user )
+      // req.cookie("jwt-coder", newToken, { signed: true })
+
       const {
         payload,
         totalPages,
@@ -126,9 +129,7 @@ export default class ViewController {
         hasNextPage,
       } = await ProductService.getAllPaginate(req, PORT);
 
-      // const { payload, totalPages, prevPage, nextPage, prevLink, nextLink, page, hasPrevPage, hasNextPage } = await getProducts( req, res )
-
-      res.render("home", {
+      return res.cookie("jwt-coder", newToken, { signed: true }).render("home", {
         products: payload,
         prevLink,
         nextLink,
@@ -136,7 +137,11 @@ export default class ViewController {
         hasNextPage,
         page,
         user: { first_name, last_name, email, age, role, cart },
-        isAdmin: req.user.role === "admin",
+        role: {
+          isAdmin: role === "admin",
+          isPremium: role === "premium",
+          isUser: role === 'user'
+        },
       });
     } catch (error) {
       next(error);

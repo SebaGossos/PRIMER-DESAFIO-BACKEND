@@ -13,6 +13,10 @@ export default class AuthRouter extends MyRouter {
 
         this.get('/failRegister', ['PUBLIC'], authController.failRegister)
 
+        this.get('/premium', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failLogin', session: false }), authController.premium)
+
+        this.get('/standar', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failLogin', session: false }), authController.standar)
+
         this.post('/changePassword', ['PUBLIC'], authController.changePassword )
 
         this.post('/login', ['PUBLIC'], passport.authenticate('login', { failureRedirect:'failLogin', session: false }), authController.loginUser)

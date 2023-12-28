@@ -37,9 +37,28 @@ export default class AuthController {
   
     const newPassword = createHash( password )
 
-    await UserService.update( email, { password: newPassword } )
+    const isUpdated = await UserService.update( email, { password: newPassword } )
+    if( !isUpdated ) return res.json( { status: 'error', message: 'The data you want to change is not found in our model' } )
+
+    await userPasswordModel.deleteOne({token})
     
-    res.json({status: 'success',message: 'Your password just been change'})
+    res.json( { status: 'success', message: 'Your password just been change' } )
+  }
+
+  //!USER PREMIUM
+  premium = async( req, res ) => {
+    console.log( req.user )
+    const { email } = req.user;
+    const updateUser = await UserService.update(email, { role: 'premium' })
+    res.json({'siu': 33})
+  }
+
+  //!USER STANDAR
+  standar = async( req, res ) => {
+    console.log( req.user )
+    const { email } = req.user;
+    const updateUser = await UserService.update(email, { role: 'user' })
+    res.json({'siu': 33})
   }
   
   //!GITHUBLOGIN

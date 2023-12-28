@@ -90,10 +90,8 @@ const initializePassport = () => {
               err: "no se encuentra estoy en passport ",
             });
           if (!isValidPassword(user, password)) return done(null, false);
-          else {
-            user.role = "user";
-            return done(null, user);
-          }
+          return done(null, user);
+          
         } catch (err) {
           done(err);
         }
