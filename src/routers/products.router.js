@@ -19,7 +19,7 @@ export default class ProductsRouter extends MyRouter {
 
     this.post(
       "/",
-      ["ADMIN"],
+      ["ADMIN", 'PREMIUM'],
       uploader.single("thumbnail"),
       productController.create
     );

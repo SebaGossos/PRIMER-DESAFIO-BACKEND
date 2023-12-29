@@ -131,7 +131,7 @@ export default class ViewController {
 
       const { first_name, last_name, email, age, role, cart } = user;
 
-      const objectToHandlebars = {
+      const objectForHandlebars = {
         products: payload,
         prevLink,
         nextLink,
@@ -148,7 +148,7 @@ export default class ViewController {
 
       const newToken = generateToken( user )
       
-      return res.cookie("jwt-coder", newToken, { signed: true }).render("home", objectToHandlebars);
+      return res.cookie("jwt-coder", newToken, { signed: true }).render("home", objectForHandlebars);
  
     } catch (error) {
       next(error);
@@ -158,8 +158,12 @@ export default class ViewController {
 
   async realTimeProducts(req, res) {
     try {
-      const products = await ProductService.getAll();
-      res.render("realTimeProducts", { products });
+      let products;
+      if( req.user.role === 'admin' ) products = await ProductService.getAll();
+      else {
+        products = await ProductService.getAllByEmail( req.user.email )
+      }
+      return res.render("realTimeProducts", { products, user: req.user });
     } catch (err) {
       res.render("errors/errorPlatform", { error: err });
     }

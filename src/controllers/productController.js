@@ -76,7 +76,9 @@ export default class ProductController {
       const url = req.file?.filename;
       product.thumbnail = url ? `${Date.now()}-${url}` : undefined;
       product.status = product.status === "true";
-
+      if( req.user.role === 'premium' ) {
+        product.owner = req.user.email
+      }
       await ProductService.create(product);
       res.status(200).json(product);
     } catch (error) {

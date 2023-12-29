@@ -13,6 +13,8 @@ export default class ProductsMongo {
         return productsWithIdAsString; 
     }
 
+    getAllByEmail = async( email ) => await productModel.find({ owner: email }).lean().exec()
+
     getAllPaginate = async( req, PORT ) => {
 
         const { limit=10, page=1, sort, stock, category } = req.query;
@@ -127,9 +129,10 @@ export default class ProductsMongo {
         stock,
         category,
         status=true,
-        thumbnail=['Without image']
+        thumbnail=['Without image'],
+        owner
     }){
-        const product = { title, description, price, code, stock, category, status, thumbnail }
+        const product = { title, description, price, code, stock, category, status, thumbnail, owner }
         if ( !title || !description || !price || !code || !stock || !category ) {
             CustomError.createError({
                 name: 'Product create Error',
