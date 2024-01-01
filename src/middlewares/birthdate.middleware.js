@@ -3,7 +3,7 @@ export const birthday = async( req, res, next ) => {
     
     const today = new Date()
     const birthdateNum = new Date(date);
-    const age = today.getFullYear() - birthdateNum.getFullYear()
+    let age = today.getFullYear() - birthdateNum.getFullYear()
     const month = today.getMonth() - birthdateNum.getMonth()
     
     if( month < 0 || (month === 0 && today.getDate() < birthdateNum.getDate())){

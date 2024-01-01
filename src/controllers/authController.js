@@ -5,8 +5,8 @@ import { UserService } from "../repositories/index.js";
 export default class AuthController {
   //!REGISTER
   registerUser = (req, res) => res.redirect("/");
-  failRegister = (req, res) =>
-    res.render("errors/errorAuth", { error: "Email already exist" });
+
+  failRegister = (req, res) => res.render("errors/errorAuth", { error: "Email already exist" });
 
   //!LOGIN
   loginUser = (req, res) => {

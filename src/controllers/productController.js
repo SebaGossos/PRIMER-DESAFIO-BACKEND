@@ -5,10 +5,11 @@ import { createMockingProducts } from "../utilis/utils.js";
 export default class ProductController {
   async getAll(req, res) {
     try {
-      // const result = await getProducts(req, res);
 
-      const resultDao = await ProductService.getAll();
-
+      let resultDao
+      if ( req.user.role === 'premium' ) resultDao = await ProductService.getAllByEmail( req.user.email )
+      else resultDao = await ProductService.getAll();
+    
       res.status(200).json({ payload: resultDao });
     } catch (err) {
       res.status(500).json({
@@ -107,12 +108,17 @@ export default class ProductController {
     const id = req.params.pid;
 
     try {
+      if( req.user.role === 'premium' ) {
+        const product = await ProductService.getById( id )
+        if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not delete this product' });
+      }
       await ProductService.deleteById(id);
       const products = await ProductService.getAll();
 
       res.json({ payload: products });
-    } catch (err) {
-      res.status(400).send({ status: "error", error: err });
+    } catch (error) {
+      next( error )
+      res.status(400).send({ status: "error", error });
     }
   }
 }

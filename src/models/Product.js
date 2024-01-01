@@ -17,7 +17,7 @@ class Product {
             category: { type: String, required: true },
             status: { type: Boolean, default: true },
             thumbnail: { type: [String], default:[] },
-            owner: {type: String, default: 'admin'}
+            owner: {type: String, default: 'admin', required: true, ref:'users'}
         })
         instanceMongo.plugin( mongoosePaginate )
         return instanceMongo
