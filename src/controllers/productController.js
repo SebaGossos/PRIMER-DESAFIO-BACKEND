@@ -113,7 +113,11 @@ export default class ProductController {
         if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not delete this product' });
       }
       await ProductService.deleteById(id);
-      const products = await ProductService.getAll();
+
+      let products
+      if ( req.user.role === 'premium' ) products = await ProductService.getAllByEmail( req.user.email )
+      else products = await ProductService.getAll();
+      
 
       res.json({ payload: products });
     } catch (error) {
