@@ -63,8 +63,12 @@ export default class ProductController {
     const code = req.params.pcode;
 
     try {
-      const prod = await ProductService.getByCode(code);
-      return res.status(200).json({ payload: prod });
+      const product = await ProductService.getByCode(code);
+      
+      if( req.user.role === 'premium' ) {
+        if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not search this product' });
+      }
+      return res.status(200).json({ payload: product });
     } catch (error) {
       next(error);
       // return res.status(400).send({ status: "error", error: err });
@@ -89,12 +93,15 @@ export default class ProductController {
 
   async updated(req, res) {
     try {
+      const id = req.params.pid;
+      if( !id ) return res.json({ status:'error', error:'You must send an id to update this product' });
+      
       if( req.user.role === 'premium' ) {
         const product = await ProductService.getById( id )
-        if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not delete this product' });
+        console.log(33)
+        if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can only update your own products' });
       }
-      
-      const id = req.params.pid;
+
       const product = req.body;
       const url = req.file?.filename;
       product.thumbnail = url ? `${Date.now()}-${url}` : ["without image"];
@@ -113,6 +120,7 @@ export default class ProductController {
     const id = req.params.pid;
 
     try {
+
       if( req.user.role === 'premium' ) {
         const product = await ProductService.getById( id )
         if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not delete this product' });

@@ -16,7 +16,7 @@ export default class ProductsRouter extends MyRouter {
 
     this.get("/:pid", ["USER", "ADMIN", "PUBLIC"], productController.getById);
 
-    this.get("/query/:pcode", ["USER", "ADMIN"], productController.getByCode);
+    this.get("/query/:pcode", ["USER", "ADMIN", 'PREMIUM'],passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getByCode);
 
     this.post(
         "/",

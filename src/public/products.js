@@ -10,7 +10,7 @@ const callApiAddProd = async( cid , pid ) => {
         data.status === 'error' ? Swal.fire(data.message) : Swal.fire(`Added Successfully!`);
         
     } catch ( err ) {
-        // console.log(33)
+
         alert(`Ocurrio un error: ${err.error}`)
     }
 }
