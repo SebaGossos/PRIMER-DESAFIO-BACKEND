@@ -89,6 +89,11 @@ export default class ProductController {
 
   async updated(req, res) {
     try {
+      if( req.user.role === 'premium' ) {
+        const product = await ProductService.getById( id )
+        if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not delete this product' });
+      }
+      
       const id = req.params.pid;
       const product = req.body;
       const url = req.file?.filename;

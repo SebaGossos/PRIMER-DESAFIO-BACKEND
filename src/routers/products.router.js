@@ -19,16 +19,17 @@ export default class ProductsRouter extends MyRouter {
     this.get("/query/:pcode", ["USER", "ADMIN"], productController.getByCode);
 
     this.post(
-      "/",
+        "/",
+        ["ADMIN", 'PREMIUM'],
+        passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),
+        uploader.single("thumbnail"),
+        productController.create
+      );
+      
+      this.put(
+      "/:pid",
       ["ADMIN", 'PREMIUM'],
       passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),
-      uploader.single("thumbnail"),
-      productController.create
-    );
-
-    this.put(
-      "/:pid",
-      ["ADMIN"],
       uploader.single("thumbnail"),
       productController.updated
     );
