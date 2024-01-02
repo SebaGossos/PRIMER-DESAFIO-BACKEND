@@ -38,7 +38,7 @@ export default class UserMongo {
     return user;
   };
 
-  update = async ( email, data ) => {
+  update = async ( _id, data ) => {
 
     const dataToUpdate = {}
     const isDataToChange = [ 'first_name', 'last_name', 'email', 'age', 'password', 'role' ]
@@ -48,7 +48,7 @@ export default class UserMongo {
       dataToUpdate[prop] = data[prop]
     }
 
-    const updated = await userModel.findOneAndUpdate({email}, dataToUpdate )
+    const updated = await userModel.findOneAndUpdate({_id}, dataToUpdate )
     return updated
   }
 }

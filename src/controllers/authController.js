@@ -47,19 +47,19 @@ export default class AuthController {
 
   //!USER PREMIUM
   premium = async( req, res ) => {
-    console.log( req.user )
-    const { email } = req.user;
-    const updateUser = await UserService.update(email, { role: 'premium' })
-    res.json({'siu': 33})
+    const uid = req.params.uid
+    const user = await UserService.findById( uid );
+
+    if (user.role === 'premium') {
+      await UserService.update(uid, { role: 'user' })
+      return res.json({'siu': 33})
+    }
+
+    await UserService.update( uid, { role: 'premium' })
+
+    return res.json({'siu': 33})
   }
 
-  //!USER STANDAR
-  standar = async( req, res ) => {
-    console.log( req.user )
-    const { email } = req.user;
-    const updateUser = await UserService.update(email, { role: 'user' })
-    res.json({'siu': 33})
-  }
   
   //!GITHUBLOGIN
   loginGithub = (req, res) => {};

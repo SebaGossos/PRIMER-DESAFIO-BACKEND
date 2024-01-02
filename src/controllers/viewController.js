@@ -138,7 +138,7 @@ export default class ViewController {
         hasPrevPage,
         hasNextPage,
         page,
-        user: { first_name, last_name, email, age, role, cart },
+        user: { first_name, last_name, email, age, role, cart, id: user?._id },
         role: {
           isAdmin: role === "admin",
           isPremium: role === "premium",
