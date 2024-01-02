@@ -84,7 +84,6 @@ updateBtn.addEventListener("click", () => {
   })
     .then((result) => result.json())
     .then((result) => {
-      console.log(33)
       if (result.status === "error") throw Swal.fire(result.error);
     })
     .then(() => fetch("/api/products"))
@@ -97,7 +96,7 @@ updateBtn.addEventListener("click", () => {
       );
       cleanInputs("add");
     })
-    .catch((err) => alert(`Ocurrió un error: \n${err}`));
+    .catch((err) => Swal.fire(`Ocurrió un error: \n${err}`));
 });
 
 let timerId;
@@ -135,7 +134,7 @@ const deleteProduct = (id) => {
     .then((result) => {
       if (result.status === "error") throw new Error(result.error);
       socket.emit("productList", result.payload);
-      alert(`Ok. Todo salió bien! :) \nEl producto se ha eliminado con éxito!`);
+      Swal.fire(`Product has been deleted!`);
     });
 };
 
