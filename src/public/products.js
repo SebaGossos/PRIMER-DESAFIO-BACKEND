@@ -2,13 +2,15 @@
 const callApiAddProd = async( cid , pid ) => {
 
     try{
-        
-        await fetch( `/api/carts/${cid}/product/${pid}`, {
+        const result = await fetch( `/api/carts/${cid}/product/${pid}`, {
             method: 'post'
         })
-        Swal.fire(`Added Successfully!`)
-        // alert(`producto agregado al cartId: ${cid}`)
+
+        const data = await result.json()
+        data.status === 'error' ? Swal.fire(data.message) : Swal.fire(`Added Successfully!`);
+        
     } catch ( err ) {
+        // console.log(33)
         alert(`Ocurrio un error: ${err.error}`)
     }
 }

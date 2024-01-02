@@ -1,4 +1,4 @@
-import { CartService } from "../repositories/index.js";
+import { CartService, ProductService } from "../repositories/index.js";
 
 export default class CartController {
   async getAll(req, res) {
@@ -65,6 +65,11 @@ export default class CartController {
     const cid = req.params.cid;
     const pid = req.params.pid;
     try {
+
+      if( req.user.role === 'premium' ){
+        const product = await ProductService.getById( pid );
+        if ( product?.owner === req.user.email ) return res.status(500).send({ status: "error", message: `You can´t add your own product`});
+      }
       const { addToCartByMongo, cartAdded } = await CartService.addToCart(
         cid,
         pid
