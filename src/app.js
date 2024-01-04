@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import handlebars from "express-handlebars";
 import cors from "cors";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
 import { fork } from "child_process";
 
 import { Server } from "socket.io";
@@ -29,6 +31,21 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(config.cookie.keyCookie));
+
+//!SWAGGER
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Documantation',
+      description: 'App to improve my skills 🎹⏫'
+    }
+  },
+  apis: ['./docs/**/*.yaml']
+}
+const specs = swaggerJSDoc( swaggerOptions )
+app.use( '/docs', swaggerUiExpress.serve, swaggerUiExpress.setup( specs ) )
 
 // app.use( session({
 //     // store: MongoStore.create({
