@@ -18,6 +18,16 @@ export default class CartController {
     }
   }
 
+  async create( req, res ) {
+    try {
+      const createCart = await CartService.create();
+      console.log( createCart )      
+      res.json({ status: 'success', payload: createCart})
+    } catch {
+      res.json({ status: 'error', message: 'Error To Create a Cart' })
+    }
+  }
+
   async update(req, res) {
     const cid = req.params.cid;
     const body = req.body;

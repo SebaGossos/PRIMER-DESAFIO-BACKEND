@@ -17,51 +17,6 @@ export default class CartsMongo {
 
   create = async () => await cartModel.create({ products: [] });
 
-  // update = async (cid, change) => {
-  //   //! HANDLE ERRORS
-  //   const data = await cartModel.findById(cid).populate("products.pId");
-  //   if (!data)
-  //     throw { httpError: 404, desc: `The cartId : ${cid} was not found` };
-  //   let products = change.products;
-  //   if (!products)
-  //     throw {
-  //       httpError: 404,
-  //       desc: `Must send a products as property, not: ${change.products}`,
-  //     };
-  //   products = await Promise.all(
-  //     products.map(async (p) => {
-  //       if (!p.pId || typeof p.quantity === "undefined")
-  //         throw {
-  //           httpError: 400,
-  //           desc: `Must send a product with pId and quantity as property, not: ${
-  //             p.pId && p.quantity
-  //           }`,
-  //         };
-  //       // const product = await productManagerDb.getProductsById( p.pId );
-  //       // const product = await ProductService.getById(p.pId);
-  //       const product = await this.productsDAO.getById(p.pId);
-  //       if (!product)
-  //         throw {
-  //           httpError: 404,
-  //           desc: `The productId : ${pid} was not found`,
-  //         };
-  //       if (typeof p.quantity !== "number" || p.quantity < 1)
-  //         throw {
-  //           httpError: 400,
-  //           desc: `Quantity from product must be a number greater than: ${p.quantity}`,
-  //         };
-  //       return p;
-  //     })
-  //   );
-
-  //   //? SOLUTION
-
-  //   data.products = products;
-  //   const updatedByMongo = await cartModel.findByIdAndUpdate(cid, data);
-
-  //   return { updatedByMongo, cartUpdated: data };
-  // };
-
   updateQuantity = async (cid, pid, change) => {
     //! HANDLE ERRORS
     const data = await cartModel.findById(cid).lean();

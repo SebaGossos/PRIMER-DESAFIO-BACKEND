@@ -12,6 +12,8 @@ export default class CartRouter extends MyRouter {
   init() {
     this.get('/', ['PUBLIC'], cartController.getAll)
 
+    this.post("/", ['PUBLIC'], cartController.create)
+
     this.get("/:cid", ['PUBLIC'], cartController.getById)
 
     this.get('/:cid/purchase', ['USER', 'PREMIUM'], ticketController.purchase)
@@ -28,17 +30,5 @@ export default class CartRouter extends MyRouter {
     
     this.delete('/:cid/product/:pid', ['PUBLIC'], cartController.deleteProdById)
 
-    //todo: IF THERE IS NO ERROR, DELETE.
-
-    // this.post("/", async ( req, res ) => {
-    //   const cart = req.user.cart;
-    //   try{
-    //     console.log(33)
-    //     res.json({ status: 'success', payload: cart });
-    //   }catch( err ){
-    //     res.status(400).send({ status: "error", error: err });
-    //   }
-    // })
-    
   }
 }
