@@ -1,0 +1,300 @@
+paths:
+  /api/carts:
+    get:
+      summary: Get all carts
+      tags:
+        - Cart
+      responses:
+        200:
+          description: Returns an array of all carts
+          content:
+            application/json:
+              example:
+                - _id: "cart_id_1"
+                  userEmail: "user@example.com"
+                  products: []
+        500:
+          description: Internal Server Error
+
+    post:
+      summary: Create a new cart
+      tags:
+        - Cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCartInput"
+      responses:
+        201:
+          description: Returns the created cart
+          content:
+            application/json:
+              example:
+                _id: "new_cart_id"
+                userEmail: "user@example.com"
+                products: []
+        400:
+          description: Bad Request
+        500:
+          description: Internal Server Error
+
+  /api/carts/{cid}:
+    get:
+      summary: Get cart by ID
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart to be retrieved
+      responses:
+        200:
+          description: Successful response with the specified cart
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "cart_id_1"
+                  userEmail: "user@example.com"
+                  products: []
+        400:
+          description: Bad Request
+        404:
+          description: Cart not found
+        500:
+          description: Internal Server Error
+
+    put:
+      summary: Update cart by ID
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart to be updated
+        - name: product
+          in: body
+          required: true
+          description: The updated cart information
+          schema:
+            $ref: "#/components/schemas/UpdateCartInput"
+      responses:
+        200:
+          description: Cart updated successfully
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "updated_cart_id"
+                  userEmail: "updated_user@example.com"
+                  products: []
+        400:
+          description: Bad Request
+        404:
+          description: Cart not found
+        500:
+          description: Internal Server Error
+
+    delete:
+      summary: Delete cart by ID
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart to be deleted
+      responses:
+        200:
+          description: Cart deleted successfully
+          content:
+            application/json:
+              example:
+                status: success
+                message: "Cart deleted successfully."
+        404:
+          description: Cart not found
+        500:
+          description: Internal Server Error
+
+  /api/carts/{cid}/product/{pid}:
+    put:
+      summary: Update quantity of a product in the cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart containing the product
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to be updated
+        - name: quantity
+          in: body
+          required: true
+          description: The updated quantity of the product
+          schema:
+            type: number
+      responses:
+        200:
+          description: Product quantity in the cart updated successfully
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "cart_id_1"
+                  userEmail: "user@example.com"
+                  products:
+                    - productId: "product_id_1"
+                      quantity: 5
+        400:
+          description: Bad Request
+        404:
+          description: Cart or Product not found
+        500:
+          description: Internal Server Error
+
+    delete:
+      summary: Remove a product from the cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart containing the product
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to be removed
+      responses:
+        200:
+          description: Product removed from the cart successfully
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "cart_id_1"
+                  userEmail: "user@example.com"
+                  products: []
+        404:
+          description: Cart or Product not found
+        500:
+          description: Internal Server Error
+
+  /api/carts/{cid}/purchase:
+    get:
+      summary: Checkout cart and generate a purchase ticket
+      tags:
+        - Cart
+      security:
+        - jwt: []  
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart to be checked out
+      responses:
+        201:
+          description: Checkout successful, returns purchase ticket details
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "ticket_id_1"
+                  purchaseCode: "purchase_code_1"
+                  products:
+                    - product: "product_id_1"
+                      price: 50
+                      quantity: 2
+                  totalAmount: 100
+                  buyerEmail: "user@example.com"
+        403:
+          description: Forbidden
+        404:
+          description: Cart not found
+        500:
+          description: Internal Server Error
+
+  /api/carts/getbill:
+    post:
+      summary: Send purchase bill via email
+      tags:
+        - Cart
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the purchase ticket
+      responses:
+        200:
+          description: Purchase bill sent successfully
+          content:
+            application/json:
+              example:
+                message: "Purchase bill sent successfully."
+        404:
+          description: Ticket not found
+        500:
+          description: Internal Server Error
+
+components:
+  schemas:
+    CreateCartInput:
+      type: object
+      properties:
+        userEmail:
+          type: string
+          description: The email of the user creating the cart
+      required:
+        - userEmail
+
+    UpdateCartInput:
+      type: object
+      properties:
+        userEmail:
+          type: string
+          description: The updated email of the user
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                description: The ID of the product
+              quantity:
+                type: number
+                description: The quantity of the product
+      required:
+        - userEmail
+        - products
