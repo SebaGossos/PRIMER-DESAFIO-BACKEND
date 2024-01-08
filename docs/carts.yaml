@@ -10,17 +10,19 @@ paths:
       summary: Get all carts
       tags:
         - Cart
-      security:
-        - bearerAuth: []
       responses:
         200:
           description: Returns an array of all carts
           content:
             application/json:
               example:
-                - _id: "cart_id_1"
-                  userEmail: "user@example.com"
-                  products: []
+                success: 
+                    - _id: 653ba14551f65a1fbea18803
+                      products: 
+                        - pId: 650873421c24555677fb58f7
+                          quantity: 3
+                        - pId: 65087ad12c3454343558f7gf
+                          quantity: 3
         500:
           description: Internal Server Error
 
@@ -82,6 +84,8 @@ paths:
       summary: Update cart by ID
       tags:
         - Cart
+      security:
+        - bearerAuth: []
       parameters:
         - name: cid
           in: path
@@ -117,6 +121,8 @@ paths:
       summary: Delete cart by ID
       tags:
         - Cart
+      security:
+        - bearerAuth: []
       parameters:
         - name: cid
           in: path
@@ -137,82 +143,6 @@ paths:
         500:
           description: Internal Server Error
 
-  /api/carts/{cid}/product/{pid}:
-    put:
-      summary: Update quantity of a product in the cart
-      tags:
-        - Cart
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the cart containing the product
-        - name: pid
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the product to be updated
-        - name: quantity
-          in: body
-          required: true
-          description: The updated quantity of the product
-          schema:
-            type: number
-      responses:
-        200:
-          description: Product quantity in the cart updated successfully
-          content:
-            application/json:
-              example:
-                status: success
-                payload:
-                  _id: "cart_id_1"
-                  userEmail: "user@example.com"
-                  products:
-                    - productId: "product_id_1"
-                      quantity: 5
-        400:
-          description: Bad Request
-        404:
-          description: Cart or Product not found
-        500:
-          description: Internal Server Error
-
-    delete:
-      summary: Remove a product from the cart
-      tags:
-        - Cart
-      parameters:
-        - name: cid
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the cart containing the product
-        - name: pid
-          in: path
-          required: true
-          schema:
-            type: string
-          description: The ID of the product to be removed
-      responses:
-        200:
-          description: Product removed from the cart successfully
-          content:
-            application/json:
-              example:
-                status: success
-                payload:
-                  _id: "cart_id_1"
-                  userEmail: "user@example.com"
-                  products: []
-        404:
-          description: Cart or Product not found
-        500:
-          description: Internal Server Error
 
   /api/carts/{cid}/purchase:
     get:
@@ -220,7 +150,7 @@ paths:
       tags:
         - Cart
       security:
-        - jwt: []  
+        - bearerAuth: []
       parameters:
         - name: cid
           in: path
@@ -275,34 +205,128 @@ paths:
         500:
           description: Internal Server Error
 
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Send purchase bill via email
+      tags:
+        - Cart
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the purchase ticket
+      responses:
+        200:
+          description: Purchase bill sent successfully
+          content:
+            application/json:
+              example:
+                message: "Purchase bill sent successfully."
+        404:
+          description: Ticket not found
+        500:
+          description: Internal Server Error
+
+    put:
+      summary: Update quantity of a product in the cart
+      tags:
+        - Cart
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart containing the product
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to be updated
+        - name: quantity
+          in: body
+          required: true
+          description: The updated quantity of the product
+          schema:
+            type: number
+      responses:
+        200:
+          description: Product quantity in the cart updated successfully
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "cart_id_1"
+                  userEmail: "user@example.com"
+                  products:
+                    - productId: "product_id_1"
+                      quantity: 5
+        404:
+          description: Cart or Product not found
+        500:
+          description: Internal Server Error
+
+    delete:
+      summary: Remove a product from the cart
+      tags:
+        - Cart
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the cart containing the product
+        - name: pid
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to be removed
+      responses:
+        200:
+          description: Product removed from the cart successfully
+          content:
+            application/json:
+              example:
+                status: success
+                payload:
+                  _id: "cart_id_1"
+                  userEmail: "user@example.com"
+                  products: []
+        404:
+          description: Cart or Product not found
+        500:
+          description: Internal Server Error
+
 components:
   schemas:
-    CreateCartInput:
+    Cart:
       type: object
       properties:
-        userEmail:
+        _id:
           type: string
-          description: The email of the user creating the cart
-      required:
-        - userEmail
-
-    UpdateCartInput:
-      type: object
-      properties:
-        userEmail:
-          type: string
-          description: The updated email of the user
+          description: Id autogenerated
         products:
           type: array
           items:
             type: object
             properties:
-              productId:
+              pId:
                 type: string
                 description: The ID of the product
-              quantity:
+              quantity: 
                 type: number
                 description: The quantity of the product
-      required:
-        - userEmail
-        - products
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
