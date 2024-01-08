@@ -5,12 +5,12 @@ import { createMockingProducts } from "../utilis/utils.js";
 export default class ProductController {
   async getAll(req, res) {
     try {
-
+      
       let resultDao
-      if ( req.user.role === 'premium' ) resultDao = await ProductService.getAllByEmail( req.user.email )
+      if ( req.user?.role === 'premium' ) resultDao = await ProductService.getAllByEmail( req.user?.email )
       else resultDao = await ProductService.getAll();
     
-      res.status(200).json({ payload: resultDao });
+      res.status(200).json({ status: 'success', payload: resultDao });
     } catch (err) {
       res.status(500).json({
         status: "error",

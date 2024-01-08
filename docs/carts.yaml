@@ -10,6 +10,8 @@ paths:
       summary: Get all carts
       tags:
         - Cart
+      security:
+        - bearerAuth: []
       responses:
         200:
           description: Returns an array of all carts

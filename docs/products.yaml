@@ -4,6 +4,8 @@ paths:
       summary: Get all products
       tags:
         - Products
+      security:
+        - bearerAuth: []
       responses:
         200:
           description: Returns an array of all the products
@@ -12,21 +14,21 @@ paths:
               example:
                 status: success
                 payload:
-                  - _id: "65810f3e3160c42463eb78fc"
-                    title: "Elegant Granite Table"
-                    description: "Carbonite web goalkeeper gloves are ergonomically designed to give easy fit"
-                    price: 903
-                    thumbnail:
-                      - "https://picsum.photos/seed/nzkuvtMAtp/640/480"
-                    code: "qWFivAP"
-                    stock: 0
-                    category:
-                      - "Toys"
-                      - "Computers"
-                    owner: "admin"
-                    __v: 0
-        400:
-          description: Bad Request
+                - _id: 659482cc5918c84d6a2fd40b
+                  title: SIUUU2
+                  description: '23232'
+                  price: 23432443
+                  code: '234342432'
+                  stock: 234342324
+                  category: Agua
+                  status: true
+                  thumbnail:
+                  - without image
+                  owner: 2@2
+                  __v: 0
+
+        404:
+          description: NOT FOUND
         500:
           description: Internal Server Error
 
@@ -34,32 +36,24 @@ paths:
       summary: Create a new product
       tags:
         - Products
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ProductInput"
+              $ref: "#/components/schemas/Product"
       responses:
-        201:
+        200:
           description: Returns the created product
           content:
             application/json:
-              example:
-                status: success
-                payload:
-                  _id: "newly_generated_id"
-                  title: "New Product"
-                  description: "Description of the new product"
-                  price: 999
-                  thumbnail:
-                    - "https://example.com/new-thumbnail.jpg"
-                  category:
-                    - "New Category"
-                  owner: "admin"
-                  __v: 0
-        400:
-          description: Bad Request
+            schema:
+              items:
+                $ref: "#/components/schemas/Product"
+        404:
+          description: Not Found
         500:
           description: Internal Server Error
 
@@ -80,24 +74,9 @@ paths:
           description: Successful response with the specified product
           content:
             application/json:
-              example:
-                status: success
-                payload:
-                  _id: "65810f3e3160c42463eb78fc"
-                  title: "Elegant Granite Table"
-                  description: "Carbonite web goalkeeper gloves are ergonomically designed to give easy fit"
-                  price: 903
-                  thumbnail:
-                    - "https://picsum.photos/seed/nzkuvtMAtp/640/480"
-                  code: "qWFivAP"
-                  stock: 0
-                  category:
-                    - "Toys"
-                    - "Computers"
-                  owner: "admin"
-                  __v: 0
-        400:
-          description: Bad Request
+              type: Object
+              schema:
+                $ref: '#/components/schemas/Product'
         404:
           description: Product not found
         500:
@@ -114,34 +93,16 @@ paths:
           schema:
             type: string
           description: The ID of the product to be updated
-        - name: product
-          in: body
-          required: true
-          description: The updated product information
-          schema:
-            $ref: "#/components/schemas/ProductInput"
+
       security:
-        - jwt: [] # Specify JWT authentication for this operation
+        - bearerAuth: [] 
       responses:
         200:
           description: Product updated successfully
           content:
             application/json:
-              example:
-                status: success
-                payload:
-                  _id: "updated_id"
-                  title: "Updated Product"
-                  description: "Description of the updated product"
-                  price: 123
-                  thumbnail:
-                    - "https://example.com/updated-thumbnail.jpg"
-                  category:
-                    - "Updated Category"
-                  owner: "admin"
-                  __v: 1
-        400:
-          description: Bad Request
+                schema:
+                  $ref: '#/components/schemas/Product'
         404:
           description: Product not found
         500:
@@ -180,32 +141,23 @@ paths:
         500:
           description: Internal Server Error
 
-  /api/products/realtime:
+  /api/products/mockingproducts:
     get:
-      summary: Get real-time product data
+      summary: Create mocking products
       tags:
         - Products
-      security:
-        - jwt: [] # Specify JWT authentication for this operation
       responses:
         200:
-          description: Successful response with real-time product data
+          description: Mocking products created successfully
           content:
             application/json:
               example:
                 status: success
-                payload: "Real-time product data"
-        403:
-          description: Forbidden
-          content:
-            application/json:
-              example:
-                status: error
-                message: "You don't have permission to access real-time product data."
+                message: "Mocking products created successfully."
         500:
           description: Internal Server Error
 
-  /api/products/create/mockingproducts:
+  /api/products/query/{pcode}:
     get:
       summary: Create mocking products
       tags:
@@ -223,9 +175,12 @@ paths:
 
 components:
   schemas:
-    ProductInput:
+    Product:
       type: object
       properties:
+        _id: 
+          type: ObjectId
+          description: Id autogenerated
         title:
           type: string
           description: The title of the product
@@ -235,17 +190,38 @@ components:
         price:
           type: number
           description: The price of the product
-        thumbnail:
-          type: array
-          items:
-            type: string
-          description: URL of the product thumbnail image
+        code:
+          type: string
+          description: The code of the product
+        stock:
+          type: number
+          description: The stock of the product
         category:
           type: array
           items:
             type: string
           description: Product category
+        status: 
+          type: boolean
+          description: True if product is available and the opposite is false
+        thumbnail:
+          type: array
+          items:
+            type: string
+          description: URL of the product thumbnail image
+        owner:
+          type: string
+          description: The email or name of the product owner
       required:
         - title
         - description
         - price
+        - code
+        - stock
+        - category
+        - owner
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

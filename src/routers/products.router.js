@@ -12,21 +12,18 @@ export default class ProductsRouter extends MyRouter {
   init() {
     this.get("/", ["USER", "ADMIN", "PUBLIC"], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getAll);
 
-    this.get("/mockingproducts", ["PUBLIC"], productController.mockingProducts);
+    this.post(
+      "/",
+      ["ADMIN", 'PREMIUM'],
+      passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),
+      uploader.single("thumbnail"),
+      productController.create
+    );
+
 
     this.get("/:pid", ["USER", "ADMIN", "PUBLIC"], productController.getById);
-
-    this.get("/query/:pcode", ["USER", "ADMIN", 'PREMIUM'],passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getByCode);
-
-    this.post(
-        "/",
-        ["ADMIN", 'PREMIUM'],
-        passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),
-        uploader.single("thumbnail"),
-        productController.create
-      );
-      
-      this.put(
+    
+    this.put(
       "/:pid",
       ["ADMIN", 'PREMIUM'],
       passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),
@@ -35,5 +32,10 @@ export default class ProductsRouter extends MyRouter {
     );
 
     this.delete("/:pid", ["ADMIN", 'PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.delete);
+
+    this.get("/mockingproducts", ["PUBLIC"], productController.mockingProducts);
+
+    this.get("/query/:pcode", ["USER", "ADMIN", 'PREMIUM'],passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getByCode);
+ 
   }
 }
