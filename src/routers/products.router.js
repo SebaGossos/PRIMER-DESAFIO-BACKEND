@@ -11,6 +11,8 @@ const uploader = multer({ storage });
 export default class ProductsRouter extends MyRouter {
   init() {
     this.get("/", ["USER", "ADMIN", "PUBLIC"], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getAll);
+    
+    this.get("/mockingproducts", ["PUBLIC"], productController.mockingProducts);
 
     this.post(
       "/",
@@ -33,9 +35,8 @@ export default class ProductsRouter extends MyRouter {
 
     this.delete("/:pid", ["ADMIN", 'PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.delete);
 
-    this.get("/mockingproducts", ["PUBLIC"], productController.mockingProducts);
 
-    this.get("/query/:pcode", ["USER", "ADMIN", 'PREMIUM'],passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getByCode);
+    this.get("/query/:pcode", ["USER", "ADMIN", 'PREMIUM', "PUBLIC"], productController.getByCode);
  
   }
 }

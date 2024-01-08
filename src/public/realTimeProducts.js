@@ -131,9 +131,12 @@ const deleteProduct = (id) => {
     method: "delete",
   })
     .then((result) => result.json())
-    .then((result) => {
+    .then( async(result) => {
       if (result.status === "error") throw new Error(result.error);
-      socket.emit("productList", result.payload);
+      const request = await fetch("/api/products")
+      const products = await request.json()
+      console.log(33,result)
+      socket.emit("productList", products.payload);
       Swal.fire(`Product has been deleted!`);
     });
 };

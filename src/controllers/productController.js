@@ -48,7 +48,9 @@ export default class ProductController {
   }
 
   async getById(req, res, next) {
+
     const id = req.params.pid;
+    console.log(id)
 
     try {
       const result = await ProductService.getById(id);
@@ -60,13 +62,14 @@ export default class ProductController {
   }
 
   async getByCode(req, res, next) {
+
     const code = req.params.pcode;
 
     try {
       const product = await ProductService.getByCode(code);
       
-      if( req.user.role === 'premium' ) {
-        if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not search this product' });
+      if( req.user?.role === 'premium' ) {
+        if( product.owner !== req.user?.email ) return res.json({ status:'error', error:'You can not search this product' });
       }
       return res.status(200).json({ payload: product });
     } catch (error) {
@@ -125,14 +128,9 @@ export default class ProductController {
         const product = await ProductService.getById( id )
         if( product.owner !== req.user.email ) return res.json({ status:'error', error:'You can not delete this product' });
       }
-      await ProductService.deleteById(id);
+      await ProductService.deleteById(id);      
 
-      let products
-      if ( req.user.role === 'premium' ) products = await ProductService.getAllByEmail( req.user.email )
-      else products = await ProductService.getAll();
-      
-
-      res.json({ payload: products });
+      res.json({ status: 'sueccess', message: 'Product deleted successfully' });
     } catch (error) {
       next( error )
       res.status(400).send({ status: "error", error });
