@@ -113,7 +113,6 @@ export default class ViewController {
   async products(req, res, next) {
     try {
       let user;
-
       const {
         payload,
         totalPages,

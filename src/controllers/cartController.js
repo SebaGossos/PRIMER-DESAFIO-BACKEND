@@ -3,7 +3,7 @@ import { CartService, ProductService } from "../repositories/index.js";
 export default class CartController {
   async getAll(req, res) {
     try {
-      res.json({ success: await CartService.getAll() });
+      res.json({ status: 'success', success: await CartService.getAll() });
     } catch (err) {
       res.status(400).send({ status: "error", error: err });
     }

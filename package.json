@@ -6,7 +6,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "testProd": "mocha test/**.js"
   },
   "keywords": [],
   "author": "",
@@ -42,5 +43,10 @@
       "data/carts.json",
       "data/products.json"
     ]
+  },
+  "devDependencies": {
+    "chai": "^5.0.0",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }

@@ -25,6 +25,7 @@ const initializePassport = () => {
         secretOrKey: config.jwt.keyToken,
       },
       async (jwt_payload, done) => {
+        
         try {
           const user = jwt_payload.user ? jwt_payload.user : false;
           return done(null, user);
