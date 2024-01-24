@@ -20,6 +20,8 @@ export default class CartRouter extends MyRouter {
 
     this.delete('/:cid', ['ADMIN'], cartController.delete)
 
+    this.delete('/delete/:email', ['USER', 'PREMIUM'], cartController.deleteByEmail)
+
     this.get('/:cid/purchase', ['USER', 'PREMIUM'], ticketController.purchase)
 
     this.post('/getbill', ['USER', 'PREMIUM'], getBill)

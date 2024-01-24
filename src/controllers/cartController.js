@@ -109,6 +109,19 @@ export default class CartController {
     }
   }
 
+  async deleteByEmail( req, res ) {
+    const email = req.params.email;
+    try {
+      console.log(33)
+      const deleteByEmail = await CartService.deleteByEmail(email)
+
+      res.send({status:'success', payload: deleteByEmail })
+    } catch(error) {
+      res.json({hola:22})
+    }
+    
+  }
+
   async deleteProdById(req, res) {
     const cid = req.params.cid;
     const pid = req.params.pid;

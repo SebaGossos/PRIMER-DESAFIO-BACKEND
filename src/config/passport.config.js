@@ -50,7 +50,7 @@ const initializePassport = () => {
           if (user) {
             return done(null, false, { info: "error del regis" });
           }
-          const cart = await CartService.create();
+          const cart = await CartService.create( username );
 
           const result = await UserService.create({
             first_name,
@@ -120,7 +120,7 @@ const initializePassport = () => {
             password: "",
             age: "",
             role: "user",
-            cart: await CartService.create(),
+            cart: await CartService.create(profile._json.email),
             source: profile.provider,
           });
           return done(null, newUser);

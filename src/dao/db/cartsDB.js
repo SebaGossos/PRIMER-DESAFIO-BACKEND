@@ -15,7 +15,7 @@ export default class CartsMongo {
     return cart;
   };
 
-  create = async () => await cartModel.create({ products: [] });
+  create = async ( userEmail ) => await cartModel.create({ userEmail, products: [] });
 
   updateQuantity = async (cid, pid, change) => {
     //! HANDLE ERRORS
@@ -108,6 +108,18 @@ export default class CartsMongo {
       throw { httpError: 404, desc: `${cid} not found this cart` };
     return cartDeleted;
   };
+
+  deleteByEmail = async (userEmail) => {
+    const cart = await cartModel.find({userEmail});
+    if (!cart) throw `Did not found CID: ${cid}`;
+    const cartDeleted = await cartModel.findOneAndDelete({userEmail});
+
+    if (!cartDeleted)
+      throw { httpError: 404, desc: `${cid} not found this cart` };
+    return cartDeleted;
+  };
+
+
 
   deleteProdById = async (cid, pid) => {
     //! HANDLE ERRORS

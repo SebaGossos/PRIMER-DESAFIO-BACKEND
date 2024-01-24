@@ -1,5 +1,7 @@
 import supertest from 'supertest'
 import { expect } from 'chai'
+import { fakerES as faker } from "@faker-js/faker";
+
 
 
 const requester = supertest('http://localhost:8080')
@@ -7,6 +9,8 @@ const requester = supertest('http://localhost:8080')
 
 describe('Testing Auth', () => {
   describe(' /api/Auth', () => {
+
+    let jwtCookie;
 
     const userLogged = 'test@api.com'
     const passwordLogged = 'a'
@@ -18,7 +22,7 @@ describe('Testing Auth', () => {
       const response = await requester.post('/api/auth/login')
             .send({ email: userLogged, password: passwordLogged }).expect(302)
 
-      const jwtCookie = response.header['set-cookie'].find(cookie => {
+      jwtCookie = response.header['set-cookie'].find(cookie => {
         return cookie.startsWith('jwt-coder')
       })
 
@@ -32,7 +36,7 @@ describe('Testing Auth', () => {
       const response = await requester.post('/api/auth/login')
             .send({ email: userNotLogged, password: passwordNotLogged }).expect(302)
             
-      // console.log(response.headers)
+
       const jwtCookie = response.header['set-cookie']?.find(cookie => {
         return cookie.startsWith('jwt-coder')
       })
@@ -40,29 +44,42 @@ describe('Testing Auth', () => {
       expect(jwtCookie).to.be.undefined;
       expect( response.headers.location ).to.equal('failLogin')
 
-
     })
 
+    //! REGISTER
+
+    const userToRegister = {
+      first_name: 'Pepe',
+      last_name: 'Sand',
+      email: faker.internet.email(),
+      age: 33,
+      password: 'abc'
+    }
+
+    it('Register /api/auth/register register a user', async() => {
+
+      const response = await requester.post('/api/auth/register')
+                                      .send( userToRegister )
+                                      .expect( 302 )
+      expect(response.headers?.location).to.equal('/')
+    })
     
-    // it('Endpoint /api/products should receive an array of carts', async () => {
-    //   const { status, headers , _body } = await requester.get('/api/carts')
-    //                                               .set('Cookie', jwtCookie)
-    //                                               .expect(200)
+    it('Register /api/auth/register recibe an error', async() => {
 
-    //   expect(_body.status).to.be.equal('success')
-    //   expect(_body.success).to.be.an('array');
+      const response = await requester.post('/api/auth/register')
+                                      .send( userToRegister )
+                                      .expect( 302 )
 
-    // })
-
-    // it('Endpoint  /api/carts/:cid should receive a cart', async () => {
-    //   const cid = '653ba14551f65a1fbea18803'
-    //   const { status, headers, _body } = await requester.get(`/api/carts/${cid}`)
-    //                                               .set('Cookie', jwtCookie)
-    //                                               .expect( 200 )
-
-    //   expect(_body.status).to.be.equal('success')
-    //   expect(_body.payload).to.have.property('_id', cid)                                             
-    // })
+      expect(response.headers?.location).to.equal('failRegister')
+    })
     
+    after(async function () {
+      const response = await requester.delete(`/api/carts/delete/${userToRegister.email}`)
+                                      .set( 'Cookie', jwtCookie )
+                                      .expect( 200 )
+      // console.log( response.headers, response.body )
+      //TODO: DELETE USER CREATED FOR TEST
+    })
   })
+
 })

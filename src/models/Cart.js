@@ -8,6 +8,11 @@ class Cart {
     static get schema() {
 
         const instanceMongo = new mongoose.Schema({
+            userEmail: {
+                type: String,
+                require: true, 
+                unique: true
+            },
             products:{
                 type:[{
                     _id:false,

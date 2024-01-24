@@ -41,7 +41,7 @@ describe('Testing Carts', () => {
     })
 
     it('Endpoint  /api/carts/:cid/product/:pid should add a product to cart', async () => {
-      const cid = '65b10d73d39952bd7f0c25fa'
+      const cid = '653d39772b7cacd31376fb6d'
       const pid = '65087ad12c24555677fb58fd'
       const { status, headers, _body } = await requester.post(`/api/carts/${cid}/product/${pid}`)
                                                   .set('Cookie', jwtCookie)
