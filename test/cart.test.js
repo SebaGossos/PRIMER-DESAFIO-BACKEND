@@ -6,7 +6,7 @@ const requester = supertest('http://localhost:8080')
 
 
 describe('Testing Carts', () => {
-  describe('GET /api/carts', () => {
+  describe(' /api/carts', () => {
 
     let jwtCookie;
   
@@ -35,6 +35,18 @@ describe('Testing Carts', () => {
       const { status, headers, _body } = await requester.get(`/api/carts/${cid}`)
                                                   .set('Cookie', jwtCookie)
                                                   .expect( 200 )
+
+      expect(_body.status).to.be.equal('success')
+      expect(_body.payload).to.have.property('_id', cid)                                             
+    })
+
+    it('Endpoint  /api/carts/:cid/product/:pid should add a product to cart', async () => {
+      const cid = '65b10d73d39952bd7f0c25fa'
+      const pid = '65087ad12c24555677fb58fd'
+      const { status, headers, _body } = await requester.post(`/api/carts/${cid}/product/${pid}`)
+                                                  .set('Cookie', jwtCookie)
+                                                  .expect( 200 )
+
 
       expect(_body.status).to.be.equal('success')
       expect(_body.payload).to.have.property('_id', cid)                                             

@@ -7,7 +7,7 @@ const requester = supertest('http://localhost:8080')
 
 
 describe('Testing Product', () => {
-  describe('GET /api/products', () => {
+  describe(' /api/products', () => {
 
     let jwtCookie;
   
