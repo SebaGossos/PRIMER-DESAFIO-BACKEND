@@ -45,7 +45,7 @@ export default class AuthController {
     res.json( { status: 'success', message: 'Your password just been change' } )
   }
 
-  //!USER PREMIUM
+  //!USER
   premium = async( req, res ) => {
     const uid = req.params.uid
     const user = await UserService.findById( uid );
@@ -60,6 +60,14 @@ export default class AuthController {
     return res.json({'siu': 33})
   }
 
+  deleteUser = async( req, res ) => {
+    const email = req.params.email
+    const user = await UserService.getByEmail( email );
+    if ( !user ) return res.send({status: 'error', message: 'dind´t found the user'})
+    const userDelete = await UserService.deleteUser( email )
+
+    return res.send({ status: 'success', payload: userDelete })
+  }
   
   //!GITHUBLOGIN
   loginGithub = (req, res) => {};

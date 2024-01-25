@@ -51,4 +51,9 @@ export default class UserMongo {
     const updated = await userModel.findOneAndUpdate({_id}, dataToUpdate )
     return updated
   }
+
+  deleteUser = async( email ) => {
+    const userDeleted = await userModel.findOneAndDelete({ email })
+    return userDeleted
+  }
 }

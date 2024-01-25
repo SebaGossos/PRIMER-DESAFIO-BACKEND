@@ -1,5 +1,4 @@
 const callApiDeleteProd = async( cid , pid ) => {
-
     try{
         await fetch( `/api/carts/${cid}/product/${pid}`, {
             method: "delete"

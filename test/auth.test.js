@@ -1,14 +1,15 @@
 import supertest from 'supertest'
 import { expect } from 'chai'
 import { fakerES as faker } from "@faker-js/faker";
+import config from "../src/config/config.js";
 
 
 
-const requester = supertest('http://localhost:8080')
+const requester = supertest(`http://localhost:${config.port}`)
 
 
 describe('Testing Auth', () => {
-  describe(' /api/Auth', () => {
+  describe(' /api/auth', () => {
 
     let jwtCookie;
 
@@ -47,7 +48,7 @@ describe('Testing Auth', () => {
     })
 
     //! REGISTER
-
+    //? CREATE A NEW USER EMAIL EVERYTIME THAT REGISTER
     const userToRegister = {
       first_name: 'Pepe',
       last_name: 'Sand',
@@ -74,11 +75,17 @@ describe('Testing Auth', () => {
     })
     
     after(async function () {
-      const response = await requester.delete(`/api/carts/delete/${userToRegister.email}`)
+
+      const deleteCart = await requester.delete(`/api/carts/delete/${userToRegister.email}`)
                                       .set( 'Cookie', jwtCookie )
                                       .expect( 200 )
-      // console.log( response.headers, response.body )
-      //TODO: DELETE USER CREATED FOR TEST
+      // console.log( deleteCart.headers, deleteCart.body )
+
+      const deleteUser = await requester.delete(`/api/auth/userDelete/${userToRegister.email}`)
+                                      .set( 'Cookie', jwtCookie )
+                                      .expect( 200 )
+      // console.log( deleteUser.headers, deleteUser.body )
+      
     })
   })
 

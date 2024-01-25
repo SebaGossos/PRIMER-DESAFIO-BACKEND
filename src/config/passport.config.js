@@ -8,6 +8,9 @@ import config from "./config.js";
 const emailAdmin = config.admin.adminEmail;
 const passwordAdmin = config.admin.adminPassword;
 
+const emailTest = config.test.email
+const passwordTest = config.test.password
+
 import { CartService, UserService } from "../repositories/index.js";
 
 const localStrategy = local.Strategy;
@@ -78,19 +81,24 @@ const initializePassport = () => {
       },
       async (username, password, done) => {
         try {
-          if (username === emailAdmin && password === passwordAdmin)
+          if (username === emailAdmin && password === passwordAdmin) {
             return done(null, {
               email: username,
               password,
               role: "admin",
               first_name: "admin",
             });
+          } 
+
           const user = await UserService.getByEmail(username);
           if (!user)
             return done(null, false, {
               err: "no se encuentra estoy en passport ",
             });
           if (!isValidPassword(user, password)) return done(null, false);
+          if( emailTest === username && passwordTest === password ) {
+            user.role = 'test'
+          }
           return done(null, user);
           
         } catch (err) {

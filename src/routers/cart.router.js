@@ -20,17 +20,17 @@ export default class CartRouter extends MyRouter {
 
     this.delete('/:cid', ['ADMIN'], cartController.delete)
 
-    this.delete('/delete/:email', ['USER', 'PREMIUM'], cartController.deleteByEmail)
-
     this.get('/:cid/purchase', ['USER', 'PREMIUM'], ticketController.purchase)
-
+    
     this.post('/getbill', ['USER', 'PREMIUM'], getBill)
     
-    this.post("/:cid/product/:pid", ['USER', 'PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), cartController.addToCart)
-      
+    this.post("/:cid/product/:pid", ['USER', 'PREMIUM', 'TEST', 'ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), cartController.addToCart)
+    
     this.put('/:cid/product/:pid', ['USER', 'PREMIUM'], cartController.updateQuantity)
     
-    this.delete('/:cid/product/:pid', ['PUBLIC'], cartController.deleteProdById)
+    this.delete('/delete/:email', ['TEST', 'ADMIN'], cartController.deleteByEmail)
+
+    this.delete('/:cid/product/:pid', ['USER', 'PREMIUM', 'ADMIN'], cartController.deleteProdById)
 
   }
 } 

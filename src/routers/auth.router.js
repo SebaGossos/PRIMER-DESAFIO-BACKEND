@@ -26,6 +26,8 @@ export default class AuthRouter extends MyRouter {
         this.get('/githubcallback', ['PUBLIC'], passport.authenticate('github', { failureRedirect: '/', session: false }), authController.githubCallback )
 
         this.get( '/logout', ['PUBLIC'], authController.logout)
+
+        this.delete('/userDelete/:email', ['TEST', 'ADMIN'], authController.deleteUser)
         
     }
 }

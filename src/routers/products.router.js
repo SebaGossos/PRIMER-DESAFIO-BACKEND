@@ -10,7 +10,7 @@ const uploader = multer({ storage });
 
 export default class ProductsRouter extends MyRouter {
   init() {
-    this.get("/", ["USER", "ADMIN"], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getAll);
+    this.get("/", ['TEST',"USER", "ADMIN"], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), productController.getAll);
     
     this.get("/mockingproducts", ["PUBLIC"], productController.mockingProducts);
 
@@ -23,7 +23,7 @@ export default class ProductsRouter extends MyRouter {
     );
 
 
-    this.get("/:pid", ["USER", "ADMIN", "PUBLIC"], productController.getById);
+    this.get("/:pid", ['TEST',"USER", "ADMIN", "PUBLIC"], productController.getById);
     
     this.put(
       "/:pid",
