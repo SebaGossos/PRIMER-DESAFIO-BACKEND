@@ -17,7 +17,7 @@ const callApiAddProd = async( cid , pid ) => {
 
 
 const changeRoleUser = async( uid ) => {
-    const bePremium = await fetch(`/api/auth/premium/${uid}`)
+    const bePremium = await fetch(`/api/users/premium/${uid}`)
     const data = await bePremium.json()
     console.log( data )
     location.reload()

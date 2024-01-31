@@ -17,6 +17,13 @@ export default class User {
                 ref: 'carts'
             },
             role: { type: String, enum: ['user', 'admin', 'premium', 'test'], default: 'user' },
+            documents: {
+                type: [{
+                    name: String,
+                    reference: String
+                }],
+            },
+            last_connection: Date,
             source: String
         })
 

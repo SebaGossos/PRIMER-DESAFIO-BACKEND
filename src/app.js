@@ -14,6 +14,7 @@ import {
   customCartRouter,
   customChatRouter,
   customViewRouter,
+  customUserRouter
 } from "./routers/index.js";
 import config from "./config/config.js";
 
@@ -69,6 +70,7 @@ app.set("view engine", "handlebars");
 app.use(express.static("./src/public"));
 
 app.use("/api/auth", customAuthRouter.getRouter());
+app.use('/api/users', customUserRouter.getRouter())
 app.use("/api/products", customProductRouter.getRouter());
 app.use("/api/carts", customCartRouter.getRouter());
 app.use("/api/chat", customChatRouter.getRouter());
