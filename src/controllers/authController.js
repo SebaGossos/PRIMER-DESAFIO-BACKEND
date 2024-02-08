@@ -80,5 +80,9 @@ export default class AuthController {
   };
 
   //!LOGOUT
-  logout = (req, res) => res.clearCookie("jwt-coder").redirect("/");
+  logout = async(req, res) => {
+    const user = req.user;
+    const userUpdate = await UserService.update( user._id, {last_connection: Date.now()})
+    return res.clearCookie("jwt-coder").redirect("/");
+  }
 }

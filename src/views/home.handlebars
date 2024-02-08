@@ -25,15 +25,12 @@
             {{#if role.isAdmin }}
                 <a class="btn btn-info" href="/products/realtimeproducts">Real Time Products</a>
             {{else if role.isPremium }}
-                <a class="btn btn-primary" onclick="changeRoleUser('{{user.id}}')">Standar Membership</a>
-
                 <a class="btn btn-dark" href="/products/realtimeproducts">Real Time Products</a>
 
                 <a class="btn btn-warning" href="/chat">Chat</a>
 
                 <a class="btn btn-info" href="/carts/{{user.cart}}">Cart</a>
             {{else if role.isUser }}
-                <a class="btn btn-primary" onclick="changeRoleUser('{{user.id}}')">Premium Membership</a>
 
                 <a class="btn btn-warning" href="/chat">Chat</a>
 

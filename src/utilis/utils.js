@@ -55,12 +55,47 @@ export const passportCall = (strategy) => {
 
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "src/public/images/");
+    const { fieldname } = file;
+
+    let destination;
+
+    switch( fieldname ){
+
+      case 'thumbnail':
+        destination = 'products'
+        break
+      
+      case 'profilePicture':
+        destination = 'profile'
+        break
+
+      case 'dni':
+        destination = 'dni'
+        break
+        
+      case 'addresProof':
+        destination = 'addresProof'
+        break
+
+      case 'bankProof':
+        destination = 'bankProof'
+        break
+
+      default:
+        break
+    }
+    if( destination === 'profile' ) 
+      cb(null, `src/public/images/${ destination }`);
+    
+    else cb(null, `src/documents/${ destination }/`);
+    
   },
   filename: function (req, file, cb) {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
+
+export const uploader = multer({ storage })
 
 export const initMongoDB = async () => {
   try {

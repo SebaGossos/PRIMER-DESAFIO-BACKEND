@@ -40,8 +40,9 @@ export default class UserMongo {
 
   update = async ( _id, data ) => {
 
+
     const dataToUpdate = {}
-    const isDataToChange = [ 'first_name', 'last_name', 'email', 'age', 'password', 'role' ]
+    const isDataToChange = [ 'first_name', 'last_name', 'email', 'age', 'password', 'role', 'last_connection', 'profile_picture', 'documents' ]
 
     for( const prop in data ) {
       if(!isDataToChange.includes(prop)) return false; 

@@ -194,14 +194,19 @@ export default class ViewController {
 
   async profile(req, res) {
     try {
-      const { first_name, last_name, email, age, cart, role } = req.user;
+      const { _id } = req.user;
+      const { first_name, last_name, email, age, cart, role, profile_picture } = await UserService.findById(_id)
+
       res.render("authenticate/profile", {
         first_name,
         last_name,
         email,
         age,
+        profile_picture,
         role,
+        id: _id,
         isUser: role === "user",
+        isPremium: role === 'premium',
         cartId: cart,
       });
     } catch (err) {

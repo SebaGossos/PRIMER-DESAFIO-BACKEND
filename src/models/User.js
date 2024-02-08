@@ -12,6 +12,7 @@ export default class User {
             email: { type: String, unique: true, required: true },
             age: { type: Number, required: true },
             password: { type: String, required: true },
+            profile_picture: { type: String, default: 'not profile picture' },
             cart: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'carts'
@@ -19,11 +20,16 @@ export default class User {
             role: { type: String, enum: ['user', 'admin', 'premium', 'test'], default: 'user' },
             documents: {
                 type: [{
+                    _id: false,
                     name: String,
                     reference: String
                 }],
+                default: 'Not data yet'
             },
-            last_connection: Date,
+            last_connection: {
+                type: Date,
+                default: Date.now
+            },
             source: String
         })
 
