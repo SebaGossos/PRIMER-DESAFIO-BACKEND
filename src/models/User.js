@@ -24,7 +24,7 @@ export default class User {
                     name: String,
                     reference: String
                 }],
-                default: 'Not data yet'
+                default: { name:'Not data yet', reference: 'Not data yet' }
             },
             last_connection: {
                 type: Date,

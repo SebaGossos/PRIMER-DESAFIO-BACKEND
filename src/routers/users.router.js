@@ -9,6 +9,7 @@ import { uploader } from "../utilis/utils.js";
 export default class UserRouter extends MyRouter {
 
     init() {
+        this.get('/', ['PUBLIC'], userController.getAll )
 
         this.get('/premium/:uid', ['PUBLIC'], passport.authenticate('jwt', { failureRedirect: 'failLogin', session: false }), userController.premium )
 
