@@ -1,9 +1,8 @@
 import UserDTO from "../dto/user.dto.js";
 import { UserService } from "../repositories/index.js";
 
-
-
 import fs from "fs";
+import { userDeletedMail } from "../utilis/userMailDelete.js";
 
 function wasCreated(path) {
   try {
@@ -73,4 +72,20 @@ export default class UserController {
       res.send({ status: "error", message: "cant update User information" });
     }
   };
+
+  deleteUsers = async ( req, res ) => {
+    try{
+      const userDeleted = await UserService.deleteUsers();
+      if ( userDeleted.length === 1 ) await userDeletedMail( req, res, userDeleted[0].email )
+      else {
+        for (const user of userDeleted ) {
+          await userDeletedMail( req, res, user.email )
+        }
+      }
+      res.send({ status: 'success', payload: userDeleted })
+    } catch(error) {
+      res.status(400).send({ status: 'error', message: 'fail while deleting user'})
+    }
+  }
+  
 }

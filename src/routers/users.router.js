@@ -27,6 +27,7 @@ export default class UserRouter extends MyRouter {
 
         this.post('/:uid/profile/picture', ['PUBLIC'], uploader.single('profilePicture'), passport.authenticate('jwt', { failureRedirect: 'failLogin', session: false }), userController.profilePicture )
         
+        this.delete('/', ['TEST', 'ADMIN', 'PUBLIC'], userController.deleteUsers)
     } 
     
 }

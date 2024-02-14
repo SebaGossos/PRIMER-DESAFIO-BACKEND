@@ -93,7 +93,7 @@ const initializePassport = () => {
           const user = await UserService.getByEmail(username);
           //? Add last connection
           
-          const userUpdated = await UserService.update(user._id, {last_connection: Date.now()})
+          const userUpdated = await UserService.update(user._id, { last_connection: Date.now() } )
           if (!user)
             return done(null, false, {
               err: "no se encuentra estoy en passport ",
