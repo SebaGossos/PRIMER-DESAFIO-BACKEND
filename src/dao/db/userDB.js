@@ -62,22 +62,22 @@ export default class UserMongo {
   }
 
   deleteUsers = async() => {
-    // const secondsToDelete = 2 * 24 * 60 * 60 * 1000;
-    const secondsToDelete = 30 * 60 * 1000;
+    const secondsToDelete = 2 * 24 * 60 * 60 * 1000;
+    // const secondsToDelete = 60 * 1000;
     const limitDate = new Date( Date.now() - secondsToDelete )
 
     const userToDelete = await userModel.find({       
-    $or: [
-      { last_connection: { $lt: limitDate } },
-      { last_connection: { $exists: false } }
-    ]
-  })
-    // const userDeleted = await userModel.deleteMany({
-      // $or: [
-      //   { last_connection: { $lt: limitDate } },
-      //   { last_connection: { $exists: false } }
-      // ]
-    // })
+      $or: [
+        { last_connection: { $lt: limitDate } },
+        { last_connection: { $exists: false } }
+      ]
+    })
+    const userDeleted = await userModel.deleteMany({
+      $or: [
+        { last_connection: { $lt: limitDate } },
+        { last_connection: { $exists: false } }
+      ]
+    })
     return userToDelete
   }
 }

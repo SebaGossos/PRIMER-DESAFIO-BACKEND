@@ -34,7 +34,6 @@ export const userDeletedMail = async( req, res, userMail ) => {
     }
     let mail = Mailgenerator.generate(response)
 
-
     let message = {
         from: 'Coder <codershop@coderhouse.com>',
         to: addressee,
