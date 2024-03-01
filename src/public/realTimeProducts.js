@@ -84,19 +84,19 @@ updateBtn.addEventListener("click", () => {
   })
     .then((result) => result.json())
     .then((result) => {
-      if (result.status === "error") throw new Error(result.error);
+      if (result.status === "error") throw Swal.fire(result.error);
     })
     .then(() => fetch("/api/products"))
     .then((result) => result.json())
     .then((result) => {
       if (result.status === "error") throw new Error(result.error);
       socket.emit("productList", result.payload);
-      alert(
-        `Ok. Todo salió bien! :) \nEl producto se ha agregado con éxito!\n \nVista actuallizada`
+      Swal.fire(
+        `Product has been updated!`
       );
       cleanInputs("add");
     })
-    .catch((err) => alert(`Ocurrió un error: \n${err}`));
+    .catch((err) => Swal.fire(`Ocurrió un error: \n${err}`));
 });
 
 let timerId;
@@ -107,6 +107,7 @@ inputCode.addEventListener("input", (evt) => {
     fetch(`/api/products/query/${inputCode.value}`)
       .then((result) => result.json())
       .then((result) => {
+        if( result.status === 'error') return ;
         result.payload
           ? (document.getElementById("isCode").innerHTML = ` YES
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
@@ -130,10 +131,13 @@ const deleteProduct = (id) => {
     method: "delete",
   })
     .then((result) => result.json())
-    .then((result) => {
+    .then( async(result) => {
       if (result.status === "error") throw new Error(result.error);
-      socket.emit("productList", result.payload);
-      alert(`Ok. Todo salió bien! :) \nEl producto se ha eliminado con éxito!`);
+      const request = await fetch("/api/products")
+      const products = await request.json()
+      console.log(33,result)
+      socket.emit("productList", products.payload);
+      Swal.fire(`Product has been deleted!`);
     });
 };
 

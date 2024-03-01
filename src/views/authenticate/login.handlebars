@@ -12,7 +12,9 @@
             <label for="passwordInput">Password: </label>
             <input id="passwordInput" placeholder="put your password here" name="password" type="password" required>
         </div>
-
+        <div class="mb-3">
+            <a href="/forget-password">Recover password</a>
+        </div>
         <input class="btn btn-success" type="submit" value="LOGIN"> | <a class="btn btn-primary" href="/register"> REGISTER</a> | <a href="/api/auth/github"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="33px" alt=""></a> 
     </form>
 </div>
@@ -23,9 +25,7 @@
         document.getElementById('passwordInput').value = '';
     }, 600)
 
-    {{!-- if( {{userRegister}} ){
-        Swal.fire( 'User Created Successfully!' )
-
-    } --}}
-
+    if( {{messageRecovery}} ){
+        Swal.fire( 'We send an email to recover the password successfully!' )
+    }
 </script>

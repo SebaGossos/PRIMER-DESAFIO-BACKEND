@@ -10,9 +10,54 @@
             <li>Age: {{age}}</li>
             <li>Role: {{role}}</li>
             <li>Cart: {{cartId}}</li>
+            <li>Profile picture: <img class="img-thumbnail img-fluid profile-picture" src="./images/profile/{{profile_picture}}" alt="profile_picture"></li>
         </ul>
     </div>
     <div>
-        <a class="btn btn-success" href="/products">Products</a> | <a class="btn btn-danger" href="/api/auth/logout">Log Out</a> {{#if isUser}}| <a class="btn btn-info" href="/carts/{{cartId}}">Cart</a> | <a class="btn btn-warning" href="/chat">Chat</a> {{/if}}
+        <a class="btn btn-success" href="/products">Products</a> | <a class="btn btn-danger" href="/api/auth/logout">Log Out</a> {{#if isUser }}| <a class="btn btn-info" href="/carts/{{cartId}}">Cart</a> | <a class="btn btn-warning" href="/chat">Chat</a> {{/if}}
     </div>
+
+    <div class="mt-3">
+        Profile Picture: 
+        <form id="uploadPicture" onsubmit="pictureUpload('{{id}}')" enctype="multipart/form-data">
+            <div>
+                <label for="profilePicture"></label>
+                <input type="file" name="profilePicture" required>
+            </div>
+            <button class="mt-3 btn btn-success" type="submit">Upload</button>
+        </form>
+    </div>
+    {{#if isPremium }}
+    <h2 class="mt-3">You are Premium</h2>
+    {{/if}}
+
+    {{#if isUser }}
+        <ul class="mt-3">
+            <h2>For be user premium you need:</h2>
+            <form id="bePremium" onsubmit="premium('{{id}}')" enctype="multipart/form-data">
+                <li>
+                    <label for="dni">Identification:</label>
+                    <input type="file" name="dni" required>
+                </li>
+                <li class="mt-3">
+                    <label for="addresProof">Proof of address:</label>
+                    <input type="file" name="addresProof" required>
+                </li>
+                <li class="mt-3">
+                    <label for="bankProof">Bank statement: </label>
+                    <input type="file" name="bankProof" required>
+                </li>
+
+                <button class="mt-3 btn btn-success" type="submit">Send</button>
+            </form>
+        </ul>
+    {{/if}}
 </div>
+<style>
+  .profile-picture {
+    max-width: 100px; 
+    max-height: 100px; 
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/profile.js"></script>

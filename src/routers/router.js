@@ -1,4 +1,6 @@
 import { Router } from "express";
+import passport from "passport";
+
 import jwt from 'jsonwebtoken';
 import config from "../config/config.js";
 
@@ -41,9 +43,11 @@ export default class MyRouter {
     }
 
     #handlePolicies = (policies=['PUBLIC']) => (req, res, next) => {
-
+        
         if( policies.includes('PUBLIC') ) return next()
         else {
+
+            // return passport.authenticate('jwt', { session: false })(req, res, next)
             const token = req.signedCookies['jwt-coder'];
             if( !token ) {
                 return res.status(401).clearCookie('jwt-coder').render('errors/errorAuth', { error: 'Not Authenticated' })
@@ -56,7 +60,5 @@ export default class MyRouter {
             })
         }
     }    
-
-
-    
+   
 }

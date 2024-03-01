@@ -1,9 +1,9 @@
-import { CartService } from "../repositories/index.js";
+import { CartService, ProductService } from "../repositories/index.js";
 
 export default class CartController {
   async getAll(req, res) {
     try {
-      res.json({ success: await CartService.getAll() });
+      res.json({ status: 'success', success: await CartService.getAll() });
     } catch (err) {
       res.status(400).send({ status: "error", error: err });
     }
@@ -15,6 +15,16 @@ export default class CartController {
       res.json({ status: "success", payload: await CartService.getById(id) });
     } catch (err) {
       res.status(400).send({ status: "error", error: err });
+    }
+  }
+
+  async create( req, res ) {
+    try {
+      const createCart = await CartService.create();
+      console.log( createCart )      
+      res.json({ status: 'success', payload: createCart})
+    } catch {
+      res.json({ status: 'error', message: 'Error To Create a Cart' })
     }
   }
 
@@ -65,6 +75,11 @@ export default class CartController {
     const cid = req.params.cid;
     const pid = req.params.pid;
     try {
+
+      if( req.user.role === 'premium' ){
+        const product = await ProductService.getById( pid );
+        if ( product?.owner === req.user.email ) return res.status(500).send({ status: "error", message: `You can´t add your own product`});
+      }
       const { addToCartByMongo, cartAdded } = await CartService.addToCart(
         cid,
         pid
@@ -92,6 +107,19 @@ export default class CartController {
         res.status(500).json({ status: "error", error: err.message });
       }
     }
+  }
+
+  async deleteByEmail( req, res ) {
+    const email = req.params.email;
+    try {
+      console.log(33)
+      const deleteByEmail = await CartService.deleteByEmail(email)
+
+      res.send({status:'success', payload: deleteByEmail })
+    } catch(error) {
+      res.json({hola:22})
+    }
+    
   }
 
   async deleteProdById(req, res) {

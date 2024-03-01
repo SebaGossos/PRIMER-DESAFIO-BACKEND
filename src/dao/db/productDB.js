@@ -1,4 +1,6 @@
 import { productModel } from "../../models/Product.js";
+import { CustomError, EErros, ErrorInfoProd, ErrorInfoGetByCode, ErrorInfoGetById } from "../../service/errors/index.js";
+
 
 export default class ProductsMongo {
 
@@ -10,6 +12,8 @@ export default class ProductsMongo {
         })
         return productsWithIdAsString; 
     }
+
+    getAllByEmail = async( email ) => await productModel.find({ owner: email }).lean().exec()
 
     getAllPaginate = async( req, PORT ) => {
 
@@ -45,7 +49,6 @@ export default class ProductsMongo {
         
         //! HANDLE ERROR
         if ( totalPages < page ) throw `Must submit a page until: ${ totalPages }`
-
 
         const originalUrl = req.originalUrl.at(-1) === '/' ? req.originalUrl.pop() : req.originalUrl;
 
@@ -87,11 +90,33 @@ export default class ProductsMongo {
         };
     }
 
-    getById = async( id ) => await productModel.findById({ _id: id }).lean().exec();
+    getById = async( id ) => {
+        let prod;
+        try{
+            prod = await productModel.findById({ _id: id }).lean().exec();
+        } catch( error ) {
+            // console.log( error )
+            CustomError.createError({
+                name: 'Product Get Id Error',
+                cause: ErrorInfoGetById(  id ),
+                message: 'Error while trying to get a product with the correct id',
+                code: EErros.INVALID_TYPES_ERROR
+            })
+        }
+        return prod;
+    }
 
     getByCode = async( code ) => {
         const product = await productModel.findOne({ code: code }).lean().exec();
-        if( !product ) throw `Dind´t found the product with code: ${ code }.`
+
+        if( !product ) {
+            CustomError.createError({
+                name: 'Product get Code Error',
+                cause: ErrorInfoGetByCode( code ),
+                message: 'Error while trying to get a code',
+                code: EErros.INVALID_TYPES_ERROR
+            })
+        }
         product._id = product._id.toString();
         return product
     }
@@ -104,20 +129,25 @@ export default class ProductsMongo {
         stock,
         category,
         status=true,
-        thumbnail=['Without image']
+        thumbnail=['Without image'],
+        owner
     }){
-        if ( !title || !description || !price || !code || !stock || !category ) throw 'Must submit all required fields'
-        const product = { title, description, price, code, stock, category, status, thumbnail }
+        const product = { title, description, price, code, stock, category, status, thumbnail, owner }
+        if ( !title || !description || !price || !code || !stock || !category ) {
+            CustomError.createError({
+                name: 'Product create Error',
+                cause: ErrorInfoProd( product ),
+                message: 'Error while trying to create a product',
+                code: EErros.INVALID_TYPES_ERROR
+            })
+        }
         product.thumbnail = thumbnail.length === 0 ? ["Without image"] : thumbnail;
         product.status = status
-
-        // productModel.create( product )
 
         const productGenerated = new productModel( product )
         
         await productGenerated.save()
 
-        
     }
 
     update = async( id, product ) =>  await productModel.findByIdAndUpdate( id, product, { returnDocument: 'after' } );

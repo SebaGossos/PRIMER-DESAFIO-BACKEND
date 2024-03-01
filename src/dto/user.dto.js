@@ -8,4 +8,13 @@ export default class UserDTO {
         this.role = user.role
         this.source = user.source
     }
+
+    getImportant = () => {
+        return {
+            name: this.first_name + ' ' + this.last_name,
+            email: this.email,
+            role: this.role
+        }
+    }
+
 }

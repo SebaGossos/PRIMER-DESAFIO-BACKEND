@@ -2,13 +2,24 @@
 const callApiAddProd = async( cid , pid ) => {
 
     try{
-        
-        await fetch( `/api/carts/${cid}/product/${pid}`, {
+        const result = await fetch( `/api/carts/${cid}/product/${pid}`, {
             method: 'post'
         })
-        Swal.fire(`Added Successfully!`)
-        // alert(`producto agregado al cartId: ${cid}`)
+
+        const data = await result.json()
+        data.status === 'error' ? Swal.fire(data.message) : Swal.fire(`Added Successfully!`);
+        
     } catch ( err ) {
+
         alert(`Ocurrio un error: ${err.error}`)
     }
 }
+
+
+// const changeRoleUser = async( uid ) => {
+//     const bePremium = await fetch(`/api/users/premium/${uid}`)
+//     const data = await bePremium.json()
+//     console.log( data )
+//     location.reload()
+// }
+

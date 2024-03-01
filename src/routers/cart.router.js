@@ -1,7 +1,9 @@
 import MyRouter from "./router.js";
+import passport from "passport";
+
 import { cartController } from "../controllers/index.js";
 import { ticketController } from "../controllers/index.js";
-import getBill from "../controllers/checkoutController.js";
+import { getBill } from "../controllers/checkoutController.js";
 
 
 
@@ -10,33 +12,25 @@ export default class CartRouter extends MyRouter {
   init() {
     this.get('/', ['PUBLIC'], cartController.getAll)
 
+    this.post("/", ['PUBLIC'], cartController.create)
+
     this.get("/:cid", ['PUBLIC'], cartController.getById)
 
-    this.get('/:cid/purchase', ['USER'], ticketController.purchase)
+    this.put('/:cid', ['USER', 'PREMIUM'], cartController.update)
 
-    this.post('/getbill', ['USER'], getBill)
-    
-    this.post("/:cid/product/:pid", ['USER'], cartController.addToCart)
-    
-    this.put('/:cid/', ['USER'], cartController.update)
-    
-    this.put('/:cid/product/:pid', ['USER'], cartController.updateQuantity)
-    
-    this.delete('/:cid', ['PUBLIC'], cartController.delete)
-    
-    this.delete('/:cid/product/:pid', ['PUBLIC'], cartController.deleteProdById)
+    this.delete('/:cid', ['ADMIN'], cartController.delete)
 
-    //todo: IF THERE IS NO ERROR, DELETE.
-
-    // this.post("/", async ( req, res ) => {
-    //   const cart = req.user.cart;
-    //   try{
-    //     console.log(33)
-    //     res.json({ status: 'success', payload: cart });
-    //   }catch( err ){
-    //     res.status(400).send({ status: "error", error: err });
-    //   }
-    // })
+    this.get('/:cid/purchase', ['USER', 'PREMIUM'], ticketController.purchase)
     
+    this.post('/getbill', ['USER', 'PREMIUM'], getBill)
+    
+    this.post("/:cid/product/:pid", ['USER', 'PREMIUM', 'TEST', 'ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), cartController.addToCart)
+    
+    this.put('/:cid/product/:pid', ['USER', 'PREMIUM'], cartController.updateQuantity)
+    
+    this.delete('/delete/:email', ['TEST', 'ADMIN'], cartController.deleteByEmail)
+
+    this.delete('/:cid/product/:pid', ['USER', 'PREMIUM', 'ADMIN'], cartController.deleteProdById)
+
   }
-}
+} 

@@ -1,6 +1,9 @@
 import AuthController from "./authController.js";
 export const authController = new AuthController
 
+import UserController from "./userController.js";
+export const userController = new UserController;
+
 import CartController from "./cartController.js";
 export const cartController = new CartController
 

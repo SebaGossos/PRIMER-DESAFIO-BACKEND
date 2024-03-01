@@ -1,11 +1,10 @@
 import nodemailer from 'nodemailer'
 import Mailgen from 'mailgen'
-import { ProductService } from "../repositories/index.js";
+import { ProductService, UserService } from "../repositories/index.js";
 
 import config from '../config/config.js'
 
-const getBill = async( req, res ) => {
-    
+export const getBill = async( req, res ) => {
     let productsPurchased = [];
 
     let ticket = req.body.ticket;
@@ -81,5 +80,4 @@ const getBill = async( req, res ) => {
         })
         .catch(err => res.status(500).json({ status: 'error', error:err }))
 
-}
-export default getBill;
+};

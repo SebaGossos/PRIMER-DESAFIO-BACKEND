@@ -61,7 +61,7 @@ export class ProductsFile {
         return product
     }
     
-    async update( id, product){
+    async update( id, product ){
         //! ERROR HANDLER
         const { title, description, price, thumbnail, code, stock, category, status=true } = product
         if ( product.id ) throw 'Don´t have to send an ID in the body petition'

@@ -1,55 +1,52 @@
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
-import handlebars from 'express-handlebars';
-import { Command } from 'commander';
-import cors from 'cors'
-import { fork } from 'child_process'
+import express from "express";
+import cookieParser from "cookie-parser";
+import handlebars from "express-handlebars";
+import cors from "cors";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+import { fork } from "child_process";
 
+import { Server } from "socket.io";
+import errorHandler from "./middlewares/errors.js";
+import {
+  customAuthRouter,
+  customProductRouter,
+  customCartRouter,
+  customChatRouter,
+  customViewRouter,
+  customUserRouter
+} from "./routers/index.js";
+import config from "./config/config.js";
 
-import { Server } from 'socket.io';
-import { customAuthRouter, customProductRouter, customCartRouter, customChatRouter, customViewRouter } from './routers/index.js';
-import config from './config/config.js'
- 
-const program = new Command();
-program
-    .option('-p <port>', 'Puerto del servidor', 8080 )
-    .option('--mode <mode>', 'Modo de ejecución', 'production')
-program.parse()
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
+import logger from "./utilis/logger.js";
 
-
-import passport from 'passport';
-import initializePassport from './config/passport.config.js';
+// import { EErrosProducts } from './service/errors/index.js';
 
 export const PORT = config.port;
 
 const app = express();
 
-//! ------------ Test FS ------------ 
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(config.cookie.keyCookie));
 
-// import { ProductsFile } from './dao/fs/productsFS.js';
-// const productsFS = new ProductsFile('./data/products.json')
+//!SWAGGER
 
-// const test = async() => {
-  
-//     console.log( await productsFS.getByCode('abc123456789') ) 
-// }
-
-// test()
-
-
-
-//! ---------------------------------
-
-// const a = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/?retryWrites=true&w=majority'
-// const b = 'mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/'
-
-
-
-app.use( express.json() )
-app.use( cors() )
-app.use( express.urlencoded({ extended: true }) ) 
-app.use( cookieParser( config.cookie.keyCookie ) )
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Documantation',
+      description: 'App to improve my skills 🎹⏫'
+    }
+  },
+  apis: ['./docs/**/*.yaml']
+}
+const specs = swaggerJSDoc( swaggerOptions )
+app.use( '/docs', swaggerUiExpress.serve, swaggerUiExpress.setup( specs ) )
 
 // app.use( session({
 //     // store: MongoStore.create({
@@ -62,58 +59,76 @@ app.use( cookieParser( config.cookie.keyCookie ) )
 //     saveUninitialized: true
 // }))
 
-
-initializePassport()
-app.use( passport.initialize() )
+initializePassport();
+app.use(passport.initialize());
 // app.use( passport.session() )
 
+app.engine("handlebars", handlebars.engine());
+app.set("views", "./src/views");
+app.set("view engine", "handlebars");
 
-app.engine( 'handlebars', handlebars.engine() )
-app.set( 'views', './src/views' )
-app.set( 'view engine', 'handlebars' )
+app.use(express.static("./src/public"));
 
-app.use( express.static('./src/public') )
+app.use("/api/auth", customAuthRouter.getRouter());
+app.use('/api/users', customUserRouter.getRouter())
+app.use("/api/products", customProductRouter.getRouter());
+app.use("/api/carts", customCartRouter.getRouter());
+app.use("/api/chat", customChatRouter.getRouter());
+app.use("/", customViewRouter.getRouter());
+app.use("/loggerTest", (req, res, next) => {
+  logger.debug("Logger debug");
+  logger.http("Logger http");
+  logger.info("Logger info");
+  logger.warning("Logger warning");
+  logger.error("Logger error");
+  logger.fatal("Logger fatal");
+  res.send("okk");
+});
+// app.get('/test-error', (req, res, next) => {
+//     const error = new Error('Este es un error de prueba');
+//     error.code = EErrosProducts.INVALID_TYPES_ERROR;
+//     next(error);
+// });
 
-app.use( '/api/auth', customAuthRouter.getRouter() ) 
-app.use( '/api/products', customProductRouter.getRouter() )
-app.use( '/api/carts', customCartRouter.getRouter() ) 
-app.use( '/api/chat', customChatRouter.getRouter() ) 
-app.use( '/', customViewRouter.getRouter() )
+app.use(errorHandler);
 
-app.get( '*', async(req, res) => res.status(404).render('errors/errorAuth',{ error: 'Cannot get the specified endpoint' } ) )
+app.get("*", async (req, res) =>
+  res
+    .status(404)
+    .render("errors/errorAuth", { error: "Cannot get the specified endpoint" })
+);
 
-try{
-    await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
-        dbName: 'ecommerce'
-    })
-}catch(err) {
-    console.log( 'Error to connect DB' )
-}
+// try{
+//     await mongoose.connect('mongodb+srv://winigossos:coder@cluster0.digmtmx.mongodb.net/',{
+//         dbName: 'ecommerce'
+//     })
+// }catch(err) {
+//     console.log( 'Error to connect DB' )
+// }
 
+const httpServer = app.listen(PORT, () =>
+  logger.debug(`SERVER UP!! http://localhost:${PORT}`)
+);
 
+let log = [];
 
-const httpServer = app.listen( PORT, () => console.log(`SERVER UP!! http://localhost:${PORT}`) ) 
+const io = new Server(httpServer);
+io.on("connection", (socket) => {
+  console.log(`Nuevo cliente conectado ${socket.id}`);
 
+  //! realTimeProducts
+  socket.on("productList", (data) => {
+    io.emit("updatedProducts", data);
+  });
 
-let log = []
+  //! chat
+  socket.on("logDB", (data) => {
+    log = data;
+    // io.emit('log', log.reverse())
+  });
 
-const io = new Server( httpServer );
-io.on('connection', socket => {
-    console.log(`Nuevo cliente conectado ${ socket.id }`)
-
-    //! realTimeProducts
-    socket.on('productList', data => {
-        io.emit( 'updatedProducts', data )
-    })
-
-    //! chat
-    socket.on('logDB', data => {
-        log = data;
-        // io.emit('log', log.reverse())
-    })
-
-    socket.on('message', data => {
-        log.unshift( data );
-        io.emit('log', log)
-    })
-})
+  socket.on("message", (data) => {
+    log.unshift(data);
+    io.emit("log", log);
+  });
+});

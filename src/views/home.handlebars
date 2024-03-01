@@ -22,13 +22,19 @@
         </ul>
         <div class="d-flex flex-column gap-5">
             <a class="btn btn-secondary" href="/profile">Profile</a>
-            {{#if isAdmin }}
+            {{#if role.isAdmin }}
                 <a class="btn btn-info" href="/products/realtimeproducts">Real Time Products</a>
-            {{else}}
+            {{else if role.isPremium }}
+                <a class="btn btn-dark" href="/products/realtimeproducts">Real Time Products</a>
+
                 <a class="btn btn-warning" href="/chat">Chat</a>
 
                 <a class="btn btn-info" href="/carts/{{user.cart}}">Cart</a>
+            {{else if role.isUser }}
 
+                <a class="btn btn-warning" href="/chat">Chat</a>
+
+                <a class="btn btn-info" href="/carts/{{user.cart}}">Cart</a>
             {{/if}}
 
             <a class="btn btn-danger" href="/api/auth/logout">Log Out</a>

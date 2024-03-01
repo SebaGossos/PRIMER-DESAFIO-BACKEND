@@ -1,12 +1,15 @@
 import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword } from "../utilis/utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
 
 const emailAdmin = config.admin.adminEmail;
 const passwordAdmin = config.admin.adminPassword;
+
+const emailTest = config.test.email
+const passwordTest = config.test.password
 
 import { CartService, UserService } from "../repositories/index.js";
 
@@ -25,6 +28,7 @@ const initializePassport = () => {
         secretOrKey: config.jwt.keyToken,
       },
       async (jwt_payload, done) => {
+        
         try {
           const user = jwt_payload.user ? jwt_payload.user : false;
           return done(null, user);
@@ -45,11 +49,11 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, age } = req.body;
         try {
-          const user = await UserService.getByEmail({ email: username });
+          const user = await UserService.getByEmail(username);
           if (user) {
             return done(null, false, { info: "error del regis" });
           }
-          const cart = await CartService.create();
+          const cart = await CartService.create( username );
 
           const result = await UserService.create({
             first_name,
@@ -58,7 +62,7 @@ const initializePassport = () => {
             age,
             password: createHash(password),
             cart,
-            source: 'ourApp'
+            source: "ourApp",
           });
 
           return done(null, result);
@@ -77,23 +81,29 @@ const initializePassport = () => {
       },
       async (username, password, done) => {
         try {
-          if (username === emailAdmin && password === passwordAdmin)
+          if (username === emailAdmin && password === passwordAdmin) {
             return done(null, {
               email: username,
               password,
               role: "admin",
               first_name: "admin",
             });
-          const user = await UserService.getByEmail({ email: username });
+          } 
+
+          const user = await UserService.getByEmail(username);
+          //? Add last connection
+          
+          const userUpdated = await UserService.update(user._id, { last_connection: Date.now() } )
           if (!user)
             return done(null, false, {
               err: "no se encuentra estoy en passport ",
             });
           if (!isValidPassword(user, password)) return done(null, false);
-          else {
-            user.role = "user";
-            return done(null, user);
+          if( emailTest === username && passwordTest === password ) {
+            user.role = 'test'
           }
+          return done(null, user);
+          
         } catch (err) {
           done(err);
         }
@@ -111,9 +121,7 @@ const initializePassport = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const user = await UserService.getByEmail({
-            email: profile._json.email,
-          });
+          const user = await UserService.getByEmail(profile._json.email);
           if (user) return done(null, user);
 
           const newUser = await UserService.create({
@@ -123,7 +131,7 @@ const initializePassport = () => {
             password: "",
             age: "",
             role: "user",
-            cart: await CartService.create(),
+            cart: await CartService.create(profile._json.email),
             source: profile.provider,
           });
           return done(null, newUser);

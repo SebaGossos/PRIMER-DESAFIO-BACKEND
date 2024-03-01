@@ -2,6 +2,9 @@ import passport from "passport";
 
 import MyRouter from "./router.js";
 import { viewController } from "../controllers/index.js";
+// import { forgetPassword, recoveryPassword } from "../controllers/checkoutController.js";
+
+
 
 
 export default class ViewRouter extends MyRouter {
@@ -12,19 +15,25 @@ export default class ViewRouter extends MyRouter {
 
     this.get('/register', ['PUBLIC'], viewController.register)
 
-    //? PRODUCTS
-    this.get("/products", ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  viewController.products);
+    this.get('/forget-password', ['PUBLIC'], viewController.forgetPassword )
 
-    this.get("/products/realtimeproducts", ['ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.realTimeProducts);
+    this.post('/recovery', ['PUBLIC'], viewController.recoveryPassword)
+
+    this.get('/verify-token/:passToken', ['PUBLIC'], viewController.verifyToken )
+
+    //? PRODUCTS
+    this.get("/products", ['USER','ADMIN','PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}),  viewController.products);
+
+    this.get("/products/realtimeproducts", ['ADMIN','PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.realTimeProducts);
 
     //? CARTS
-    this.get('/carts/:cid', ['USER'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.cartId )
+    this.get('/carts/:cid', ['USER','PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.cartId )
 
     //? CHATS
-    this.get('/chat', ['USER'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.chat)
+    this.get('/chat', ['USER','PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.chat)
 
     //? PROFILE
-    this.get('/profile', ['USER','ADMIN'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.profile)
+    this.get('/profile', ['USER','ADMIN','PREMIUM'], passport.authenticate('jwt', { failureRedirect:'failToken', session: false}), viewController.profile)
 
     this.get('/failToken', ['PUBLIC'], viewController.failToken)
     
